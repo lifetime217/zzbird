@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
+
+	<!-- 开发环境 -->
+	<springProfile name="dev">
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+		<logger name="com.luoran.zzbird" level="debug" />
+		<root level="info">
+			<appender-ref ref="CONSOLE" />
+		</root>
+	</springProfile>
+
+	<!-- 测试环境 -->
+	<springProfile name="uat">
+		<appender name="file-mode" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>/apps/zzbird-logs/</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>%d{yyyy-MM-dd}.log</fileNamePattern>
+				<MaxHistory>30</MaxHistory>
+			</rollingPolicy>
+
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>${PATTERN}</pattern>
+			</encoder>
+		</appender>
+		<logger name="com.luoran.zzbird" level="debug">
+			<appender-ref ref="file-mode" />
+		</logger>
+		<root level="info">
+			<appender-ref ref="file-mode" />
+		</root>
+	</springProfile>
+	
+	<!-- 正式环境 -->
+	<springProfile name="pro">
+		<appender name="file-mode" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<file>/apps/zzbird-logs/</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<fileNamePattern>%d{yyyy-MM-dd}.log</fileNamePattern>
+				<MaxHistory>30</MaxHistory>
+			</rollingPolicy>
+
+			<layout class="ch.qos.logback.classic.PatternLayout">
+				<pattern>${PATTERN}</pattern>
+			</layout>
+		</appender>
+		<logger name="com.luoran.zzbird" level="debug">
+			<appender-ref ref="file-mode" />
+		</logger>
+		<root level="info">
+			<appender-ref ref="file-mode" />
+		</root>
+	</springProfile>
+</configuration>  
