@@ -1,6 +1,8 @@
 package com.luoran.zzbird.config;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,7 +40,14 @@ public class WebConfig {
 
 	@Bean
     public HttpMessageConverters fastJsonConfigure(){
-        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+		List<MediaType> mdlist = new ArrayList<>();
+		mdlist.add(MediaType.APPLICATION_JSON_UTF8);
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter() {
+        	@Override
+        	public List<MediaType> getSupportedMediaTypes() {
+        		return mdlist;
+        	}
+        };
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
         fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");

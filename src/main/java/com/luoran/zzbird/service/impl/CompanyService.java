@@ -52,7 +52,7 @@ public class CompanyService implements ICompanyService {
 		adminUser.setUserType(1);
 		
 		//新增管理员
-		userDao.insertTemplate(adminUser);
+//		userDao.insertTemplate(adminUser);
 		
 		return adminUser.getId();//返回新增的用户主键
 		
