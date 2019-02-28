@@ -1,4 +1,4 @@
-package com.luoran.zzbird.action;
+package com.luoran.zzbird.action.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
-import com.luoran.zzbird.entity.biz.TMessage;
-import com.luoran.zzbird.service.ITMessageService;
+import com.luoran.zzbird.entity.biz.TXcxUserRole;
+import com.luoran.zzbird.service.ITXcxUserRoleService;
 
 /**
  * @author lifetime
  *
  */
 @Controller
-@RequestMapping("tmessage")
-public class TMessageAction  implements BaseAction<TMessage> {
+@RequestMapping("txcxuserrole")
+public class TXcxUserRoleAction  implements BaseAction<TXcxUserRole> {
 
 	@Autowired
-	private ITMessageService service;
+	private ITXcxUserRoleService service;
 	
 	@RequestMapping
 	public String index() {
-		return "tmessage";
+		return "txcxuserrole";
 	}
 
 	@Override
-	public IBaseService<TMessage> getService() {
+	public IBaseService<TXcxUserRole> getService() {
 		return service;
 	}
 

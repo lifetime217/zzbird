@@ -13,4 +13,9 @@ public class ZzbirdApplicationTests {
 	public void contextLoads() {
 	}
 
+	@Test
+	public void danyuanceshi() {
+		System.out.println("nihao ");
+	}
+
 }

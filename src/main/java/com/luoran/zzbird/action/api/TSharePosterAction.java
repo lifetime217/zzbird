@@ -1,4 +1,4 @@
-package com.luoran.zzbird.action;
+package com.luoran.zzbird.action.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
-import com.luoran.zzbird.entity.biz.TWechatUser;
-import com.luoran.zzbird.service.ITWechatUserService;
+import com.luoran.zzbird.entity.biz.TSharePoster;
+import com.luoran.zzbird.service.ITSharePosterService;
 
 /**
  * @author lifetime
  *
  */
 @Controller
-@RequestMapping("twechatuser")
-public class TWechatUserAction  implements BaseAction<TWechatUser> {
+@RequestMapping("tshareposter")
+public class TSharePosterAction  implements BaseAction<TSharePoster> {
 
 	@Autowired
-	private ITWechatUserService service;
+	private ITSharePosterService service;
 	
 	@RequestMapping
 	public String index() {
-		return "twechatuser";
+		return "tshareposter";
 	}
 
 	@Override
-	public IBaseService<TWechatUser> getService() {
+	public IBaseService<TSharePoster> getService() {
 		return service;
 	}
 
