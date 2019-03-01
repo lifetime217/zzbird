@@ -1,8 +1,7 @@
 package com.luoran.zzbird.config;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -39,22 +38,18 @@ public class WebConfig {
 	Environment env;
 
 	@Bean
-    public HttpMessageConverters fastJsonConfigure(){
-		List<MediaType> mdlist = new ArrayList<>();
-		mdlist.add(MediaType.APPLICATION_JSON_UTF8);
-        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter() {
-        	@Override
-        	public List<MediaType> getSupportedMediaTypes() {
-        		return mdlist;
-        	}
-        };
-        FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
-        fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
-        converter.setFastJsonConfig(fastJsonConfig);
-        return new HttpMessageConverters(converter);
-    }
-	
+	public HttpMessageConverters fastJsonConfigure() {
+		StringHttpMessageConverter strconverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+		
+		FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+		FastJsonConfig fastJsonConfig = new FastJsonConfig();
+		fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+		fastJsonConfig.setDateFormat("yyyy-MM-dd HH:mm:ss");
+		fastJsonConfig.setCharset(Charset.forName("UTF-8"));
+		converter.setFastJsonConfig(fastJsonConfig);
+		return new HttpMessageConverters(strconverter,converter);
+	}
+
 	@Bean
 	public HandlerExceptionResolver customerExceptionPage() {
 		HandlerExceptionResolver exceptionResolver = new HandlerExceptionResolver() {
@@ -76,7 +71,8 @@ public class WebConfig {
 		DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
 		String viewPath = null;
 		try {
-			viewPath = resourceLoader.getResource(env.getProperty("spring.beetl.viewDir", "classpath:/views")).getFile().getPath();
+			viewPath = resourceLoader.getResource(env.getProperty("spring.beetl.viewDir", "classpath:/views")).getFile()
+					.getPath();
 			configuration.setResourceLoader(new WebAppResourceLoader(viewPath));
 		} catch (IOException e) {
 			throw new RuntimeException("spring.beetl.viewDir : " + viewPath + " ,that view path is not exists.");

@@ -90,6 +90,8 @@
 			<groupId>com.luoran</groupId>
 			<artifactId>wechat</artifactId>
 			<version>0.0.1</version>
+			<scope>system</scope>
+      		<systemPath>F:\LRWORK\wechat-facade\wechat\target\wechat-0.0.1.jar</systemPath>
 		</dependency>
 	</dependencies>
 

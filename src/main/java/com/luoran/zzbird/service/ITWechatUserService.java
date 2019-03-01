@@ -8,5 +8,5 @@ import com.luoran.zzbird.entity.biz.TWechatUser;
  *
  */
 public interface ITWechatUserService extends IBaseService<TWechatUser>{
-	
+	boolean saveUserInfo(String openId);
 }
