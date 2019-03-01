@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luoran.wechat.facade.GzhFacade;
 import com.luoran.zzbird.core.ext.AbstractBaseService;
