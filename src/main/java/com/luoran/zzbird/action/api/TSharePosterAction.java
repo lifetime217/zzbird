@@ -14,7 +14,7 @@ import com.luoran.zzbird.service.ITSharePosterService;
  *
  */
 @Controller
-@RequestMapping("tshareposter")
+@RequestMapping("shareposter")
 public class TSharePosterAction  implements BaseAction<TSharePoster> {
 
 	@Autowired

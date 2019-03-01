@@ -14,7 +14,7 @@ import com.luoran.zzbird.service.ITXcxUserService;
  *
  */
 @Controller
-@RequestMapping("txcxuser")
+@RequestMapping("xcxuser")
 public class TXcxUserAction  implements BaseAction<TXcxUser> {
 
 	@Autowired

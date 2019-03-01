@@ -14,7 +14,7 @@ import com.luoran.zzbird.service.ITMessageService;
  *
  */
 @Controller
-@RequestMapping("tmessage")
+@RequestMapping("message")
 public class TMessageAction  implements BaseAction<TMessage> {
 
 	@Autowired

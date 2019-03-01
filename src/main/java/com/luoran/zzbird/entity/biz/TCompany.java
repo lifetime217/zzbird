@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import java.util.Date;
+import java.util.List;
 
 import org.beetl.sql.core.annotatoin.AssignID;
 import org.beetl.sql.core.annotatoin.AutoID;
@@ -16,6 +17,7 @@ import com.luoran.zzbird.core.BaseInfo;
 public class TCompany extends BaseInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 
 	public TCompany() {
 	}
@@ -112,12 +114,12 @@ public class TCompany extends BaseInfo implements Serializable {
 	/**
 	 * 创建企业的人员
 	 */
-	public String getXcxOpenId() {
-		return getString("xcxOpenId");
+	public String getXcxUserRoleId() {
+		return getString("xcxUserRoleId");
 	}
 
-	public void setXcxOpenId(String xcxOpenId) {
-		set("xcxOpenId", xcxOpenId);
+	public void setXcxUserRoleId(String xcxUserRoleId) {
+		set("xcxUserRoleId", xcxUserRoleId);
 	}
 
 	/**
@@ -229,6 +231,8 @@ public class TCompany extends BaseInfo implements Serializable {
 	public void setBannerImgs(String bannerImgs) {
 		set("bannerImgs", bannerImgs);
 	}
+	
+	
 
 	/**
 	 * 老师人数

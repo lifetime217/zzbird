@@ -14,7 +14,7 @@ import com.luoran.zzbird.service.ITPosterService;
  *
  */
 @Controller
-@RequestMapping("tposter")
+@RequestMapping("poster")
 public class TPosterAction  implements BaseAction<TPoster> {
 
 	@Autowired
