@@ -185,6 +185,18 @@ public class TWechatUser extends BaseInfo implements Serializable {
 	public void setSubscribeScene(String subscribeScene) {
 		set("subscribeScene", subscribeScene);
 	}
+	
+	
+	/**
+	 * 返回用户关注的状态
+	 */
+	public Integer getSubscribe() {
+		return getInteger("subscribe");
+	}
+
+	public void setSubscribe(Integer subscribe) {
+		set("subscribe", subscribe);
+	}
 
 	/**
 	 * 二维码扫码场景
