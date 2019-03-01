@@ -1,4 +1,4 @@
-package com.luoran.zzbird.action;
+package com.luoran.zzbird.action.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
-import com.luoran.zzbird.entity.biz.TIndustry;
-import com.luoran.zzbird.service.ITIndustryService;
+import com.luoran.zzbird.entity.biz.TMessage;
+import com.luoran.zzbird.service.ITMessageService;
 
 /**
  * @author lifetime
  *
  */
 @Controller
-@RequestMapping("tindustry")
-public class TIndustryAction  implements BaseAction<TIndustry> {
+@RequestMapping("message")
+public class TMessageAction  implements BaseAction<TMessage> {
 
 	@Autowired
-	private ITIndustryService service;
+	private ITMessageService service;
 	
 	@RequestMapping
 	public String index() {
-		return "tindustry";
+		return "tmessage";
 	}
 
 	@Override
-	public IBaseService<TIndustry> getService() {
+	public IBaseService<TMessage> getService() {
 		return service;
 	}
 

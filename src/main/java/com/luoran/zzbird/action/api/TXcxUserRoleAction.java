@@ -1,4 +1,4 @@
-package com.luoran.zzbird.action;
+package com.luoran.zzbird.action.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +14,7 @@ import com.luoran.zzbird.service.ITXcxUserRoleService;
  *
  */
 @Controller
-@RequestMapping("txcxuserrole")
+@RequestMapping("xcxuserrole")
 public class TXcxUserRoleAction  implements BaseAction<TXcxUserRole> {
 
 	@Autowired

@@ -90,12 +90,12 @@ public class TXcxUser extends BaseInfo implements Serializable {
 	/**
 	 * 性别
 	 */
-	public Integer getSex() {
-		return getInteger("sex");
+	public Integer getGender() {
+		return getInteger("gender");
 	}
 
-	public void setSex(Integer sex) {
-		set("sex", sex);
+	public void setGender(Integer gender) {
+		set("gender", gender);
 	}
 
 	/**

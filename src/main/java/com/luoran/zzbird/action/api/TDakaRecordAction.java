@@ -1,4 +1,4 @@
-package com.luoran.zzbird.action;
+package com.luoran.zzbird.action.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
-import com.luoran.zzbird.entity.biz.TCompanyCourse;
-import com.luoran.zzbird.service.ITCompanyCourseService;
+import com.luoran.zzbird.entity.biz.TDakaRecord;
+import com.luoran.zzbird.service.ITDakaRecordService;
 
 /**
  * @author lifetime
  *
  */
 @Controller
-@RequestMapping("tcompanycourse")
-public class TCompanyCourseAction  implements BaseAction<TCompanyCourse> {
+@RequestMapping("dakarecord")
+public class TDakaRecordAction  implements BaseAction<TDakaRecord> {
 
 	@Autowired
-	private ITCompanyCourseService service;
+	private ITDakaRecordService service;
 	
 	@RequestMapping
 	public String index() {
-		return "tcompanycourse";
+		return "tdakarecord";
 	}
 
 	@Override
-	public IBaseService<TCompanyCourse> getService() {
+	public IBaseService<TDakaRecord> getService() {
 		return service;
 	}
 

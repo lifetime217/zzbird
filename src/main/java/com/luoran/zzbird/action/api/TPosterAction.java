@@ -1,4 +1,4 @@
-package com.luoran.zzbird.action;
+package com.luoran.zzbird.action.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
-import com.luoran.zzbird.entity.biz.User;
-import com.luoran.zzbird.service.IUserService;
+import com.luoran.zzbird.entity.biz.TPoster;
+import com.luoran.zzbird.service.ITPosterService;
 
 /**
  * @author lifetime
  *
  */
 @Controller
-@RequestMapping("user")
-public class UserAction  implements BaseAction<User> {
+@RequestMapping("poster")
+public class TPosterAction  implements BaseAction<TPoster> {
 
 	@Autowired
-	private IUserService service;
+	private ITPosterService service;
 	
 	@RequestMapping
 	public String index() {
-		return "user";
+		return "tposter";
 	}
 
 	@Override
-	public IBaseService<User> getService() {
+	public IBaseService<TPoster> getService() {
 		return service;
 	}
 
