@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +48,7 @@ public class TWechatAction {
 	}
 	
 	@PostMapping("auth")
-	public void auth2(@RequestParam Map<String, String> params,HttpServletRequest req) {
+	public void auth2(@RequestParam Map<String, String> params,HttpServletRequest req,HttpServletResponse rpe) {
 		try {
 			//解析xml
 			Map<String, String> parseXml = GzhUtils.parseXml(req);
@@ -55,13 +56,19 @@ public class TWechatAction {
 			if("subscribe".equals(parseXml.get("Event"))) {
 				iTWechatUserService.saveUserInfo(params.get("openid"));
 				System.out.println("点击了关注");
-			}else {
-				System.out.println("发送了消息或取消关注");
+				String sendSubscribeMsg = iTWechatUserService.sendSubscribeMsg(params,parseXml);
+				rpe.getWriter().write(sendSubscribeMsg);
+				//取消关注
+			}else if("unsubscribe".equals(parseXml.get("Event"))){
+				System.out.println("取消关注");
+				//发送了消息
+			}else if(parseXml.get("Event") == null){
+				
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 }
