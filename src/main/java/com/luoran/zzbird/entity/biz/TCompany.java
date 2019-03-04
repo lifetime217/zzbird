@@ -48,12 +48,12 @@ public class TCompany extends BaseInfo implements Serializable {
 	/**
 	 * 企业详细地址
 	 */
-	public String getCompanyAdress() {
-		return getString("companyAdress");
+	public String getCompanyAddress() {
+		return getString("companyAddress");
 	}
 
-	public void setCompanyAdress(String companyAdress) {
-		set("companyAdress", companyAdress);
+	public void setCompanyAddress(String companyAddress) {
+		set("companyAddress", companyAddress);
 	}
 
 	/**
@@ -266,5 +266,7 @@ public class TCompany extends BaseInfo implements Serializable {
 	public void setSign(String sign) {
 		set("sign", sign);
 	}
+	
+	
 
 }

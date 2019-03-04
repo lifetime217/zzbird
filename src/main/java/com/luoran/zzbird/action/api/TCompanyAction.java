@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
@@ -22,9 +23,10 @@ import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.service.ITCompanyService;
+import com.luoran.zzbird.utils.Convert;
 
 /**
- * @author lifetime
+ * @author wsl
  *
  */
 @Controller
@@ -58,7 +60,8 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping("/queryCompanyPage")
 	@ResponseBody()
-	public HttpResult queryCompanyPage(String search, String page) {
+	public HttpResult queryCompanyPage(@RequestParam(value = "search") String search,
+			@RequestParam(value = "page") String page) {
 		JSONObject res = new JSONObject();
 		// TODO 定位查询
 		try {
@@ -66,12 +69,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			String url = env.getProperty("file.path.url");
 
 			// 查询重点客户
-			// 拼接url数据
-			List<TCompany> pointUser = companyService.queryPointUser();
-			for (int i = 0; i < pointUser.size(); i++) {
-				String companyImg = pointUser.get(i).getBannerImgs();
-				pointUser.get(i).setBannerImgs(convertImg(companyImg, url));
-			}
+			List<TCompany> pointUser = companyService.queryPointUser(url);
 			res.put("pointUser", pointUser);
 
 			// 查询普通用户
@@ -91,7 +89,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			List<TCompany> companyList = (List<TCompany>) ordinaryUser.get("list");
 			for (int i = 0; i < companyList.size(); i++) {
 				String companyImg = companyList.get(i).getBannerImgs();
-				companyList.get(i).setBannerImgs(convertImg(companyImg, url));
+				companyList.get(i).setBannerImgs(Convert.convertImgString(companyImg, url));
 			}
 			res.put("ordinaryUser", ordinaryUser);
 
@@ -106,31 +104,45 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		}
 		return HttpResult.success("查询成功", res);
 	}
-
-	/**
-	 * @Author wsl @Title: coonvertImg @Description:
-	 * 拼接url @param: @return @return:String @throws
-	 */
-	public String convertImg(String companyImg, String url) {
-		String[] imgs = companyImg.split(",");
-		StringBuffer imgBuffer = new StringBuffer();
-		for (int j = 0; j < imgs.length; j++) {
-			imgs[j] = url + "/" + imgs[j];
-			imgBuffer.append(imgs[j] + ",");
-		}
-		return imgBuffer.toString();
+	
+	@RequestMapping("/query")
+	@ResponseBody()
+	public void  tets() {
+		System.out.println("niaho");
 	}
+
+	
 
 	/**
 	 * 
 	 * @Author wsl @Title: queryNewOrOldUser @Description: TODO
-	 * 查询新老用户(根据公司用户表是否有数据) @param: @return @return: HttpResult @throws
+	 *         查询新老用户(根据公司用户表是否有数据) @param: @return @return: HttpResult @throws
 	 */
 	@RequestMapping("/queryNewOrOldUser")
 	@ResponseBody()
-	public HttpResult queryNewOrOldUser(String code) {
+	public HttpResult queryNewOrOldUser(@RequestParam(value = "code") String code) {
 		log.info("code:" + code + ",获取用户角色id");
 		return null;
+	}
+
+	/**
+	 * 
+	 * @Author wsl @Title: queryCompanyDetail @Description: TODO
+	 *         查詢公司详情页 @param: @return @return: HttpResult @throws
+	 */
+	@RequestMapping("/queryCompanyDetail")
+	@ResponseBody()
+	public HttpResult queryCompanyDetail(@RequestParam(value = "companyId") String companyId) {
+		JSONObject res = new JSONObject();
+		try {
+			res = companyService.queryCompanyDetail(companyId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return HttpResult.fail("查询失败");
+		}
+		return HttpResult.success("查询成功", res);
+
 	}
 
 }
