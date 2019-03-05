@@ -1,7 +1,9 @@
 package com.luoran.zzbird.action.api;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,18 +15,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luoran.zzbird.core.HttpResult;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
+import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.service.ITCompanyService;
+import com.luoran.zzbird.utils.Convert;
+import com.luoran.zzbird.utils.GeohashUtil;
+import com.luoran.zzbird.utils.ShortUuid;
 
 /**
- * @author lifetime
+ * @author wsl
  *
  */
 @Controller
@@ -52,26 +62,19 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Title: get
 	 * @Description: TODO 查询公司列表的分页 利用showV1 来区分查询 （1代表重点客户 0代表普通用户）
-	 * @param: @return @return: HttpResult @throws
 	 */
 	@RequestMapping("/queryCompanyPage")
 	@ResponseBody()
-	public HttpResult queryCompanyPage(String search, String page) {
+	public HttpResult queryCompanyPage(@RequestParam(value = "search") String search,
+			@RequestParam(value = "page") String page) {
 		JSONObject res = new JSONObject();
 		// TODO 定位查询
 		try {
 			// 拿到图片的访问地址
 			String url = env.getProperty("file.path.url");
-
 			// 查询重点客户
-			// 拼接url数据
-			List<TCompany> pointUser = companyService.queryPointUser();
-			for (int i = 0; i < pointUser.size(); i++) {
-				String companyImg = pointUser.get(i).getBannerImgs();
-				pointUser.get(i).setBannerImgs(convertImg(companyImg, url));
-			}
+			List<TCompany> pointUser = companyService.queryPointUser(url);
 			res.put("pointUser", pointUser);
 
 			// 查询普通用户
@@ -91,7 +94,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			List<TCompany> companyList = (List<TCompany>) ordinaryUser.get("list");
 			for (int i = 0; i < companyList.size(); i++) {
 				String companyImg = companyList.get(i).getBannerImgs();
-				companyList.get(i).setBannerImgs(convertImg(companyImg, url));
+				companyList.get(i).setBannerImgs(Convert.convertImgString(companyImg, url));
 			}
 			res.put("ordinaryUser", ordinaryUser);
 
@@ -108,29 +111,99 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	}
 
 	/**
-	 * @Author wsl @Title: coonvertImg @Description:
-	 * 拼接url @param: @return @return:String @throws
+	 * 
+	 * @Author wsl
+	 * @Description: TODO 新建企业
 	 */
-	public String convertImg(String companyImg, String url) {
-		String[] imgs = companyImg.split(",");
-		StringBuffer imgBuffer = new StringBuffer();
-		for (int j = 0; j < imgs.length; j++) {
-			imgs[j] = url + "/" + imgs[j];
-			imgBuffer.append(imgs[j] + ",");
+	@RequestMapping("/addCompany")
+	@ResponseBody()
+	public HttpResult addCompany(TCompany company) {
+		JSONObject res = new JSONObject();
+		try {
+			company.set("addTime", new Date());
+			company.set("lookCount", 0);
+			company.set("shareCount", 0);
+			company.set("loveCount", 0);
+			company.set("showV1", 0);
+			company.set("v1", 0);
+			company.set("teacherCount", 0);
+			company.set("geohash", GeohashUtil.encode(company.getLat().doubleValue(), company.getLng().doubleValue()));
+			company.set("studentCount", 0);
+			company.set("sign", ShortUuid.generateShortUuid());
+			String companyId = companyService.add(company);
+			res.put("companyId", companyId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return HttpResult.fail("新增失败");
 		}
-		return imgBuffer.toString();
+		return HttpResult.success("新增成功", res);
 	}
 
 	/**
 	 * 
-	 * @Author wsl @Title: queryNewOrOldUser @Description: TODO
-	 * 查询新老用户(根据公司用户表是否有数据) @param: @return @return: HttpResult @throws
+	 * @Author wsl
+	 * @Description: TODO 查询新老用户(根据公司用户表是否有数据)
 	 */
 	@RequestMapping("/queryNewOrOldUser")
 	@ResponseBody()
-	public HttpResult queryNewOrOldUser(String code) {
+	public HttpResult queryNewOrOldUser(@RequestParam(value = "code") String code) {
 		log.info("code:" + code + ",获取用户角色id");
 		return null;
 	}
 
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: TODO 查詢公司详情页
+	 */
+	@RequestMapping("/queryCompanyDetail")
+	@ResponseBody()
+	public HttpResult queryCompanyDetail(@RequestParam(value = "companyId") String companyId) {
+		JSONObject res = new JSONObject();
+		try {
+			res = companyService.queryCompanyDetail(companyId);
+			// 查询老师的数组
+			List<TXcxUserRole> queryCompanyTeacher = companyService.queryCompanyTeacher(companyId);
+			res.put("companyTeacher", queryCompanyTeacher);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return HttpResult.fail("查询失败");
+		}
+		return HttpResult.success("查询成功", res);
+
+	}
+
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: TODO 根据企业id查询企业的基本信息
+	 */
+	@RequestMapping(value = "/queryCompanyByCompanyId/{companyId}", method = RequestMethod.GET)
+	@ResponseBody()
+	public HttpResult queryCompanyDetailByCompanyId(@PathVariable(value = "companyId") String companyId) {
+		JSONObject res = new JSONObject();
+		try {
+			// 拿到图片的访问地址
+			String url = env.getProperty("file.path.url");
+			TCompany company = companyService.get(companyId);
+			List<String> industryListId = Arrays.asList(company.getIndustryListId().split(",")); // 标签的id
+			List<String> industryListName = Arrays.asList(company.getIndustryListName().split(","));// 标签的name
+			// 拼接标签的集合
+			JSONArray industry = new JSONArray();
+			for (int i = 0; i < industryListId.size(); i++) {
+				JSONObject obj = new JSONObject();
+				obj.put("id", industryListId.get(i));
+				obj.put("tagName", industryListName.get(i));
+				industry.add(obj);
+			}
+			res.put("company", company);
+			res.put("industry", industry);
+			res.put("banner", Convert.convertImgString(company.getBannerImgs(), url));// 公司访问图片
+		} catch (Exception e) {
+			e.printStackTrace();
+			return HttpResult.fail("查询失败");
+		}
+		return HttpResult.success("查询成功", res);
+	}
 }

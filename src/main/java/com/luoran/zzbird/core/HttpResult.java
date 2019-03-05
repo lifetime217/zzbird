@@ -70,6 +70,14 @@ public class HttpResult implements Serializable {
 	public static final HttpResult fail(Integer code, String msg) {
 		return fail(code, msg, null);
 	}
+	
+	public static final HttpResult fail(String msg, Object data) {
+		HttpResult obj = new HttpResult();
+		obj.setMsg(msg);
+		obj.setStatusCode(500);
+		obj.setData(data);
+		return obj;
+	}
 
 	public static final HttpResult fail(Integer code, String msg, Object data) {
 		HttpResult obj = new HttpResult();

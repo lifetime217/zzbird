@@ -9,4 +9,5 @@ import com.luoran.zzbird.entity.biz.TXcxUser;
  */
 public interface ITXcxUserService extends IBaseService<TXcxUser>{
 	
+	
 }
