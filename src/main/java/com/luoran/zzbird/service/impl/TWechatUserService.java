@@ -93,4 +93,16 @@ public class TWechatUserService extends AbstractBaseService<TWechatUser> impleme
 		return str.toString();
 	}
 
+	@Override
+	public TWechatUser queryGzhUserByOpenId(String openId) {
+		// TODO Auto-generated method stub
+		return dao.queryGzhUserByOpenId(openId);
+	}
+
+	@Override
+	public List<TWechatUser> queryGzhUserByNickName(String nickName) {
+		// TODO Auto-generated method stub
+		return dao.queryGzhUserByNickName(nickName);
+	}
+
 }

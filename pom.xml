@@ -101,7 +101,7 @@
 			<artifactId>wechat</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
-      		<systemPath>D:\common-git\wechat-facade\wechat\target\wechat-0.0.1.jar</systemPath>
+      		<systemPath>E:\eclipse_workspace\wechat-facade\wechat\target\wechat-0.0.1.jar</systemPath>
 		</dependency>
 	</dependencies>
 
