@@ -59,7 +59,7 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 		}
 		executorService.execute(new Runnable() {
 			public void run() {
-				TWechatUser user = null;
+				TWechatUser user = wechatService.get;
 				if (user == null) {
 					return;
 				}
@@ -187,7 +187,39 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 
 	@Override
 	public void notifyAddXcxUser(String xcxOpenId) {
-		
+		if (StringUtils.isEmpty(xcxOpenId)) {
+			return;
+		}
+		executorService.execute(new Runnable() {
+			public void run() {
+				TXcxUser user = null;
+				if (user == null) {
+					return;
+				}
+				String imgUrl = user.getAvatarUrl();
+				BufferedImage wxImgObj = getImgObject(imgUrl);
+				if (wxImgObj == null) {
+					return;
+				}
+				List<TWechatUser> likeList = findLikeUser(user);
+				float maxLikeVal = 0F;
+				String maxWechatOpenId = null;
+				for (TWechatUser oUser : likeList) {
+					BufferedImage uimg = getImgObject(oUser.getHeadimgUrl());
+					float likeVal = getImageLikeVal(wxImgObj, uimg);
+					if (likeVal > 90) {
+						if (likeVal > maxLikeVal) {
+							maxWechatOpenId = oUser.getOpenId();
+							maxLikeVal = likeVal;
+						}
+					}
+				}
+
+				if (!StringUtils.isEmpty(maxWechatOpenId)) {
+					relation(xcxOpenId, maxWechatOpenId);
+				}
+			}
+		});
 	}
 
 }
