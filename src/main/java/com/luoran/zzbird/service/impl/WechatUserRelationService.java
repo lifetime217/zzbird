@@ -59,7 +59,7 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 		}
 		executorService.execute(new Runnable() {
 			public void run() {
-				TWechatUser user = wechatService.get;
+				TWechatUser user = wechatService.queryGzhUserByOpenId(wxOpenId);
 				if (user == null) {
 					return;
 				}
@@ -75,6 +75,7 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 					BufferedImage uimg = getImgObject(oUser.getAvatarUrl());
 					float likeVal = getImageLikeVal(wxImgObj, uimg);
 					if (likeVal > 90) {
+						// 如果相似度高于90%，则认为是同一个用户。如果存在多个，则取相似度最高的那个
 						if (likeVal > maxLikeVal) {
 							maxXcxOpenId = oUser.getOpenId();
 							maxLikeVal = likeVal;
@@ -170,8 +171,7 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 	 * @return
 	 */
 	protected List<TWechatUser> findLikeUser(TXcxUser user) {
-
-		return null;
+		return wechatService.queryGzhUserByNickName(user.getNickName());
 	}
 
 	/**
@@ -181,8 +181,7 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 	 * @return
 	 */
 	protected List<TXcxUser> findLikeUser(TWechatUser user) {
-
-		return null;
+		return xcxService.queryXcxUserByNickName(user.getNickName());
 	}
 
 	@Override
@@ -192,7 +191,7 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 		}
 		executorService.execute(new Runnable() {
 			public void run() {
-				TXcxUser user = null;
+				TXcxUser user = xcxService.queryXcxUserByOpenId(xcxOpenId);
 				if (user == null) {
 					return;
 				}
@@ -208,6 +207,7 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 					BufferedImage uimg = getImgObject(oUser.getHeadimgUrl());
 					float likeVal = getImageLikeVal(wxImgObj, uimg);
 					if (likeVal > 90) {
+						// 如果相似度高于90%，则认为是同一个用户。如果存在多个，则取相似度最高的那个
 						if (likeVal > maxLikeVal) {
 							maxWechatOpenId = oUser.getOpenId();
 							maxLikeVal = likeVal;
