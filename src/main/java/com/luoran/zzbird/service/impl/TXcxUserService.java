@@ -11,22 +11,23 @@ import com.luoran.zzbird.service.ITXcxUserService;
 
 
 /**
- * @author lifetime
+ * @author wsl
  *
  */
 @Service
 public class TXcxUserService extends AbstractBaseService<TXcxUser> implements ITXcxUserService{
 	@Autowired
-	private ITXcxUserDao dao;
+	private ITXcxUserDao userDao;
 
 	@Override
 	public BaseDao<TXcxUser> getDao() {
-		return dao;
+		return userDao;
 	}
 	
 	@Override
 	public String add(TXcxUser t) {
 		return super.add(t);
 	}
+
 
 }

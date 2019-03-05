@@ -12,6 +12,7 @@ import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.dao.ITCompanyDao;
 import com.luoran.zzbird.entity.biz.TCompany;
+import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.entity.vo.CompanyDetailVo;
 import com.luoran.zzbird.service.ITCompanyService;
 import com.luoran.zzbird.service.ITXcxUserRoleService;
@@ -58,6 +59,13 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 	@Override
 	public List<TCompany> queryPointUser(String url) {
 		List<TCompany> pointUser = companyDao.queryPointUser();
+//		JSONArray array = new JSONArray();
+//		for (TCompany tCompany : pointUser) {
+//			JSONObject obj = new JSONObject();
+//			obj.putAll(tCompany.values());
+//			obj.put("aaa", tCompany.get("aaa"));
+//			array.add(obj);
+//		}
 		// 拼接url数据
 		for (int i = 0; i < pointUser.size(); i++) {
 			String companyImg = pointUser.get(i).getBannerImgs();
@@ -88,8 +96,17 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		res.put("bannerList", Convert.convertImgList(companyDetail.getBannerImgs(), url));
 		res.put("industry", Arrays.asList(companyDetail.getIndustryListName().split(",")));
 		res.put("companyDetail", companyDetail);
-		res.put("companyTeacher", xcxUserRoleService.queryCompanyUser(20, companyId));
 		return res;
+	}
+
+	/**
+	 * 
+	 * @Author wsl @Title: queryCompanyTeacher @Description: TODO
+	 * 查询公司的老师 @param: @param companyId @param: @return @return:
+	 * List<TXcxUserRole> @throws
+	 */
+	public List<TXcxUserRole> queryCompanyTeacher(String companyId) {
+		return xcxUserRoleService.queryCompanyUser(20, companyId);
 	}
 
 }
