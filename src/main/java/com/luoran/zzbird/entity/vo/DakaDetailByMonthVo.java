@@ -3,7 +3,7 @@ package com.luoran.zzbird.entity.vo;
 import java.sql.Date;
 
 public class DakaDetailByMonthVo {
-	private Date monthDate;
+	private String monthDate;
 	private String statDate;
 	private String endDate;
 	//private List<>
@@ -11,10 +11,10 @@ public class DakaDetailByMonthVo {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Date getMonthDate() {
+	public String getMonthDate() {
 		return monthDate;
 	}
-	public void setMonthDate(Date monthDate) {
+	public void setMonthDate(String monthDate) {
 		this.monthDate = monthDate;
 	}
 	public String getStatDate() {
@@ -33,5 +33,6 @@ public class DakaDetailByMonthVo {
 	public String toString() {
 		return "DakaDetailByMonthVo [monthDate=" + monthDate + ", statDate=" + statDate + ", endDate=" + endDate + "]";
 	}
+	
 	
 }
