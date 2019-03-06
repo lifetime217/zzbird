@@ -20,7 +20,7 @@ public class Convert {
 			imgs[j] = url + "/" + imgs[j];
 			imgBuffer.append(imgs[j] + ",");
 		}
-		return imgBuffer.toString();
+		return imgBuffer.replace(imgBuffer.length() - 1, imgBuffer.length(), "").toString();
 	}
 
 	/**

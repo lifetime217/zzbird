@@ -85,6 +85,7 @@ queryCompanyDetail
 	t_company.look_count,
 	t_company.share_count,
 	t_company.love_count,
+	t_company.industry_list_id,
 	t_company.industry_list_name,
 	t_company.banner_imgs,
 	t_company.teacher_count,

@@ -44,18 +44,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		return super.add(t);
 	}
 
-	/**
-	 * 查询公司重点用户
-	 * <p>
-	 * Title: queryPointUser
-	 * </p>
-	 * <p>
-	 * Description:
-	 * </p>
-	 * 
-	 * @return
-	 * @see com.luoran.zzbird.service.ITCompanyService#queryPointUser()
-	 */
+	
 	@Override
 	public List<TCompany> queryPointUser(String url) {
 		List<TCompany> pointUser = companyDao.queryPointUser();
@@ -74,37 +63,13 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		return pointUser;
 	}
 
-	/**
-	 * 查询公司的详情
-	 * <p>
-	 * Title: queryCompanyDetail
-	 * </p>
-	 * <p>
-	 * Description:
-	 * </p>
-	 * 
-	 * @return
-	 * @see com.luoran.zzbird.service.ITCompanyService#queryCompanyDetail()
-	 */
+	
 	@Override
-	public JSONObject queryCompanyDetail(String companyId) {
-		JSONObject res = new JSONObject();
-		// 拿到图片的访问地址
-		String url = env.getProperty("file.path.url");
-		TCompany companyDetail = companyDao.queryCompanyDetail(companyId);
-		// 拼接图片转换成list
-		res.put("bannerList", Convert.convertImgList(companyDetail.getBannerImgs(), url));
-		res.put("industry", Arrays.asList(companyDetail.getIndustryListName().split(",")));
-		res.put("companyDetail", companyDetail);
-		return res;
+	public TCompany queryCompanyDetail(String companyId) {
+		return companyDao.queryCompanyDetail(companyId);
 	}
 
-	/**
-	 * 
-	 * @Author wsl @Title: queryCompanyTeacher @Description: TODO
-	 * 查询公司的老师 @param: @param companyId @param: @return @return:
-	 * List<TXcxUserRole> @throws
-	 */
+	
 	public List<TXcxUserRole> queryCompanyTeacher(String companyId) {
 		return xcxUserRoleService.queryCompanyUser(20, companyId);
 	}

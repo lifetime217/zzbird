@@ -11,22 +11,27 @@ import com.luoran.zzbird.service.ITCompanyCourseService;
 
 
 /**
- * @author lifetime
+ * @author wsl
  *
  */
 @Service
 public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> implements ITCompanyCourseService{
 	@Autowired
-	private ITCompanyCourseDao dao;
+	private ITCompanyCourseDao courseDao;
 
 	@Override
 	public BaseDao<TCompanyCourse> getDao() {
-		return dao;
+		return courseDao;
 	}
 	
 	@Override
 	public String add(TCompanyCourse t) {
 		return super.add(t);
+	}
+
+	@Override
+	public TCompanyCourse queryCourseDetail(String courseId) {
+		return courseDao.queryCourseDetail(courseId);
 	}
 
 }
