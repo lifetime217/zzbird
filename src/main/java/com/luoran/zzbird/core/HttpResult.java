@@ -15,6 +15,43 @@ public class HttpResult implements Serializable {
 	private Integer statusCode;
 	private Object data;
 	private String msg;
+	private Long page;
+	private Long pageSize;
+	private Long totalRow;
+	private Long totalPage;
+
+	
+	public Long getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Long pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public Long getTotalPage() {
+		return totalPage;
+	}
+
+	public void setTotalPage(Long totalPage) {
+		this.totalPage = totalPage;
+	}
+
+	public Long getPage() {
+		return page;
+	}
+
+	public void setPage(Long page) {
+		this.page = page;
+	}
+
+	public Long getTotalRow() {
+		return totalRow;
+	}
+
+	public void setTotalRow(Long totalRow) {
+		this.totalRow = totalRow;
+	}
 
 	public Integer getStatusCode() {
 		return statusCode;

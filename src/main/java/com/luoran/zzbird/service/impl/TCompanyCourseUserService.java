@@ -1,5 +1,9 @@
 package com.luoran.zzbird.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,31 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 	@Override
 	public String add(TCompanyCourseUser t) {
 		return super.add(t);
+	}
+
+	@Override
+	public PageQuery<TCompanyCourseUser> getComStudentByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
+		dao.queryComStudentByBoosRole(pageQuery);
+		return pageQuery;
+	}
+
+	@Override
+	public List<TCompanyCourseUser> getCourseByStuRoleId(Map<String, String> map) {
+		List<TCompanyCourseUser> list = dao.queryCourseByStuRoleId(map);
+		return list;
+	}
+	
+	
+	@Override
+	public PageQuery<TCompanyCourseUser> getComTeacherByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
+		dao.queryComTeacherByBoosRole(pageQuery);
+		return pageQuery;
+	}
+
+	@Override
+	public List<TCompanyCourseUser> getCourseByTeaRoleId(Map<String, String> map) {
+		List<TCompanyCourseUser> list = dao.queryCourseByTeaRoleId(map);
+		return list;
 	}
 
 }

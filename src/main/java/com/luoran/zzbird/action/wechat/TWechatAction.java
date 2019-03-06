@@ -1,9 +1,5 @@
 package com.luoran.zzbird.action.wechat;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,10 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.luoran.wechat.facade.GzhFacade;
 import com.luoran.zzbird.service.ITWechatUserService;
 import com.luoran.zzbird.wxfwhUtils.GzhUtils;
-
+/**
+ * 
+ * @author tzx
+ *
+ */
 @RestController
 @RequestMapping("wechat")
 public class TWechatAction {
@@ -27,7 +26,11 @@ public class TWechatAction {
 	@Autowired
 	private ITWechatUserService iTWechatUserService;
 	private String TOKEN = "luoran";
-
+	/**
+	 *  用于注册微信公众号服务器
+	 * @param params
+	 * @return echostr 成功返回
+	 */
 	@GetMapping("auth")
 	public Long auth(@RequestParam Map<String, String> params) {
 		String signature = params.get("signature");
@@ -46,7 +49,12 @@ public class TWechatAction {
 			return 0L;
 		}
 	}
-	
+	/**
+	 * 用于接收微信公众号发来的消息和注册于取消关注
+	 * @param params
+	 * @param req
+	 * @param rpe
+	 */
 	@PostMapping("auth")
 	public void auth2(@RequestParam Map<String, String> params,HttpServletRequest req,HttpServletResponse rpe) {
 		try {

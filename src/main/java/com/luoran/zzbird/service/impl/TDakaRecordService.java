@@ -34,17 +34,32 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 		return super.add(t);
 	}
 
+	@Override
+	public List<TDakaRecord> getPunchMonth(Map<String, String> map) {
+		List<TDakaRecord> queryPunchMonth = dao.queryPunchMonth(map);
+		return queryPunchMonth;
+	}
 
 	@Override
-	public PageQuery<DakaDetailByMonthVo> getPunchList(Map<String, String> map) {
-		PageQuery<DakaDetailByMonthVo> pageQuery = new PageQuery<DakaDetailByMonthVo>();
-		pageQuery.setPageSize(10);
-		pageQuery.setPageNumber(Integer.valueOf(map.get("page")));
-		pageQuery.setParas(map);
-		dao.queryDatePage(pageQuery);
-		
-		return pageQuery;
+	public List<TDakaRecord> getPunchList(Map<String, String> map) {
+		List<TDakaRecord> queryPunchList = dao.queryPunchList(map);
+		return queryPunchList;
 	}
+
+	@Override
+	public List<TDakaRecord> getPunchCourseList(Map<String, String> map) {
+		List<TDakaRecord> queryPunchCourseList = dao.queryPunchCourseList(map);
+		return queryPunchCourseList;
+	}
+
+	@Override
+	public List<TDakaRecord> getPunchListByCourse(Map<String, String> map) {
+		List<TDakaRecord> queryPunchListByCourse = dao.queryPunchListByCourse(map);
+		return queryPunchListByCourse;
+	}
+
+
+	
 	
 
 }
