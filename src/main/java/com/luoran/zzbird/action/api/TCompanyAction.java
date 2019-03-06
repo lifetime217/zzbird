@@ -162,7 +162,12 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	public HttpResult queryCompanyDetail(@RequestParam(value = "companyId") String companyId) {
 		JSONObject res = new JSONObject();
 		try {
-			res = companyService.queryCompanyDetail(companyId);
+			String url = env.getProperty("file.path.url");
+			TCompany companyDetail = companyService.queryCompanyDetail(companyId);
+			// 拼接图片转换成list
+			res.put("bannerList", Convert.convertImgList(companyDetail.getBannerImgs(), url));
+			res.put("industry", Arrays.asList(companyDetail.getIndustryListName().split(",")));
+			res.put("companyDetail", companyDetail);
 			// 查询老师的数组
 			List<TXcxUserRole> queryCompanyTeacher = companyService.queryCompanyTeacher(companyId);
 			res.put("companyTeacher", queryCompanyTeacher);
@@ -184,9 +189,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	public HttpResult queryCompanyDetailByCompanyId(@PathVariable(value = "companyId") String companyId) {
 		JSONObject res = new JSONObject();
 		try {
-			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url");
-			TCompany company = companyService.get(companyId);
+			TCompany company = companyService.queryCompanyDetail(companyId);
 			List<String> industryListId = Arrays.asList(company.getIndustryListId().split(",")); // 标签的id
 			List<String> industryListName = Arrays.asList(company.getIndustryListName().split(","));// 标签的name
 			// 拼接标签的集合
@@ -199,11 +202,44 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			}
 			res.put("company", company);
 			res.put("industry", industry);
-			res.put("banner", Convert.convertImgString(company.getBannerImgs(), url));// 公司访问图片
+			// 拿到图片的访问地址
+			String url = env.getProperty("file.path.url");
+			List<String> bannerImgsUrl = Arrays
+					.asList(Convert.convertImgString(company.getBannerImgs(), url).split(","));
+			List<String> bannerImgsName = Arrays.asList(company.getBannerImgs().split(","));
+			// 拼接图片的集合
+			JSONArray bannerList = new JSONArray();
+			for (int i = 0; i < bannerImgsUrl.size(); i++) {
+				JSONObject obj = new JSONObject();
+				obj.put("url", bannerImgsUrl.get(i));
+				obj.put("name", bannerImgsName.get(i));
+				bannerList.add(obj);
+			}
+			res.put("banner", bannerList);// banner图片集合
+			res.put("bannerImgsName", bannerImgsName);// banner图片名称
 		} catch (Exception e) {
 			e.printStackTrace();
 			return HttpResult.fail("查询失败");
 		}
 		return HttpResult.success("查询成功", res);
+	}
+
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: TODO 修改企业
+	 */
+	@RequestMapping("/updateCompany")
+	@ResponseBody()
+	public HttpResult updateCompany(TCompany company) {
+		JSONObject res = new JSONObject();
+		try {
+			companyService.save(company);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return HttpResult.fail("修改失败");
+		}
+		return HttpResult.success("修改成功", res);
+
 	}
 }

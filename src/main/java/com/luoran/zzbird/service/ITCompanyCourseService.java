@@ -4,9 +4,15 @@ import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 
 /**
- * @author lifetime
+ * @author wsl
  *
  */
-public interface ITCompanyCourseService extends IBaseService<TCompanyCourse>{
-	
+public interface ITCompanyCourseService extends IBaseService<TCompanyCourse> {
+
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: TODO 根据课程id查询课程的详情
+	 */
+	TCompanyCourse queryCourseDetail(String courseId);
 }
