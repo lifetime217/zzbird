@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luoran.zzbird.core.HttpResult;
+import com.luoran.zzbird.core.UserContext;
+import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
@@ -50,6 +52,9 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 	public HttpResult getCompanyUser(@RequestParam Map<String, String> params) {
 		HttpResult hr = new HttpResult();
 		JSONArray data = new JSONArray();
+		UserContextInfo userContextInfo = UserContext.get();
+		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
+		params.put("roleId", xcxUserRoleId.toString());
 		if (StringUtils.isEmpty(params.get("roleId"))) {
 			hr.setMsg("roleId未传入");
 			hr.setStatusCode(100);
