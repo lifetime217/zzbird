@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ import com.luoran.zzbird.utils.ShortUuid;
  *
  */
 @Controller
-@RequestMapping("companycourse")
+@RequestMapping("api/companycourse")
 public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 
 	private final static Logger log = LoggerFactory.getLogger(TCompanyCourseAction.class);
@@ -87,14 +89,14 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	 */
 	@RequestMapping(value = "/queryCourseDetailByCourseId/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
-	public HttpResult queryCourseDetailByCourseId(@PathVariable(value = "courseId") String courseId) {
+	public HttpResult queryCourseDetailByCourseId(@PathVariable(value = "courseId") String courseId,HttpServletRequest req) {
 		JSONObject res = new JSONObject();
 		try {
 			TCompanyCourse course = courseService.get(courseId);
 
 			res.put("course", course);
 			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url");
+			String url = env.getProperty("file.path.url")+ req.getContextPath() + "/upload";
 			List<String> courseImgsUrl = Arrays.asList(Convert.convertImgString(course.getCourseImg(), url).split(","));
 			List<String> courseImgsName = Arrays.asList(course.getCourseImg().split(","));
 			// 拼接图片的集合
@@ -142,14 +144,14 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	 */
 	@RequestMapping(value = "/queryCourseAndCompany/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
-	public HttpResult queryCourseAndCompany(@PathVariable(value = "courseId") String courseId) {
+	public HttpResult queryCourseAndCompany(@PathVariable(value = "courseId") String courseId,HttpServletRequest req) {
 		JSONObject res = new JSONObject();
 		try {
 			TCompanyCourse course = courseService.queryCourseDetail(courseId);
 			res.put("companyName", course.get("companyName"));
 			res.put("course", course);
 			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url");
+			String url = env.getProperty("file.path.url")+ req.getContextPath() + "/upload";
 			List<String> courseImgsUrl = Arrays.asList(Convert.convertImgString(course.getCourseImg(), url).split(","));
 			List<String> courseImgsName = Arrays.asList(course.getCourseImg().split(","));
 			// 拼接图片的集合

@@ -14,7 +14,7 @@ import com.luoran.zzbird.service.ITWechatUserService;
  *
  */
 @Controller
-@RequestMapping("wechatuser")
+@RequestMapping("api/wechatuser")
 public class TWechatUserAction  implements BaseAction<TWechatUser> {
 
 	@Autowired

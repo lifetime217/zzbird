@@ -11,5 +11,16 @@ import com.luoran.zzbird.entity.biz.TXcxUserRole;
  */
 public interface ITXcxUserRoleService extends IBaseService<TXcxUserRole> {
 
-	List<TXcxUserRole> queryCompanyUser(Integer roleVal,String companyId);
+	/**
+	 * @author wsl
+	 * @Description: 根据传入的角色参数来查询公司的用户和老师
+	 */
+	List<TXcxUserRole> queryCompanyUser(Integer roleVal, String companyId);
+
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: TODO 修改正在使用的角色为0
+	 */
+	boolean updateCurrentActiveByZero(String xcxUserId);
 }

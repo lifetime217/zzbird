@@ -30,7 +30,7 @@ import com.luoran.zzbird.service.ITDakaRecordService;
  */
 
 @Controller
-@RequestMapping("dakarecord")
+@RequestMapping("api/dakarecord")
 public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 
 	@Autowired

@@ -32,4 +32,6 @@ public interface ITXcxUserService extends IBaseService<TXcxUser>{
 	 * @Description: TODO 根据sessionkey查询用户是否是新老用户
 	 */
 	List<UserRoleVo> queryNewOrOldUser(String sessionKey);
+	
+
 }

@@ -14,7 +14,7 @@ import com.luoran.zzbird.service.ITXcxUserRoleService;
  *
  */
 @Controller
-@RequestMapping("xcxuserrole")
+@RequestMapping("api/xcxuserrole")
 public class TXcxUserRoleAction  implements BaseAction<TXcxUserRole> {
 
 	@Autowired

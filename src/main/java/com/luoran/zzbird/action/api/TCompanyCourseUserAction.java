@@ -27,7 +27,7 @@ import com.luoran.zzbird.service.ITCompanyCourseUserService;
  *
  */
 @Controller
-@RequestMapping("companycourseuser")
+@RequestMapping("api/companycourseuser")
 public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> {
 
 	@Autowired

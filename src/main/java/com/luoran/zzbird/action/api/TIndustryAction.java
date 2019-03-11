@@ -19,7 +19,7 @@ import com.luoran.zzbird.service.ITIndustryService;
  *
  */
 @Controller
-@RequestMapping("industry")
+@RequestMapping("api/industry")
 public class TIndustryAction implements BaseAction<TIndustry> {
 
 	@Autowired

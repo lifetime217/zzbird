@@ -17,4 +17,11 @@ public interface ITXcxUserRoleDao extends BaseDao<TXcxUserRole> {
 	public void queryPage(PageQuery<TXcxUserRole> pageQuery);
 
 	List<TXcxUserRole> queryCompanyUser(@Param("roleVal") Integer roleVal,@Param("companyId")String companyId);
+	
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: TODO 修改正在使用的角色为0
+	 */
+	Integer updateCurrentActiveByZero(@Param("xcxUserId")String xcxUserId);
 }

@@ -22,20 +22,28 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.luoran.zzbird.core.XcxSessionInterceptor;
 
 /**
  * @author lifetime
  *
  */
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer{
 
 	@Autowired
 	Environment env;
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new XcxSessionInterceptor()).addPathPatterns("/api/**");
+	}
 
 	@Bean
 	public HttpMessageConverters fastJsonConfigure() {

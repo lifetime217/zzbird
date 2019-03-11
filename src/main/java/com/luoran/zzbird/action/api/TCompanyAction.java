@@ -8,12 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +34,11 @@ import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
+import com.luoran.zzbird.entity.biz.TXcxUser;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.service.ITCompanyService;
+import com.luoran.zzbird.service.ITXcxUserRoleService;
+import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.GeohashUtil;
 import com.luoran.zzbird.utils.ShortUuid;
@@ -40,13 +48,19 @@ import com.luoran.zzbird.utils.ShortUuid;
  *
  */
 @Controller
-@RequestMapping("company")
+@RequestMapping("api/company")
 public class TCompanyAction implements BaseAction<TCompany> {
 
 	private final static Logger log = LoggerFactory.getLogger(TCompanyAction.class);
 
 	@Autowired
 	private ITCompanyService companyService;
+
+	@Autowired
+	private ITXcxUserRoleService xcxUserRoleService;
+
+	@Autowired
+	private ITXcxUserService xcxUserService;
 
 	@Autowired
 	Environment env;
@@ -72,12 +86,12 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	public HttpResult queryCompanyPage(@RequestParam(value = "search") String search,
 			@RequestParam(value = "page") String page,
 			@RequestParam(value = "latitude", required = false, defaultValue = "0.0d") double latitude,
-			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude) {
+			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude,HttpServletRequest req) {
 		JSONObject res = new JSONObject();
 		// TODO 定位查询
 		try {
 			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url");
+			String url = env.getProperty("file.path.url")+ req.getContextPath() + "/upload";
 			// 查询重点客户
 			List<TCompany> pointUser = companyService.queryPointUser(url);
 			res.put("pointUser", pointUser);
@@ -133,9 +147,11 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping("/addCompany")
 	@ResponseBody()
+	@Transactional
 	public HttpResult addCompany(TCompany company) {
 		JSONObject res = new JSONObject();
 		try {
+			// 添加公司表
 			company.set("addTime", new Date());
 			company.set("lookCount", 0);
 			company.set("shareCount", 0);
@@ -148,9 +164,32 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			company.set("sign", ShortUuid.generateShortUuid());
 			String companyId = companyService.add(company);
 			res.put("companyId", companyId);
+
+			UserContextInfo user = UserContext.get();
+			// 根据openid查询出用户的信息
+			TXcxUser xcxUser = xcxUserService.queryXcxUserByOpenId(user.getOpenid());
+
+			// 修改用户上次登录的为0
+			xcxUserRoleService.updateCurrentActiveByZero(xcxUser.getId());
+
+			// 默认微信的头像和名字
+			TXcxUserRole tXcxUserRole = new TXcxUserRole();
+			tXcxUserRole.setCompanyId(companyId);
+			tXcxUserRole.setRoleVal(10);
+			tXcxUserRole.setRoleName(xcxUser.getNickName());
+			tXcxUserRole.setRoleHeadimg(xcxUser.getAvatarUrl());
+			tXcxUserRole.setXcxUserId(xcxUser.getId());
+			tXcxUserRole.setCurrentActive(1);
+			tXcxUserRole.setSign(ShortUuid.generateShortUuid());
+			tXcxUserRole.setIsdelete(0);
+			// 添加角色用户表
+			xcxUserRoleService.add(tXcxUserRole);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			// 回滚
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return HttpResult.fail("新增失败");
 		}
 		return HttpResult.success("新增成功", res);
@@ -175,10 +214,10 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping("/queryCompanyDetail")
 	@ResponseBody()
-	public HttpResult queryCompanyDetail(@RequestParam(value = "companyId") String companyId) {
+	public HttpResult queryCompanyDetail(@RequestParam(value = "companyId") String companyId,HttpServletRequest req) {
 		JSONObject res = new JSONObject();
 		try {
-			String url = env.getProperty("file.path.url");
+			String url = env.getProperty("file.path.url")+ req.getContextPath() + "/upload";
 			TCompany companyDetail = companyService.queryCompanyDetail(companyId);
 			// 拼接图片转换成list
 			res.put("bannerList", Convert.convertImgList(companyDetail.getBannerImgs(), url));
@@ -202,7 +241,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping(value = "/queryCompanyByCompanyId", method = RequestMethod.GET)
 	@ResponseBody()
-	public HttpResult queryCompanyDetailByCompanyId() {
+	public HttpResult queryCompanyDetailByCompanyId(HttpServletRequest req) {
 		JSONObject res = new JSONObject();
 		try {
 			UserContextInfo user = UserContext.get();
@@ -221,7 +260,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			res.put("company", company);
 			res.put("industry", industry);
 			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url");
+			String url = env.getProperty("file.path.url") + req.getContextPath() + "/upload";
 			List<String> bannerImgsUrl = Arrays
 					.asList(Convert.convertImgString(company.getBannerImgs(), url).split(","));
 			List<String> bannerImgsName = Arrays.asList(company.getBannerImgs().split(","));
@@ -255,6 +294,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			UserContextInfo user = UserContext.get();
 			company.setId(user.getCompanyId());
 			companyService.save(company);
+			res.put("companyId", user.getCompanyId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return HttpResult.fail("修改失败");
