@@ -86,12 +86,12 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	public HttpResult queryCompanyPage(@RequestParam(value = "search") String search,
 			@RequestParam(value = "page") String page,
 			@RequestParam(value = "latitude", required = false, defaultValue = "0.0d") double latitude,
-			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude,HttpServletRequest req) {
+			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude) {
 		JSONObject res = new JSONObject();
 		// TODO 定位查询
 		try {
 			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url")+ req.getContextPath() + "/upload";
+			String url = env.getProperty("file.path.url");
 			// 查询重点客户
 			List<TCompany> pointUser = companyService.queryPointUser(url);
 			res.put("pointUser", pointUser);
@@ -214,10 +214,10 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping("/queryCompanyDetail")
 	@ResponseBody()
-	public HttpResult queryCompanyDetail(@RequestParam(value = "companyId") String companyId,HttpServletRequest req) {
+	public HttpResult queryCompanyDetail(@RequestParam(value = "companyId") String companyId) {
 		JSONObject res = new JSONObject();
 		try {
-			String url = env.getProperty("file.path.url")+ req.getContextPath() + "/upload";
+			String url = env.getProperty("file.path.url");
 			TCompany companyDetail = companyService.queryCompanyDetail(companyId);
 			// 拼接图片转换成list
 			res.put("bannerList", Convert.convertImgList(companyDetail.getBannerImgs(), url));
@@ -241,7 +241,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping(value = "/queryCompanyByCompanyId", method = RequestMethod.GET)
 	@ResponseBody()
-	public HttpResult queryCompanyDetailByCompanyId(HttpServletRequest req) {
+	public HttpResult queryCompanyDetailByCompanyId() {
 		JSONObject res = new JSONObject();
 		try {
 			UserContextInfo user = UserContext.get();
@@ -260,7 +260,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			res.put("company", company);
 			res.put("industry", industry);
 			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url") + req.getContextPath() + "/upload";
+			String url = env.getProperty("file.path.url");
 			List<String> bannerImgsUrl = Arrays
 					.asList(Convert.convertImgString(company.getBannerImgs(), url).split(","));
 			List<String> bannerImgsName = Arrays.asList(company.getBannerImgs().split(","));

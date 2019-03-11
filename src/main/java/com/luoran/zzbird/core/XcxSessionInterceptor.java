@@ -35,10 +35,6 @@ public class XcxSessionInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
 		UserContext.clear();
 		String sessionKey = req.getParameter(XcxSessionKey);
-		// 如果是请求code的就放行
-		if ("loginCode".equals(sessionKey)) {
-			return true;
-		}
 		if (StringUtils.isEmpty(sessionKey) || !SessionManager.isValid(sessionKey)) {
 			try {
 				log.info("身份不合法");

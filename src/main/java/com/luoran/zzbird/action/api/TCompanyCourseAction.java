@@ -89,14 +89,14 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	 */
 	@RequestMapping(value = "/queryCourseDetailByCourseId/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
-	public HttpResult queryCourseDetailByCourseId(@PathVariable(value = "courseId") String courseId,HttpServletRequest req) {
+	public HttpResult queryCourseDetailByCourseId(@PathVariable(value = "courseId") String courseId) {
 		JSONObject res = new JSONObject();
 		try {
 			TCompanyCourse course = courseService.get(courseId);
 
 			res.put("course", course);
 			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url")+ req.getContextPath() + "/upload";
+			String url = env.getProperty("file.path.url");
 			List<String> courseImgsUrl = Arrays.asList(Convert.convertImgString(course.getCourseImg(), url).split(","));
 			List<String> courseImgsName = Arrays.asList(course.getCourseImg().split(","));
 			// 拼接图片的集合
@@ -144,14 +144,14 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	 */
 	@RequestMapping(value = "/queryCourseAndCompany/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
-	public HttpResult queryCourseAndCompany(@PathVariable(value = "courseId") String courseId,HttpServletRequest req) {
+	public HttpResult queryCourseAndCompany(@PathVariable(value = "courseId") String courseId) {
 		JSONObject res = new JSONObject();
 		try {
 			TCompanyCourse course = courseService.queryCourseDetail(courseId);
 			res.put("companyName", course.get("companyName"));
 			res.put("course", course);
 			// 拿到图片的访问地址
-			String url = env.getProperty("file.path.url")+ req.getContextPath() + "/upload";
+			String url = env.getProperty("file.path.url");
 			List<String> courseImgsUrl = Arrays.asList(Convert.convertImgString(course.getCourseImg(), url).split(","));
 			List<String> courseImgsName = Arrays.asList(course.getCourseImg().split(","));
 			// 拼接图片的集合
