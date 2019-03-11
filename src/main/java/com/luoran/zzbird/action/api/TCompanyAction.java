@@ -74,7 +74,6 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			@RequestParam(value = "latitude", required = false, defaultValue = "0.0d") double latitude,
 			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude) {
 		JSONObject res = new JSONObject();
-		UserContextInfo userContextInfo = UserContext.get();
 		// TODO 定位查询
 		try {
 			// 拿到图片的访问地址
@@ -100,7 +99,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 				queryParams.put("geohashList", geohashList);
 			}
 
-			//分页查询
+			// 分页查询
 			PageQuery<TCompany> pageQuery = new PageQuery<TCompany>();
 			pageQuery.setPageNumber(StringUtils.isEmpty(page) ? 1 : Integer.parseInt(page));
 			pageQuery.setPageSize(10);
@@ -201,11 +200,13 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 * @Author wsl
 	 * @Description: TODO 根据企业id查询企业的基本信息
 	 */
-	@RequestMapping(value = "/queryCompanyByCompanyId/{companyId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/queryCompanyByCompanyId", method = RequestMethod.GET)
 	@ResponseBody()
-	public HttpResult queryCompanyDetailByCompanyId(@PathVariable(value = "companyId") String companyId) {
+	public HttpResult queryCompanyDetailByCompanyId() {
 		JSONObject res = new JSONObject();
 		try {
+			UserContextInfo user = UserContext.get();
+			String companyId = user.getCompanyId();
 			TCompany company = companyService.queryCompanyDetail(companyId);
 			List<String> industryListId = Arrays.asList(company.getIndustryListId().split(",")); // 标签的id
 			List<String> industryListName = Arrays.asList(company.getIndustryListName().split(","));// 标签的name
@@ -251,6 +252,8 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	public HttpResult updateCompany(TCompany company) {
 		JSONObject res = new JSONObject();
 		try {
+			UserContextInfo user = UserContext.get();
+			company.setId(user.getCompanyId());
 			companyService.save(company);
 		} catch (Exception e) {
 			e.printStackTrace();

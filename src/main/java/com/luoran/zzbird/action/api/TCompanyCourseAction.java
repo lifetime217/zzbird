@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luoran.zzbird.core.HttpResult;
+import com.luoran.zzbird.core.UserContext;
+import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
@@ -66,6 +68,8 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	public HttpResult addCourse(TCompanyCourse course) {
 		JSONObject res = new JSONObject();
 		try {
+			UserContextInfo user = UserContext.get();
+			course.setCompanyId(user.getCompanyId());
 			course.setPersonNumber(0);
 			String courseId = courseService.add(course);
 			res.put("courseId", courseId);
@@ -120,6 +124,8 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	public HttpResult updateCourse(TCompanyCourse course) {
 		JSONObject res = new JSONObject();
 		try {
+			UserContextInfo user = UserContext.get();
+			course.setCompanyId(user.getCompanyId());
 			courseService.save(course);
 		} catch (Exception e) {
 			e.printStackTrace();
