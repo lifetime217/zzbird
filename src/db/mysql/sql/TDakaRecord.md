@@ -13,6 +13,7 @@ where
 	and tdr.daka_time > (select from_unixtime(#statDate#))
 	and tdr.daka_time < (select from_unixtime(#endDate#))
 	GROUP BY monthDate
+	order by monthDate desc
 
 	
 queryPunchList
@@ -36,6 +37,7 @@ and txur.isdelete = 0
 and tdr.student_id = #roleId#
 and tdr.daka_time > (select from_unixtime(#statDate#))
 and tdr.daka_time < (select from_unixtime(#endDate#))
+order by tdr.daka_time desc
 
 
 queryPunchCourseList
@@ -68,3 +70,4 @@ WHERE tdr.isdelete = 0
 and txur.isdelete = 0
 and tdr.student_id = #roleId#
 and tcc.id = #courseId#
+order by tdr.daka_time desc

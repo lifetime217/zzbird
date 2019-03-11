@@ -9,19 +9,24 @@ import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
 
 /**
- * @author lifetime
+ * @author tzx
  *
  */
-public interface ITCompanyCourseUserService extends IBaseService<TCompanyCourseUser>{
+public interface ITCompanyCourseUserService extends IBaseService<TCompanyCourseUser> {
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description: TODO 根据Boos的角色id查询企业下的用户并且分页
+	 */
+	PageQuery<TCompanyCourseUser> getComUserByBoosRole(PageQuery<TCompanyCourseUser> pageQuery);
 
-	PageQuery<TCompanyCourseUser> getComStudentByBoosRole(PageQuery<TCompanyCourseUser> pageQuery);
-
-	List<TCompanyCourseUser> getCourseByStuRoleId(Map<String, String> map);
-
-	PageQuery<TCompanyCourseUser> getComTeacherByBoosRole(PageQuery<TCompanyCourseUser> pageQuery);
-
-	List<TCompanyCourseUser> getCourseByTeaRoleId(Map<String, String> map);
-
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description: TODO 根据用户的角色id查询所有课程
+	 */
+	List<TCompanyCourseUser> getCourseByUserRoleId(Map<String, String> map);
 
 	
+
 }

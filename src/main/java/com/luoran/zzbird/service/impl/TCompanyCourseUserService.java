@@ -34,28 +34,16 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 	}
 
 	@Override
-	public PageQuery<TCompanyCourseUser> getComStudentByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
-		dao.queryComStudentByBoosRole(pageQuery);
+	public PageQuery<TCompanyCourseUser> getComUserByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
+		dao.queryComUserByBoosRole(pageQuery);
 		return pageQuery;
 	}
 
 	@Override
-	public List<TCompanyCourseUser> getCourseByStuRoleId(Map<String, String> map) {
-		List<TCompanyCourseUser> list = dao.queryCourseByStuRoleId(map);
+	public List<TCompanyCourseUser> getCourseByUserRoleId(Map<String, String> map) {
+		List<TCompanyCourseUser> list = dao.queryCourseByUserRoleId(map);
 		return list;
 	}
 	
-	
-	@Override
-	public PageQuery<TCompanyCourseUser> getComTeacherByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
-		dao.queryComTeacherByBoosRole(pageQuery);
-		return pageQuery;
-	}
-
-	@Override
-	public List<TCompanyCourseUser> getCourseByTeaRoleId(Map<String, String> map) {
-		List<TCompanyCourseUser> list = dao.queryCourseByTeaRoleId(map);
-		return list;
-	}
 
 }

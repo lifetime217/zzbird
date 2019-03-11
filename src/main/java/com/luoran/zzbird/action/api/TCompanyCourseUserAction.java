@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.beetl.sql.core.annotatoin.Param;
 import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,11 +42,12 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 	}
 
 	/**
-	 * 企业查课程下的学生
+	 * @author tzx
+	 * @Description: TODO企业查课程下的用户
 	 */
-	@RequestMapping("queryCompanyStudent")
+	@RequestMapping("queryCompanyUser")
 	@ResponseBody()
-	public HttpResult getCompanyStudent(@RequestParam Map<String, String> params) {
+	public HttpResult getCompanyUser(@RequestParam Map<String, String> params) {
 		HttpResult hr = new HttpResult();
 		JSONArray data = new JSONArray();
 		if (StringUtils.isEmpty(params.get("roleId"))) {
@@ -66,103 +66,45 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		pageQuery.setPageNumber(Integer.parseInt(params.get("page")));
 		pageQuery.setPageSize(10);
 		pageQuery.setParas(params);
-		PageQuery<TCompanyCourseUser> stuQueryPage = new PageQuery<TCompanyCourseUser>();
+		PageQuery<TCompanyCourseUser> userQueryPage = new PageQuery<TCompanyCourseUser>();
 		try {
 			// 返回学生的集合
-			stuQueryPage = service.getComStudentByBoosRole(pageQuery);
-			List<TCompanyCourseUser> stulist = stuQueryPage.getList();
+			userQueryPage = service.getComUserByBoosRole(pageQuery);
+			List<TCompanyCourseUser> userlist = userQueryPage.getList();
 			// 循环塞入jsonArr
-			for (TCompanyCourseUser stu : stulist) {
+			for (TCompanyCourseUser user : userlist) {
 				JSONArray jACourseList = new JSONArray();
-				JSONObject jStu = new JSONObject();
+				JSONObject jUser = new JSONObject();
 				Map<String, String> map = new HashMap<String, String>();
-				map.put("roleId", stu.getString("stuRoleid"));
-				jStu.putAll(stu.values());
+				map.put("roleId", user.getString("userRoleid"));
+				jUser.putAll(user.values());
 				// 查出学生对应的课程
-				List<TCompanyCourseUser> courseList = service.getCourseByStuRoleId(map);
+				List<TCompanyCourseUser> courseList = service.getCourseByUserRoleId(map);
 				for (TCompanyCourseUser course : courseList) {
 					// 存入课程集合
 					JSONObject jCourse = new JSONObject();
 					jCourse.putAll(course.values());
 					jACourseList.add(jCourse);
 				}
-				jStu.put("courseList", jACourseList);
-				data.add(jStu);
+				jUser.put("courseList", jACourseList);
+				data.add(jUser);
 			}
 			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
+			hr.setMsg("服务器错误");
+			hr.setStatusCode(500);
+			return hr;
 		}
-		hr.setPageSize(stuQueryPage.getPageSize());
-		hr.setTotalPage(stuQueryPage.getTotalPage());
-		hr.setPage(stuQueryPage.getPageNumber());
-		hr.setTotalRow(stuQueryPage.getTotalRow());
+		//存入分页参数
+		hr.setPageSize(userQueryPage.getPageSize());
+		hr.setTotalPage(userQueryPage.getTotalPage());
+		hr.setPage(userQueryPage.getPageNumber());
+		hr.setTotalRow(userQueryPage.getTotalRow());
 		hr.setData(data);
 		hr.setMsg("查询成功");
 		hr.setStatusCode(200);
 		return hr;
 	}
-	
-	
-	
-	/**
-	 * 企业查课程下的老师
-	 */
-	@RequestMapping("queryCompanyTeacher")
-	@ResponseBody()
-	public HttpResult getCompanyTeacher(@RequestParam Map<String, String> params) {
-		HttpResult hr = new HttpResult();
-		JSONArray data = new JSONArray();
-		if (StringUtils.isEmpty(params.get("roleId"))) {
-			hr.setMsg("roleId未传入");
-			hr.setStatusCode(100);
-			return hr;
-		}
-		if (StringUtils.isEmpty(params.get("page"))) {
-			hr.setMsg("page未传入");
-			hr.setStatusCode(100);
-			return hr;
-		}
-		// 分页查询
-		PageQuery<TCompanyCourseUser> pageQuery = new PageQuery<TCompanyCourseUser>();
-		// 存入分页参数
-		pageQuery.setPageNumber(Integer.parseInt(params.get("page")));
-		pageQuery.setPageSize(10);
-		pageQuery.setParas(params);
-		PageQuery<TCompanyCourseUser> teaQueryPage = new PageQuery<TCompanyCourseUser>();
-		try {
-			// 返回学生的集合
-			teaQueryPage = service.getComTeacherByBoosRole(pageQuery);
-			List<TCompanyCourseUser> tealist = teaQueryPage.getList();
-			// 循环塞入jsonArr
-			for (TCompanyCourseUser tea : tealist) {
-				JSONArray jACourseList = new JSONArray();
-				JSONObject jTea = new JSONObject();
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("roleId", tea.getString("teaRoleid"));
-				jTea.putAll(tea.values());
-				// 查出学生对应的课程
-				List<TCompanyCourseUser> courseList = service.getCourseByTeaRoleId(map);
-				for (TCompanyCourseUser course : courseList) {
-					// 存入课程集合
-					JSONObject jCourse = new JSONObject();
-					jCourse.putAll(course.values());
-					jACourseList.add(jCourse);
-				}
-				jTea.put("courseList", jACourseList);
-				data.add(jTea);
-			}
-			System.out.println();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		hr.setPageSize(teaQueryPage.getPageSize());
-		hr.setTotalPage(teaQueryPage.getTotalPage());
-		hr.setPage(teaQueryPage.getPageNumber());
-		hr.setTotalRow(teaQueryPage.getTotalRow());
-		hr.setData(data);
-		hr.setMsg("查询成功");
-		hr.setStatusCode(200);
-		return hr;
-	}
+
 }
