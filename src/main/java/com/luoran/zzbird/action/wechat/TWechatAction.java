@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.luoran.zzbird.service.ITWechatUserService;
-import com.luoran.zzbird.wxfwhUtils.GzhUtils;
+import com.luoran.zzbird.utils.GzhUtils;
 /**
  * 
  * @author tzx

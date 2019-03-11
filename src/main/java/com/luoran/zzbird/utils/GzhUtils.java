@@ -1,4 +1,4 @@
-package com.luoran.zzbird.wxfwhUtils;
+package com.luoran.zzbird.utils;
 
 import java.io.InputStream;
 import java.io.StringReader;
