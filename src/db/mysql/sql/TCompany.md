@@ -3,21 +3,21 @@ queryPage
 *  公司列表普通用户分页查询sql
 
 	select
-	@pageTag(){
-	id,
-	company_name,
-	company_address, 
-	company_simple_address,
-	telphone,
-	lat,
-	lng,
-	geohash,
-	industry_list_id,
-	industry_list_name,
-	banner_imgs,
-	teacher_count,
-	student_count,
-	sign
+		@pageTag(){
+		id,
+		company_name,
+		company_address, 
+		company_simple_address,
+		telphone,
+		lat,
+		lng,
+		geohash,
+		industry_list_id,
+		industry_list_name,
+		banner_imgs,
+		teacher_count,
+		student_count,
+		sign
 	@}
 	from t_company
 	@where(){
@@ -26,6 +26,10 @@ queryPage
 		@}
 		@if(!isEmpty(search)){
 		 and CONCAT(IFNUll(`company_name`,''),IFNUll(`company_address`,''),IFNUll(`industry_list_name`,'')) LIKE CONCAT('%',#search#,'%')
+		@}
+		@if(!isEmpty(geohashList)){
+		and geohash like CONCAT(#geohashList[0]#,'%') or geohash like CONCAT(#geohashList[1]#,'%') or geohash like CONCAT(#geohashList[2]#,'%') or geohash like CONCAT(#geohashList[3]#,'%') or geohash like CONCAT(#geohashList[4]#,'%') 
+		or geohash like CONCAT(#geohashList[5]#,'%') or geohash like CONCAT(#geohashList[6]#,'%') or geohash like CONCAT(#geohashList[7]#,'%') 
 		@}
 	@}
 	

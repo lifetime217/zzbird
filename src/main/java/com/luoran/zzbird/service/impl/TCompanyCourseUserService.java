@@ -11,6 +11,7 @@ import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.dao.ITCompanyCourseUserDao;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
+import com.luoran.zzbird.entity.vo.CourseUserVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
 
 
@@ -21,11 +22,11 @@ import com.luoran.zzbird.service.ITCompanyCourseUserService;
 @Service
 public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCourseUser> implements ITCompanyCourseUserService{
 	@Autowired
-	private ITCompanyCourseUserDao dao;
+	private ITCompanyCourseUserDao companyCourseUserDao;
 
 	@Override
 	public BaseDao<TCompanyCourseUser> getDao() {
-		return dao;
+		return companyCourseUserDao;
 	}
 	
 	@Override
@@ -45,5 +46,10 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		return list;
 	}
 	
+
+	@Override
+	public List<CourseUserVo> queryCourseUserByCourseId(String courseId, Integer roleVal) {
+		return companyCourseUserDao.queryCourseUserByCourseId(courseId, roleVal);
+	}
 
 }

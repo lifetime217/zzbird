@@ -9,6 +9,7 @@ import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.dao.ITXcxUserDao;
 import com.luoran.zzbird.entity.biz.TXcxUser;
+import com.luoran.zzbird.entity.vo.UserRoleVo;
 import com.luoran.zzbird.service.ITXcxUserService;
 
 
@@ -39,6 +40,11 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 	@Override
 	public List<TXcxUser> queryXcxUserByNickName(String nickName) {
 		return userDao.queryXcxUserByNickName(nickName);
+	}
+
+	@Override
+	public List<UserRoleVo> queryNewOrOldUser(String sessionKey) {
+		return userDao.queryNewOrOldUser(sessionKey);
 	}
 
 

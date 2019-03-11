@@ -19,7 +19,7 @@ public final class SessionManager {
 	}
 	
 	public static boolean isValid(String sessionKey) {
-		return SessionCache.contains(sessionKey);
+		return SessionCache.containsKey(sessionKey);
 	}
 	
 	

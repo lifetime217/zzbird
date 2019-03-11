@@ -3,6 +3,7 @@ package com.luoran.zzbird.service.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,11 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		return super.add(t);
 	}
 
-	
+	public PageQuery<TCompany> getQueryList(PageQuery<TCompany> pageQuery) {
+		companyDao.queryPage(pageQuery);
+		return pageQuery;
+	}
+
 	@Override
 	public List<TCompany> queryPointUser(String url) {
 		List<TCompany> pointUser = companyDao.queryPointUser();
@@ -63,13 +68,11 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		return pointUser;
 	}
 
-	
 	@Override
 	public TCompany queryCompanyDetail(String companyId) {
 		return companyDao.queryCompanyDetail(companyId);
 	}
 
-	
 	public List<TXcxUserRole> queryCompanyTeacher(String companyId) {
 		return xcxUserRoleService.queryCompanyUser(20, companyId);
 	}
