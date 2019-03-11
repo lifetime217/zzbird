@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.beetl.ext.fn.ParseInt;
 import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ import com.luoran.zzbird.service.ITXcxUserRoleService;
 import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.GeohashUtil;
+import com.luoran.zzbird.utils.SessionManagerUtil;
 import com.luoran.zzbird.utils.ShortUuid;
 
 /**
@@ -183,7 +185,11 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			tXcxUserRole.setSign(ShortUuid.generateShortUuid());
 			tXcxUserRole.setIsdelete(0);
 			// 添加角色用户表
-			xcxUserRoleService.add(tXcxUserRole);
+			String xcxUserRoleId = xcxUserRoleService.add(tXcxUserRole);
+
+			//重新赋值sessionmanager
+			SessionManagerUtil.putSessionManager(user.getSessionKey(), user.getOpenid(), companyId, 10, Integer.parseInt(xcxUserRoleId),
+					company.getCompanyName(), xcxUser.getNickName(), xcxUser.getAvatarUrl());
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

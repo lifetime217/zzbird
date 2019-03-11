@@ -51,3 +51,29 @@ queryCourseUserByCourseId
 		tx.role_val = #roleVal#
 		ORDER BY
 		tc.add_time DESC	
+
+queryCourseByUserList
+===
+* 查询用户所属的公司对应角色的课程
+
+	SELECT
+	c.course_name courseName,
+	c.start_time startTime,
+	c.end_time endTime,
+	c.person_number personNumber,
+	c.course_img courseImg
+	FROM
+	t_company_course_user AS cu ,
+	t_company_course AS c ,
+	t_xcx_user_role AS ur ,
+	t_xcx_user AS u
+	WHERE
+	cu.company_course_id = c.id AND
+	cu.xcx_user_role_id = ur.id AND
+	c.company_id = #companyId# AND
+	u.open_id = #openId# AND
+	u.id = ur.xcx_user_id AND
+	ur.role_val = #roleVal#
+
+	
+	

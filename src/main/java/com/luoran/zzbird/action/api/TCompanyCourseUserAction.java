@@ -1,11 +1,13 @@
 package com.luoran.zzbird.action.api;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,9 @@ import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
+import com.luoran.zzbird.entity.vo.CourseListVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
+import com.luoran.zzbird.utils.Convert;
 
 /**
  * @author tzx
@@ -31,7 +35,10 @@ import com.luoran.zzbird.service.ITCompanyCourseUserService;
 public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> {
 
 	@Autowired
-	private ITCompanyCourseUserService service;
+	private ITCompanyCourseUserService companyCourseUserService;
+
+	@Autowired
+	Environment env;
 
 	@RequestMapping
 	public String index() {
@@ -40,7 +47,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 
 	@Override
 	public IBaseService<TCompanyCourseUser> getService() {
-		return service;
+		return companyCourseUserService;
 	}
 
 	/**
@@ -74,7 +81,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		PageQuery<TCompanyCourseUser> userQueryPage = new PageQuery<TCompanyCourseUser>();
 		try {
 			// 返回学生的集合
-			userQueryPage = service.getComUserByBoosRole(pageQuery);
+			userQueryPage = companyCourseUserService.getComUserByBoosRole(pageQuery);
 			List<TCompanyCourseUser> userlist = userQueryPage.getList();
 			// 循环塞入jsonArr
 			for (TCompanyCourseUser user : userlist) {
@@ -84,7 +91,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 				map.put("roleId", user.getString("userRoleid"));
 				jUser.putAll(user.values());
 				// 查出学生对应的课程
-				List<TCompanyCourseUser> courseList = service.getCourseByUserRoleId(map);
+				List<TCompanyCourseUser> courseList = companyCourseUserService.getCourseByUserRoleId(map);
 				for (TCompanyCourseUser course : courseList) {
 					// 存入课程集合
 					JSONObject jCourse = new JSONObject();
@@ -101,7 +108,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			hr.setStatusCode(500);
 			return hr;
 		}
-		//存入分页参数
+		// 存入分页参数
 		hr.setPageSize(userQueryPage.getPageSize());
 		hr.setTotalPage(userQueryPage.getTotalPage());
 		hr.setPage(userQueryPage.getPageNumber());
@@ -112,4 +119,33 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		return hr;
 	}
 
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: TODO 查询用户角色下的公司课程
+	 */
+	@RequestMapping("queryCourseByUser")
+	@ResponseBody()
+	public HttpResult queryCourseByUser() {
+		JSONObject res = new JSONObject();
+		try {
+			UserContextInfo user = UserContext.get();
+			String companyId = user.getCompanyId();
+			String openId = user.getOpenid();
+			Integer roleVal = user.getRoleVal();
+			List<CourseListVo> courseList = companyCourseUserService.queryCourseList(openId, companyId, roleVal);
+			// 拿到图片的访问地址
+			String url = env.getProperty("file.path.url");
+			for (CourseListVo courseListVo : courseList) {
+				courseListVo.setCourseImg(url + "/" + courseListVo.getCourseImg());
+			}
+			res.put("courseList", courseList);
+			res.put("roleVal", user.getRoleVal());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return HttpResult.fail("查询失败!");
+		}
+		return HttpResult.success("查询成功!", res);
+
+	}
 }

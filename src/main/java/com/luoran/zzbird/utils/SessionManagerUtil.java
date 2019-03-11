@@ -20,6 +20,7 @@ public class SessionManagerUtil {
 		info.setCompanyName(companyName);
 		info.setRoleName(roleName);
 		info.setHeadImg(headImg);
+		info.setSessionKey(sessionKey);
 		SessionManager.put(sessionKey, info);
 	}
 
@@ -37,8 +38,10 @@ public class SessionManagerUtil {
 		info.setCompanyName(companyName);
 		info.setRoleName(roleName);
 		info.setHeadImg(headImg);
+		info.setSessionKey(sessionKey);
 		SessionManager.put(sessionKey, info);
 	}
+	
 
 	/**
 	 * 
@@ -48,6 +51,7 @@ public class SessionManagerUtil {
 	public static void putSessionManager(String sessionKey, String opid) {
 		UserContextInfo info = new UserContextInfo();
 		info.setOpenid(opid);
+		info.setSessionKey(sessionKey);
 		SessionManager.put(sessionKey, info);
 	}
 

@@ -12,6 +12,15 @@ public class UserContextInfo {
 	private String roleName;
 	private String HeadImg;
 	private String openid;
+	private String sessionKey;
+
+	public String getSessionKey() {
+		return sessionKey;
+	}
+
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
+	}
 
 	public String getRoleName() {
 		return roleName;
