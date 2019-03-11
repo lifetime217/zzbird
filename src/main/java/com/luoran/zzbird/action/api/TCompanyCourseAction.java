@@ -21,7 +21,9 @@ import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
+import com.luoran.zzbird.entity.vo.CourseUserVo;
 import com.luoran.zzbird.service.ITCompanyCourseService;
+import com.luoran.zzbird.service.ITCompanyCourseUserService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.ShortUuid;
 
@@ -37,6 +39,9 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 
 	@Autowired
 	private ITCompanyCourseService courseService;
+	
+	@Autowired
+	private ITCompanyCourseUserService companyCourseUserService;
 
 	@Autowired
 	Environment env;
@@ -65,7 +70,6 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			String courseId = courseService.add(course);
 			res.put("courseId", courseId);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return HttpResult.fail("新增失败");
 		}
@@ -118,7 +122,6 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 		try {
 			courseService.save(course);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return HttpResult.fail("修改失败");
 		}
@@ -129,7 +132,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 查询课程和公司名
+	 * @Description: TODO 查询课程信息、公司名、课程老师的名字、如果是学生需要查询用户的学习天数和累计学习的课时
 	 */
 	@RequestMapping(value = "/queryCourseAndCompany/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
@@ -152,8 +155,13 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 				courseImgList.add(obj);
 			}
 			res.put("courseImgsUrl", courseImgList);// courseImg图片集合
+			
+			//查询课程下的老师
+			List<CourseUserVo> teacher= companyCourseUserService.queryCourseUserByCourseId(courseId, 20);
+			res.put("teacher", teacher);
+			
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return HttpResult.fail("查询失败");
 		}

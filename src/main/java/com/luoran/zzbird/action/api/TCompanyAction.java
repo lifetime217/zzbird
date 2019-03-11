@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luoran.zzbird.core.HttpResult;
+import com.luoran.zzbird.core.UserContext;
+import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
@@ -63,12 +65,16 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 * 
 	 * @Author wsl
 	 * @Description: TODO 查询公司列表的分页 利用showV1 来区分查询 （1代表重点客户 0代表普通用户）
+	 * @params lat 纬度 lng经度
 	 */
 	@RequestMapping("/queryCompanyPage")
 	@ResponseBody()
 	public HttpResult queryCompanyPage(@RequestParam(value = "search") String search,
-			@RequestParam(value = "page") String page) {
+			@RequestParam(value = "page") String page,
+			@RequestParam(value = "latitude", required = false, defaultValue = "0.0d") double latitude,
+			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude) {
 		JSONObject res = new JSONObject();
+		UserContextInfo userContextInfo = UserContext.get();
 		// TODO 定位查询
 		try {
 			// 拿到图片的访问地址
@@ -77,18 +83,29 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			List<TCompany> pointUser = companyService.queryPointUser(url);
 			res.put("pointUser", pointUser);
 
+			// 设置分页的查询条件
 			// 查询普通用户
-			Map<String, String> queryParams = new HashMap<>();
-			if (!StringUtils.isEmpty(page)) {
-				queryParams.put("page", page);
-			}
+			Map<String, Object> queryParams = new HashMap<>();
 			// 如果没有传递搜索条件就查询普通用户，如果有搜索条件就查询全部的数据
 			if (!StringUtils.isEmpty(search)) {
 				queryParams.put("search", search);
 			} else {
 				queryParams.put("showV1", "0");
 			}
-			JSONObject ordinaryUser = listQuery(queryParams);
+			if (latitude != 0.0d && longitude != 0.0d) {
+				List<String> geohashList = GeohashUtil.encodes(latitude, longitude, 6);
+//				for(int i=0;i<geohashList.size();i++) {
+//					geohashList.set(i, geohashList.get(i).substring(0, 5));
+//				}
+				queryParams.put("geohashList", geohashList);
+			}
+
+			//分页查询
+			PageQuery<TCompany> pageQuery = new PageQuery<TCompany>();
+			pageQuery.setPageNumber(StringUtils.isEmpty(page) ? 1 : Integer.parseInt(page));
+			pageQuery.setPageSize(10);
+			pageQuery.setParas(queryParams);
+			JSONObject ordinaryUser = pager(companyService.getQueryList(pageQuery));
 			// 拼接图片url
 			@SuppressWarnings("unchecked")
 			List<TCompany> companyList = (List<TCompany>) ordinaryUser.get("list");

@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class Convert {
 	/**
-	 * @Author wsl @Title: convertImgString @Description:
-	 *         拼接url返回String @param: @return @return:String @throws
+	 * @Author wsl 
+	 * @Description: 拼接url返回String 
 	 */
 	public static String convertImgString(String companyImg, String url) {
 		String[] imgs = companyImg.split(",");
@@ -25,10 +25,7 @@ public class Convert {
 
 	/**
 	 * @Author wsl
-	 * @Title: convertImgList
 	 * @Description: 拼接url 返回List 
-	 * @param: @return
-	 * @return:String @throws
 	 */
 	public static List<String> convertImgList(String companyImg, String url) {
 		List<String> imgs = Arrays.asList(companyImg.split(","));

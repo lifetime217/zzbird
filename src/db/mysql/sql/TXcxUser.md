@@ -42,3 +42,24 @@ queryXcxUserByNickName
 	t_xcx_user
 	WHERE
 	t_xcx_user.nick_name =#nickName#
+	
+queryNewOrOldUser
+===
+* 根据sessionKey查询是否是新老用户
+
+	SELECT
+		r.id AS xcxUserRoleId,
+		r.company_id AS companyId,
+		c1.company_name AS companyName,
+		r.role_val AS roleVal,
+		r.role_name AS roleName,
+		r.role_headimg AS headImg,
+		r.current_active AS currentActive
+		FROM
+		t_xcx_user_role AS r ,
+		t_xcx_user AS u ,
+		t_company AS c1
+		WHERE
+		u.id = r.xcx_user_id AND
+		MD5(u.open_id) = #sessionKey# AND
+		c1.id = r.company_id

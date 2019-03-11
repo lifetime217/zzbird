@@ -149,15 +149,23 @@ public class GeohashUtil {
 		double lat2 = 39.918118;
 		double dist;
 		String geocode;
+		
+		String encode = encode(lat1,lon1,5);
+		System.out.println("geoHash " + encode + "");
+		
 		List<String> hashs = new ArrayList<>();
 
 		dist = distance(lat1, lon1, lat2, lon2);
 		System.out.println("两点相距1：" + dist + " 米");
 
 		hashs = encodes(lat1, lon1);
+	
 		System.out.println("当前位置编码：" + hashs.toString());
-
-		hashs = encodes(lat2, lon2);
+		hashs = encodes(lat1, lon1,5);
+		System.out.println("当前位置编码：" + hashs.toString());
+		hashs = encodes(lat2, lat2);
+		System.out.println("远方位置编码：" + hashs.toString());
+		hashs = encodes(lat2, lon2,5);
 		System.out.println("远方位置编码：" + hashs.toString());
 
 		double[] decode = GeohashUtil.decode(encode(lat1, lon1));

@@ -11,6 +11,7 @@ import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.dao.ITCompanyCourseUserDao;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
+import com.luoran.zzbird.entity.vo.CourseUserVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
 
 
@@ -21,11 +22,11 @@ import com.luoran.zzbird.service.ITCompanyCourseUserService;
 @Service
 public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCourseUser> implements ITCompanyCourseUserService{
 	@Autowired
-	private ITCompanyCourseUserDao dao;
+	private ITCompanyCourseUserDao companyCourseUserDao;
 
 	@Override
 	public BaseDao<TCompanyCourseUser> getDao() {
-		return dao;
+		return companyCourseUserDao;
 	}
 	
 	@Override
@@ -35,27 +36,32 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 
 	@Override
 	public PageQuery<TCompanyCourseUser> getComStudentByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
-		dao.queryComStudentByBoosRole(pageQuery);
+		companyCourseUserDao.queryComStudentByBoosRole(pageQuery);
 		return pageQuery;
 	}
 
 	@Override
 	public List<TCompanyCourseUser> getCourseByStuRoleId(Map<String, String> map) {
-		List<TCompanyCourseUser> list = dao.queryCourseByStuRoleId(map);
+		List<TCompanyCourseUser> list = companyCourseUserDao.queryCourseByStuRoleId(map);
 		return list;
 	}
 	
 	
 	@Override
 	public PageQuery<TCompanyCourseUser> getComTeacherByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
-		dao.queryComTeacherByBoosRole(pageQuery);
+		companyCourseUserDao.queryComTeacherByBoosRole(pageQuery);
 		return pageQuery;
 	}
 
 	@Override
 	public List<TCompanyCourseUser> getCourseByTeaRoleId(Map<String, String> map) {
-		List<TCompanyCourseUser> list = dao.queryCourseByTeaRoleId(map);
+		List<TCompanyCourseUser> list = companyCourseUserDao.queryCourseByTeaRoleId(map);
 		return list;
+	}
+
+	@Override
+	public List<CourseUserVo> queryCourseUserByCourseId(String courseId, Integer roleVal) {
+		return companyCourseUserDao.queryCourseUserByCourseId(courseId, roleVal);
 	}
 
 }

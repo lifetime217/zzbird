@@ -68,3 +68,23 @@ from t_company_course_user tccu
 INNER JOIN t_company_course tcc on tccu.company_course_id = tcc.id
 where tccu.xcx_user_role_id = #roleId#
 ORDER BY tcc.id
+
+
+
+
+queryCourseUserByCourseId
+===
+* 根据传入的课程id和角色身份来查询这个课程下的学生或者老师
+	SELECT
+		tx.role_name name,
+		tx.role_headimg headImg
+		FROM
+		t_company_course_user AS tc ,
+		t_xcx_user_role AS tx
+		WHERE
+		tc.xcx_user_role_id = tx.id AND
+		tc.company_course_id = #courseId# AND
+		tx.role_val = #roleVal#
+		ORDER BY
+		tc.add_time DESC	
+
