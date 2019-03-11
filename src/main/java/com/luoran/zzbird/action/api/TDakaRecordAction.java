@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luoran.zzbird.core.HttpResult;
+import com.luoran.zzbird.core.UserContext;
+import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TDakaRecord;
@@ -57,9 +59,12 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 	@ResponseBody
 	public HttpResult getPunchListByMonth(@RequestParam Map<String, String> params, HttpServletRequest req) {
 		HttpResult hr = new HttpResult();
+		UserContextInfo userContextInfo = UserContext.get();
+		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
+		params.put("roleId", xcxUserRoleId.toString());
 		if (StringUtils.isEmpty(params.get("roleId"))) {
 			hr.setStatusCode(100);
-			hr.setMsg("roleId传入为空");
+			hr.setMsg("后台roleId传入为空");
 			return hr;
 		}
 		if (StringUtils.isEmpty(params.get("statDate"))) {

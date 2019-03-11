@@ -56,7 +56,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
 		params.put("roleId", xcxUserRoleId.toString());
 		if (StringUtils.isEmpty(params.get("roleId"))) {
-			hr.setMsg("roleId未传入");
+			hr.setMsg("后台roleId未传入");
 			hr.setStatusCode(100);
 			return hr;
 		}
