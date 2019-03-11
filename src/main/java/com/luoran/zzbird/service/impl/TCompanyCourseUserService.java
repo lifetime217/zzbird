@@ -36,13 +36,13 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 
 	@Override
 	public PageQuery<TCompanyCourseUser> getComUserByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
-		dao.queryComUserByBoosRole(pageQuery);
+		companyCourseUserDao.queryComUserByBoosRole(pageQuery);
 		return pageQuery;
 	}
 
 	@Override
 	public List<TCompanyCourseUser> getCourseByUserRoleId(Map<String, String> map) {
-		List<TCompanyCourseUser> list = dao.queryCourseByUserRoleId(map);
+		List<TCompanyCourseUser> list = companyCourseUserDao.queryCourseByUserRoleId(map);
 		return list;
 	}
 	
