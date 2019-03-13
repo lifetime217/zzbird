@@ -1,5 +1,6 @@
 queryPunchMonth
 ===
+* 查询打卡的月并且分组排序
 select 
 	DATE_FORMAT(tdr.daka_time, '%Y-%m')  monthDate,
 	COUNT(tdr.id) punCount,
@@ -18,7 +19,7 @@ where
 	
 queryPunchList
 ===
-
+* 按月查询打卡记录
 select
 	tdr.id,
 	tdr.company_course_id,
@@ -42,6 +43,7 @@ order by tdr.daka_time desc
 
 queryPunchCourseList
 ===
+* 查询课程的列
 SELECT
 	tdr.company_course_id courseid,
 	tcc.course_name coursename,
@@ -72,6 +74,83 @@ and tdr.student_id = #roleId#
 and tcc.id = #courseId#
 order by tdr.daka_time desc
 
+
+queryTeaInfo
+===
+* 查询老师详情
+select
+	txur.id,
+	txur.role_headimg,
+	txur.role_name
+from t_company_course_user tccu
+inner join t_xcx_user_role txur on tccu.xcx_user_role_id = txur.id
+where
+txur.isdelete = 0
+and tccu.xcx_user_role_id = #roleId#
+and tccu.company_course_id = #courseId#
+and txur.role_val = 20
+
+
+queryTeaDakaTime
+===
+* 查询老师打的卡天数
+SELECT
+	count(timess.tiems) days
+FROM
+	(
+		SELECT
+			DATE_FORMAT(tdr.daka_time, '%Y-%m-%d') tiems
+		FROM
+			t_daka_record tdr
+		WHERE
+			tdr.isdelete = 0
+		AND tdr.teacher_id = #roleId#
+		AND tdr.company_course_id = #courseId#
+		GROUP BY tiems
+	) timess
+	
+queryYidaka
+===
+* 查询已打卡
+
+SELECT
+	tdr.id daka_id,
+	txur.id,
+	txur.role_headimg,
+	txur.role_name
+FROM
+	t_daka_record tdr
+INNER JOIN t_xcx_user_role txur ON tdr.student_id = txur.id
+WHERE
+	txur.isdelete = 0
+AND tdr.isdelete = 0
+AND txur.role_val = 30
+AND tdr.company_course_id = #courseId#
+AND TO_DAYS(tdr.daka_time) = TO_DAYS(NOW())
+
+
+queryWeidaka
+===
+* 查询未打卡
+
+SELECT
+	txur.id,
+	txur.role_name,
+	txur.role_headimg
+from t_company_course_user tccu 
+inner join t_xcx_user_role txur on tccu.xcx_user_role_id = txur.id
+where 
+txur.isdelete = 0
+and tccu.company_course_id = #courseId#
+and txur.role_val = 30
+@if(list.~size != 0){
+	and txur.id not IN (
+		@for(id in list){
+			#id#  #text(idLP.last?"":"," )#
+		@}
+	#text(")")#
+@}
+
 queryUserClassHour
 ===
 * 查询老师、企业、学生的打卡总课时(如传入课程id查询学生的单个课程的总课时)
@@ -96,7 +175,3 @@ queryUserClassHour
 		 and  c.company_id = = #companyId#
 	@} 
 	 ORDER BY r.daka_time
-	
-	
-	
-	

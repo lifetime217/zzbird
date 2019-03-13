@@ -81,7 +81,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		pageQuery.setParas(params);
 		PageQuery<TCompanyCourseUser> userQueryPage = new PageQuery<TCompanyCourseUser>();
 		try {
-			// 返回学生的集合
+			// 返回用户的集合
 			userQueryPage = companyCourseUserService.getComUserByBoosRole(pageQuery);
 			List<TCompanyCourseUser> userlist = userQueryPage.getList();
 			// 循环塞入jsonArr
@@ -91,7 +91,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("roleId", user.getString("userRoleid"));
 				jUser.putAll(user.values());
-				// 查出学生对应的课程
+				// 查出用户对应的课程
 				List<TCompanyCourseUser> courseList = companyCourseUserService.getCourseByUserRoleId(map);
 				for (TCompanyCourseUser course : courseList) {
 					// 存入课程集合
