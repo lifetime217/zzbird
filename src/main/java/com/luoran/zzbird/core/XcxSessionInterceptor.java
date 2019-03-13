@@ -47,7 +47,7 @@ public class XcxSessionInterceptor extends HandlerInterceptorAdapter {
 			// sessionKey不为空
 			UserContextInfo user = SessionManager.get(sessionKey);
 			// 为空数据库查找
-			if (user == null) {
+			if (user.getCompanyId() == null) {
 				// 判断新老用户(根据用户角色表查询)
 				List<UserRoleVo> userList = xcxUserService.queryNewOrOldUser(sessionKey);
 				if (userList != null) {
