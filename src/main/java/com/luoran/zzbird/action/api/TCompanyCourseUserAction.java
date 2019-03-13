@@ -1,11 +1,12 @@
 package com.luoran.zzbird.action.api;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.beetl.sql.core.engine.PageQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -21,10 +22,9 @@ import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
+import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
-import com.luoran.zzbird.entity.vo.CourseListVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
-import com.luoran.zzbird.utils.Convert;
 
 /**
  * @author tzx
@@ -33,6 +33,7 @@ import com.luoran.zzbird.utils.Convert;
 @Controller
 @RequestMapping("api/companycourseuser")
 public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> {
+	private final static Logger log = LoggerFactory.getLogger(TCompanyCourseUserAction.class);
 
 	@Autowired
 	private ITCompanyCourseUserService companyCourseUserService;
@@ -52,7 +53,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 
 	/**
 	 * @author tzx
-	 * @Description: TODO企业查课程下的用户
+	 * @Description: 企业查课程下的用户
 	 */
 	@RequestMapping("queryCompanyUser")
 	@ResponseBody()
@@ -122,27 +123,25 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 查询用户角色下的公司课程
+	 * @Description: 查询用户角色下的公司课程
 	 */
 	@RequestMapping("queryCourseByUser")
 	@ResponseBody()
 	public HttpResult queryCourseByUser() {
 		JSONObject res = new JSONObject();
 		try {
-			UserContextInfo user = UserContext.get();
-			String companyId = user.getCompanyId();
-			String openId = user.getOpenid();
-			Integer roleVal = user.getRoleVal();
-			List<CourseListVo> courseList = companyCourseUserService.queryCourseList(openId, companyId, roleVal);
-			// 拿到图片的访问地址
+			List<TCompanyCourse> courseList = companyCourseUserService.queryCourseList();
 			String url = env.getProperty("file.path.url");
-			for (CourseListVo courseListVo : courseList) {
-				courseListVo.setCourseImg(url + "/" + courseListVo.getCourseImg());
+			JSONArray json = new JSONArray();
+			for (TCompanyCourse course : courseList) {
+				JSONObject jsonObject = new JSONObject();
+				course.setCourseImg(url + "/" + course.getCourseImg());
+				jsonObject.putAll(course.values());
+				json.add(jsonObject);
 			}
-			res.put("courseList", courseList);
-			res.put("roleVal", user.getRoleVal());
+			res.put("courseList", json);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败!");
 		}
 		return HttpResult.success("查询成功!", res);

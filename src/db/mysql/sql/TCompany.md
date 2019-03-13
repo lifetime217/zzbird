@@ -28,26 +28,12 @@ queryPage
 		 and CONCAT(IFNUll(`company_name`,''),IFNUll(`company_address`,''),IFNUll(`industry_list_name`,'')) LIKE CONCAT('%',#search#,'%')
 		@}
 		@if(!isEmpty(geohashList)){
-		and geohash like CONCAT(#geohashList[0]#,'%') or geohash like CONCAT(#geohashList[1]#,'%') or geohash like CONCAT(#geohashList[2]#,'%') or geohash like CONCAT(#geohashList[3]#,'%') or geohash like CONCAT(#geohashList[4]#,'%') 
+		and geohash like CONCAT(left(geohash,6),'%') or geohash like CONCAT(#geohashList[0]#,'%') or geohash like CONCAT(#geohashList[1]#,'%') or geohash like CONCAT(#geohashList[2]#,'%') or geohash like CONCAT(#geohashList[3]#,'%') or geohash like CONCAT(#geohashList[4]#,'%') 
 		or geohash like CONCAT(#geohashList[5]#,'%') or geohash like CONCAT(#geohashList[6]#,'%') or geohash like CONCAT(#geohashList[7]#,'%') 
 		@}
 	@}
 	
-queryTeacher
-===
-*  测试查询一对多关系查询  @orm.many({"id":"companyId"},"TCompany.queryTeacher","TXcxUserRole");
-	SELECT
-	t_xcx_user_role.id,
-	t_xcx_user_role.role_name,
-	t_xcx_user_role.role_headimg,
-	t_xcx_user_role.xcx_user_id,
-	t_xcx_user_role.sign
-	FROM
-	t_xcx_user_role
-	WHERE
-	t_xcx_user_role.company_id=#companyId#
-	and  role_val = 20
-	
+
 	
 	
 queryPointUser

@@ -35,12 +35,7 @@ public class UploadPictureAction {
 	/**
 	 * 
 	 * @Author wsl  
-	 * @Title: upload   
-	 * @Description: TODO  上传图片 （没有删除储存图片）
-	 * @param: @param req
-	 * @param: @return      
-	 * @return: HttpResult      
-	 * @throws
+	 * @Description:   上传图片 （没有删除储存图片）
 	 */
 	@RequestMapping("/pic")
 	@ResponseBody
@@ -71,7 +66,7 @@ public class UploadPictureAction {
 				obj.put("flag", true);
 				log.info("图片上传成功");
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e.getCause());
 				obj.put("flag", false);
 				return HttpResult.fail("上传失败", obj);
 			}

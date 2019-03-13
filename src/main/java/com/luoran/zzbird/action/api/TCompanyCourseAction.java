@@ -1,10 +1,7 @@
 package com.luoran.zzbird.action.api;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +20,12 @@ import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
-import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.vo.CourseUserVo;
 import com.luoran.zzbird.service.ITCompanyCourseService;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
+import com.luoran.zzbird.service.ITDakaRecordService;
 import com.luoran.zzbird.utils.Convert;
-import com.luoran.zzbird.utils.ShortUuid;
 
 /**
  * @author wsl
@@ -43,9 +39,12 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 
 	@Autowired
 	private ITCompanyCourseService courseService;
-	
+
 	@Autowired
 	private ITCompanyCourseUserService companyCourseUserService;
+
+	@Autowired
+	private ITDakaRecordService dakaRecordService;
 
 	@Autowired
 	Environment env;
@@ -63,20 +62,17 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 新建课程
+	 * @Description: 新建课程
 	 */
 	@RequestMapping("/addCourse")
 	@ResponseBody()
-	public HttpResult addCourse(TCompanyCourse course) {
+	public HttpResult addCourse(TCompanyCourse course, String sessionKey) {
 		JSONObject res = new JSONObject();
 		try {
-			UserContextInfo user = UserContext.get();
-			course.setCompanyId(user.getCompanyId());
-			course.setPersonNumber(0);
-			String courseId = courseService.add(course);
+			String courseId = courseService.addCourse(course);
 			res.put("courseId", courseId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("新增失败");
 		}
 		return HttpResult.success("新增成功", res);
@@ -85,7 +81,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 根据课程id查询课程的基本信息
+	 * @Description: 根据课程id查询课程的基本信息
 	 */
 	@RequestMapping(value = "/queryCourseDetailByCourseId/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
@@ -110,7 +106,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			res.put("courseImgsUrl", courseImgList);// courseImg图片集合
 			res.put("courseImgsName", courseImgsName);// courseImg图片名称
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
 		}
 		return HttpResult.success("查询成功", res);
@@ -119,7 +115,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 修改课程
+	 * @Description: 修改课程
 	 */
 	@RequestMapping("/updateCourse")
 	@ResponseBody()
@@ -130,7 +126,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			course.setCompanyId(user.getCompanyId());
 			courseService.save(course);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("修改失败");
 		}
 		return HttpResult.success("修改成功", res);
@@ -140,7 +136,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 查询课程信息、公司名、课程老师的名字、如果是学生需要查询用户的学习天数和累计学习的课时
+	 * @Description: 查询课程信息、公司名、课程老师的名字、如果是学生需要查询用户的学习周数和累计学习的课时
 	 */
 	@RequestMapping(value = "/queryCourseAndCompany/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
@@ -163,14 +159,21 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 				courseImgList.add(obj);
 			}
 			res.put("courseImgsUrl", courseImgList);// courseImg图片集合
-			
-			//查询课程下的老师
-			List<CourseUserVo> teacher= companyCourseUserService.queryCourseUserByCourseId(courseId, 20);
+
+			// 查询课程下的老师
+			List<CourseUserVo> teacher = companyCourseUserService.queryCourseUserByCourseId(courseId, 20);
 			res.put("teacher", teacher);
+
+			UserContextInfo userContextInfo = UserContext.get();
 			
-			
+			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 30) {
+				// 查询用户课程的上课课时
+				res.put("classHour", dakaRecordService.queryStuClassHourByCourseId(courseId));	
+				// 查询用户课程的上课周数
+			}
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
 		}
 		return HttpResult.success("查询成功", res);

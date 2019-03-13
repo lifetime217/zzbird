@@ -2,6 +2,7 @@ package com.luoran.zzbird.utils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ch.hsr.geohash.GeoHash;
@@ -143,33 +144,44 @@ public class GeohashUtil {
 		// 116.402843,39.999375 鸟巢 wx4g8c9v
 		// 116.3967,39.99932 水立方 wx4g89tk
 		// 116.40382,39.918118 故宫 wx4g0ffe
-		double lon1 = 116.402843;
-		double lat1 = 39.999375;
-		double lon2 = 116.40382;
-		double lat2 = 39.918118;
-		double dist;
-		String geocode;
+		double lon1 = 121.4385790000;
+		double lat1 = 31.3555530000;
+		double lon2 = 121.4400601387;
+		double lat2 = 31.3567703367;
 		
-		String encode = encode(lat1,lon1,5);
-		System.out.println("geoHash " + encode + "");
 		
-		List<String> hashs = new ArrayList<>();
-
-		dist = distance(lat1, lon1, lat2, lon2);
-		System.out.println("两点相距1：" + dist + " 米");
-
-		hashs = encodes(lat1, lon1);
-	
-		System.out.println("当前位置编码：" + hashs.toString());
-		hashs = encodes(lat1, lon1,5);
-		System.out.println("当前位置编码：" + hashs.toString());
-		hashs = encodes(lat2, lat2);
-		System.out.println("远方位置编码：" + hashs.toString());
-		hashs = encodes(lat2, lon2,5);
-		System.out.println("远方位置编码：" + hashs.toString());
-
-		double[] decode = GeohashUtil.decode(encode(lat1, lon1));
-		System.out.println(decode[0] + "," + decode[1]);
+		System.out.println("位置1：" + encode(lat1, lon1));
+		System.out.println("位置1的周边：" + Arrays.toString(encodes(lat1, lon1,5).toArray()));
+		
+		System.out.println("位置2：" + encode(lat2, lon2));
+//		double dist;
+//		String geocode;
+//		
+//		String encode = encode(lat1,lon1,5);
+//		System.out.println("geoHash " + encode + "");
+//		
+//		List<String> hashs = new ArrayList<>();
+//
+//		dist = distance(lat1, lon1, lat2, lon2);
+//		System.out.println("两点相距1：" + dist + " 米");
+//
+//		hashs = encodes(lat1, lon1);
+//	
+//		System.out.println("当前位置编码：" + hashs.toString());
+//		hashs = encodes(lat1, lon1,5);
+//		System.out.println("当前位置编码：" + hashs.toString());
+//		hashs = encodes(lat2, lat2);
+//		System.out.println("远方位置编码：" + hashs.toString());
+//		hashs = encodes(lat2, lon2,5);
+//		System.out.println("远方位置编码：" + hashs.toString());
+//
+//		double[] decode = GeohashUtil.decode(encode(lat1, lon1));
+//		System.out.println(decode[0] + "," + decode[1]);
+		
+		
+		
+		
+		
 
 	}
 }

@@ -39,10 +39,13 @@ public class WebConfig implements WebMvcConfigurer{
 
 	@Autowired
 	Environment env;
+	
+	@Autowired
+	XcxSessionInterceptor xcxSessionInter;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new XcxSessionInterceptor()).addPathPatterns("/api/**");
+		registry.addInterceptor(xcxSessionInter).addPathPatterns("/api/**");
 	}
 
 	@Bean

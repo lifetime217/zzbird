@@ -9,7 +9,6 @@ public class DakaDetailByMonthVo {
 	//private List<>
 	public DakaDetailByMonthVo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public String getMonthDate() {
 		return monthDate;

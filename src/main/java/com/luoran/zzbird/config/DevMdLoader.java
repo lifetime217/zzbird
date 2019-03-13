@@ -194,7 +194,6 @@ public class DevMdLoader implements SQLLoader {
 				try {
 					bf.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

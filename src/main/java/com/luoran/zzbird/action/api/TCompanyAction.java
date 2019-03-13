@@ -1,27 +1,18 @@
 package com.luoran.zzbird.action.api;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.beetl.ext.fn.ParseInt;
 import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,20 +21,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luoran.zzbird.core.HttpResult;
+import com.luoran.zzbird.core.SessionManager;
 import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
-import com.luoran.zzbird.entity.biz.TXcxUser;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
+import com.luoran.zzbird.entity.vo.UserRoleVo;
 import com.luoran.zzbird.service.ITCompanyService;
-import com.luoran.zzbird.service.ITXcxUserRoleService;
-import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.GeohashUtil;
-import com.luoran.zzbird.utils.SessionManagerUtil;
-import com.luoran.zzbird.utils.ShortUuid;
 
 /**
  * @author wsl
@@ -57,12 +45,6 @@ public class TCompanyAction implements BaseAction<TCompany> {
 
 	@Autowired
 	private ITCompanyService companyService;
-
-	@Autowired
-	private ITXcxUserRoleService xcxUserRoleService;
-
-	@Autowired
-	private ITXcxUserService xcxUserService;
 
 	@Autowired
 	Environment env;
@@ -80,7 +62,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 查询公司列表的分页 利用showV1 来区分查询 （1代表重点客户 0代表普通用户）
+	 * @Description:   查询公司列表的分页 利用showV1 来区分查询 （1代表重点客户 0代表普通用户）
 	 * @params lat 纬度 lng经度
 	 */
 	@RequestMapping("/queryCompanyPage")
@@ -90,8 +72,9 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			@RequestParam(value = "latitude", required = false, defaultValue = "0.0d") double latitude,
 			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude) {
 		JSONObject res = new JSONObject();
-		// TODO 定位查询
+		//   定位查询
 		try {
+
 			// 拿到图片的访问地址
 			String url = env.getProperty("file.path.url");
 			// 查询重点客户
@@ -109,9 +92,6 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			}
 			if (latitude != 0.0d && longitude != 0.0d) {
 				List<String> geohashList = GeohashUtil.encodes(latitude, longitude, 6);
-//				for(int i=0;i<geohashList.size();i++) {
-//					geohashList.set(i, geohashList.get(i).substring(0, 5));
-//				}
 				queryParams.put("geohashList", geohashList);
 			}
 
@@ -135,7 +115,6 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			bannersList.add(url + "/fengjing.jpg");
 			res.put("bannerList", bannersList);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return HttpResult.fail("查询失败");
 		}
@@ -145,78 +124,30 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 新建企业
+	 * @Description:   新建企业
 	 */
 	@RequestMapping("/addCompany")
 	@ResponseBody()
-	@Transactional
-	public HttpResult addCompany(TCompany company) {
+	public HttpResult addCompany(TCompany company, String sessionKey) {
 		JSONObject res = new JSONObject();
 		try {
-			// 添加公司表
-			company.set("addTime", new Date());
-			company.set("lookCount", 0);
-			company.set("shareCount", 0);
-			company.set("loveCount", 0);
-			company.set("showV1", 0);
-			company.set("v1", 0);
-			company.set("teacherCount", 0);
-			company.set("geohash", GeohashUtil.encode(company.getLat().doubleValue(), company.getLng().doubleValue()));
-			company.set("studentCount", 0);
-			company.set("sign", ShortUuid.generateShortUuid());
-			String companyId = companyService.add(company);
-			res.put("companyId", companyId);
-
-			UserContextInfo user = UserContext.get();
-			// 根据openid查询出用户的信息
-			TXcxUser xcxUser = xcxUserService.queryXcxUserByOpenId(user.getOpenid());
-
-			// 修改用户上次登录的为0
-			xcxUserRoleService.updateCurrentActiveByZero(xcxUser.getId());
-
-			// 默认微信的头像和名字
-			TXcxUserRole tXcxUserRole = new TXcxUserRole();
-			tXcxUserRole.setCompanyId(companyId);
-			tXcxUserRole.setRoleVal(10);
-			tXcxUserRole.setRoleName(xcxUser.getNickName());
-			tXcxUserRole.setRoleHeadimg(xcxUser.getAvatarUrl());
-			tXcxUserRole.setXcxUserId(xcxUser.getId());
-			tXcxUserRole.setCurrentActive(1);
-			tXcxUserRole.setSign(ShortUuid.generateShortUuid());
-			tXcxUserRole.setIsdelete(0);
-			// 添加角色用户表
-			String xcxUserRoleId = xcxUserRoleService.add(tXcxUserRole);
-
-			//重新赋值sessionmanager
-			SessionManagerUtil.putSessionManager(user.getSessionKey(), user.getOpenid(), companyId, 10, Integer.parseInt(xcxUserRoleId),
-					company.getCompanyName(), xcxUser.getNickName(), xcxUser.getAvatarUrl());
-
+			//添加公司
+			TXcxUserRole userRole = companyService.addCompany(company, sessionKey);
+			// 重新赋值sessionmanager
+			SessionManager.init(sessionKey, new UserContextInfo(userRole));
+			res.put("companyId",userRole.getCompanyId());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			// 回滚
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("新增失败");
 		}
 		return HttpResult.success("新增成功", res);
 	}
 
-	/**
-	 * 
-	 * @Author wsl
-	 * @Description: TODO 查询新老用户(根据公司用户表是否有数据)
-	 */
-	@RequestMapping("/queryNewOrOldUser")
-	@ResponseBody()
-	public HttpResult queryNewOrOldUser(@RequestParam(value = "code") String code) {
-		log.info("code:" + code + ",获取用户角色id");
-		return null;
-	}
 
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 查詢公司详情页
+	 * @Description:   查詢公司详情页
 	 */
 	@RequestMapping("/queryCompanyDetail")
 	@ResponseBody()
@@ -233,7 +164,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			List<TXcxUserRole> queryCompanyTeacher = companyService.queryCompanyTeacher(companyId);
 			res.put("companyTeacher", queryCompanyTeacher);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
 		}
 		return HttpResult.success("查询成功", res);
@@ -243,7 +174,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 根据企业id查询企业的基本信息
+	 * @Description:   根据企业id查询企业的基本信息
 	 */
 	@RequestMapping(value = "/queryCompanyByCompanyId", method = RequestMethod.GET)
 	@ResponseBody()
@@ -281,7 +212,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			res.put("banner", bannerList);// banner图片集合
 			res.put("bannerImgsName", bannerImgsName);// banner图片名称
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
 		}
 		return HttpResult.success("查询成功", res);
@@ -290,7 +221,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 修改企业
+	 * @Description:   修改企业
 	 */
 	@RequestMapping("/updateCompany")
 	@ResponseBody()
@@ -302,7 +233,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			companyService.save(company);
 			res.put("companyId", user.getCompanyId());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("修改失败");
 		}
 		return HttpResult.success("修改成功", res);

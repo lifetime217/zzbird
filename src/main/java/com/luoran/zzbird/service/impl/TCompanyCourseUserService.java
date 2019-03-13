@@ -7,29 +7,32 @@ import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.luoran.zzbird.core.UserContext;
+import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.dao.ITCompanyCourseUserDao;
+import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
-import com.luoran.zzbird.entity.vo.CourseListVo;
 import com.luoran.zzbird.entity.vo.CourseUserVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
-
 
 /**
  * @author lifetime
  *
  */
 @Service
-public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCourseUser> implements ITCompanyCourseUserService{
+public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCourseUser>
+		implements ITCompanyCourseUserService {
 	@Autowired
 	private ITCompanyCourseUserDao companyCourseUserDao;
+
 
 	@Override
 	public BaseDao<TCompanyCourseUser> getDao() {
 		return companyCourseUserDao;
 	}
-	
+
 	@Override
 	public String add(TCompanyCourseUser t) {
 		return super.add(t);
@@ -46,7 +49,6 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		List<TCompanyCourseUser> list = companyCourseUserDao.queryCourseByUserRoleId(map);
 		return list;
 	}
-	
 
 	@Override
 	public List<CourseUserVo> queryCourseUserByCourseId(String courseId, Integer roleVal) {
@@ -54,8 +56,10 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 	}
 
 	@Override
-	public List<CourseListVo> queryCourseList(String openId, String companyId, Integer roleVal) {
-		return companyCourseUserDao.queryCourseByUserList(openId, companyId, roleVal);
+	public List<TCompanyCourse> queryCourseList() {
+		UserContextInfo user = UserContext.get();
+		List<TCompanyCourse> courseList = companyCourseUserDao.queryCourseByUserList(user.getOpenid(), user.getCompanyId(), user.getRoleVal());
+		return courseList;
 	}
 
 }

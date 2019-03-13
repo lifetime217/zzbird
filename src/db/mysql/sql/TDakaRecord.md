@@ -71,3 +71,32 @@ and txur.isdelete = 0
 and tdr.student_id = #roleId#
 and tcc.id = #courseId#
 order by tdr.daka_time desc
+
+queryUserClassHour
+===
+* 查询老师、企业、学生的打卡总课时(如传入课程id查询学生的单个课程的总课时)
+	SELECT
+	SUM(CAST(LEFT(c.course_hour,1) AS SIGNED))
+	FROM
+	t_daka_record AS r ,
+	t_company_course AS c
+	WHERE
+	r.isdelete = 0 
+	AND r.company_course_id = c.id
+	@if(roleVal==30){
+		 and r.student_id = #roleId#
+	@} 
+	@if(roleVal==20){
+		 and r.teacher_id = #roleId#
+	@} 
+	@if(!isEmpty(courseId)){
+		 and r.company_course_id = #courseId#
+	@}
+	@if(!isEmpty(companyId)){
+		 and  c.company_id = = #companyId#
+	@} 
+	 ORDER BY r.daka_time
+	
+	
+	
+	

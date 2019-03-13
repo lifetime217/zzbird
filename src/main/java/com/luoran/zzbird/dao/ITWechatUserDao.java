@@ -19,14 +19,14 @@ public interface ITWechatUserDao extends BaseDao<TWechatUser> {
 	/**
 	 * 
 	 * @Author wsl  
-	 * @Description: TODO 根据openId查询公众号用户
+	 * @Description:  根据openId查询公众号用户
 	 */
 	TWechatUser queryGzhUserByOpenId(@Param("openId") String openId);
 
 	/**
 	 * 
 	 * @Author wsl  
-	 * @Description: TODO  根据用户名查询公众号用户
+	 * @Description:   根据用户名查询公众号用户
 	 */
 	List<TWechatUser> queryGzhUserByNickName(@Param("nickName") String nickName);
 }

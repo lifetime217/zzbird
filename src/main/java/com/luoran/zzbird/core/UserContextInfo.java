@@ -1,5 +1,7 @@
 package com.luoran.zzbird.core;
 
+import com.luoran.zzbird.entity.biz.TXcxUserRole;
+
 /**
  * @author lifetime
  *
@@ -12,14 +14,35 @@ public class UserContextInfo {
 	private String roleName;
 	private String HeadImg;
 	private String openid;
-	private String sessionKey;
 
-	public String getSessionKey() {
-		return sessionKey;
+	public UserContextInfo() {
 	}
 
-	public void setSessionKey(String sessionKey) {
-		this.sessionKey = sessionKey;
+	public UserContextInfo(TXcxUserRole userRole) {
+		if (userRole.get("openid") != null) {
+			this.setOpenid((String) userRole.get("openid"));
+		}
+		this.setCompanyId(userRole.getCompanyId());
+		this.setRoleVal(userRole.getRoleVal());
+		this.setXcxUserRoleId(userRole.getId());
+		if (userRole.get("companyname") != null) {
+			this.setCompanyName((String) userRole.get("companyname"));
+		}
+		this.setRoleName(userRole.getRoleName());
+		this.setHeadImg(userRole.getRoleHeadimg());
+	}
+
+	/**
+	 * 是否是普通用户
+	 * 
+	 * @Author wsl
+	 * @Description:
+	 */
+	public boolean isNormalUser() {
+		if (getRoleVal() == null) {
+			return true;
+		}
+		return false;
 	}
 
 	public String getRoleName() {

@@ -17,7 +17,7 @@ public interface ITCompanyCourseDao extends BaseDao<TCompanyCourse> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: TODO 根据课程id查询课程的详情
+	 * @Description:  根据课程id查询课程的详情
 	 */
 	TCompanyCourse queryCourseDetail(@Param(value = "courseId") String courseId);
 

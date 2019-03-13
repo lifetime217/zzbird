@@ -114,12 +114,12 @@ public class TCompany extends BaseInfo implements Serializable {
 	/**
 	 * 创建企业的人员
 	 */
-	public String getXcxUserRoleId() {
-		return getString("xcxUserRoleId");
+	public String getXcxUserId() {
+		return getString("xcxUserId");
 	}
 
-	public void setXcxUserRoleId(String xcxUserRoleId) {
-		set("xcxUserRoleId", xcxUserRoleId);
+	public void setXcxUserId(String xcxUserId) {
+		set("xcxUserId", xcxUserId);
 	}
 
 	/**

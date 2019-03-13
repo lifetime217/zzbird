@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.beetl.sql.core.engine.PageQuery;
 
-import com.alibaba.fastjson.JSONObject;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
@@ -18,9 +17,11 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	/**
 	 * 
 	 * @Author wsl  
-	 * @Description: TODO 查询公司重点用户
+	 * @Description:  查询公司重点用户
 	 */
 	List<TCompany> queryPointUser(String url);
+	
+	TXcxUserRole addCompany(TCompany company, String sessionKey);
 	
 	/**
 	 * 
@@ -32,14 +33,14 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	/**
 	 * 
 	 * @Author wsl  
-	 * @Description: TODO 查询公司的详情
+	 * @Description:  查询公司的详情
 	 */
 	TCompany queryCompanyDetail(String companyId);
 	
 	/**
 	 * 
 	 * @Author wsl  
-	 * @Description: TODO 查询公司的老师 
+	 * @Description:  查询公司的老师 
 	 */
 	List<TXcxUserRole> queryCompanyTeacher(String companyId);
 	
