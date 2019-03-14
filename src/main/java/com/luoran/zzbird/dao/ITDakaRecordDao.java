@@ -67,16 +67,25 @@ public interface ITDakaRecordDao extends BaseDao<TDakaRecord> {
 
 	/**
 	 * 
-	 * @Author wsl  
-	 * @Description:查询学生单个课程的课时  
+	 * @Author wsl
+	 * @Description:查询学生单个课程的课时
 	 */
-	Integer queryUserClassHour(@Param("courseId")String courseId,@Param("roleId")Integer roleId,@Param("roleVal")Integer roleVal);
-	
+	Integer queryUserClassHour(@Param("courseId") String courseId, @Param("roleId") Integer roleId,
+			@Param("roleVal") Integer roleVal);
+
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description:查询学生的总课时（个人 中心） roleVal来区分是用户(30)、老师(20)、企业(10)
+	 */
+	Integer queryUserClassHour(@Param("roleId") Integer roleId, @Param("companyId") String companyId,
+			@Param("roleVal") Integer roleVal);
+
 	/**
 	 * 
 	 * @Author wsl  
-	 * @Description:查询学生的总课时（个人 中心） roleVal来区分是用户(30)、老师(20)、企业(10)
+	 * @Description: 查询学生单个课程学习的周数
 	 */
-	Integer queryUserClassHour(@Param("roleId")Integer roleId,@Param("companyId")String companyId,@Param("roleVal")Integer roleVal);
-	
+	Integer queryStuStudyWeek(@Param("stuRoleId") Integer roleId, @Param("courseId") String courseId);
+
 }

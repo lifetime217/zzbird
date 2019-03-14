@@ -170,6 +170,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 				// 查询用户课程的上课课时
 				res.put("classHour", dakaRecordService.queryStuClassHourByCourseId(courseId));	
 				// 查询用户课程的上课周数
+				res.put("studyWeek", dakaRecordService.queryStuStudyWeek(courseId));	
 			}
 
 		} catch (Exception e) {

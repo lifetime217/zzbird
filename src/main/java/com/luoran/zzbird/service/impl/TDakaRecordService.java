@@ -1,7 +1,6 @@
 package com.luoran.zzbird.service.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -129,5 +128,11 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 	public Integer queryUserClassHour() {
 		UserContextInfo user = UserContext.get();
 		return iTDakaRecordDao.queryUserClassHour(user.getXcxUserRoleId(), user.getCompanyId(), user.getRoleVal());
+	}
+
+	@Override
+	public Integer queryStuStudyWeek(String courseId) {
+		UserContextInfo user = UserContext.get();
+		return iTDakaRecordDao.queryStuStudyWeek(user.getXcxUserRoleId(), courseId);
 	}
 }

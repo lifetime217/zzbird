@@ -85,4 +85,12 @@ public interface ITDakaRecordService extends IBaseService<TDakaRecord> {
 	 * @Description:查询学生、老师、企业的上课总课时
 	 */
 	Integer queryUserClassHour();
+	
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:查询学生单个课程学习的周数
+	 */
+	Integer queryStuStudyWeek(String courseId);
 }

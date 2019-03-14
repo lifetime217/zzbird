@@ -89,7 +89,6 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 	@Transactional
 	public TXcxUserRole addCompany(TCompany company, String sessionKey) {
 		UserContextInfo user = UserContext.get();
-		// 根据openid查询出用户的信息
 		TXcxUser xcxUser = xcxUserService.queryXcxUserByOpenId(user.getOpenid());
 		// 添加公司表
 		company.set("addTime", new Date());
@@ -105,7 +104,6 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		company.set("xcx_user_id", xcxUser.getId());
 		String companyId = add(company);
 
-		// 修改用户上次登录的为0
 		xcxUserRoleService.updateCurrentActiveByZero(xcxUser.getId());
 
 		// 添加角色用户表（默认微信的头像和名字 ）
