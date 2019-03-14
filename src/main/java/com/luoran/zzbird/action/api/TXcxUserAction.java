@@ -46,11 +46,11 @@ public class TXcxUserAction implements BaseAction<TXcxUser> {
 	 */
 	@RequestMapping("/addUser")
 	@ResponseBody()
-	public HttpResult addUser(TXcxUser xcxUser, String sessionKey) {
+	public HttpResult addUser(TXcxUser xcxUser, String zzbird_XcxSessionKey) {
 		try {
 			UserContextInfo user = UserContext.get();
 			xcxUser.setOpenId(user.getOpenid());
-			xcxUser.setSessionKey(sessionKey);
+			xcxUser.setSessionKey(zzbird_XcxSessionKey);
 			xcxUserService.add(xcxUser);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());

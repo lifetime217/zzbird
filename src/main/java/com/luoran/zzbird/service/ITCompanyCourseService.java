@@ -1,5 +1,7 @@
 package com.luoran.zzbird.service;
 
+import java.util.Map;
+
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 
@@ -22,4 +24,11 @@ public interface ITCompanyCourseService extends IBaseService<TCompanyCourse> {
 	 * @Description:添加课程
 	 */
 	String addCourse(TCompanyCourse course);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询公司下课程总数
+	 * @param #companyId: 公司Id
+	 */
+	Integer getCourseCount(Map<String, String> params);
 }

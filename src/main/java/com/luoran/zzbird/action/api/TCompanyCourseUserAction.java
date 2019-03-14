@@ -145,6 +145,9 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			return HttpResult.fail("查询失败!");
 		}
 		return HttpResult.success("查询成功!", res);
-
 	}
+	
+	
+	
+	
 }

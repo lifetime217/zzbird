@@ -1,6 +1,7 @@
 package com.luoran.zzbird.service.impl;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,12 @@ public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> i
 		tCompanyCourseUser.setXcxUserRoleId(user.getXcxUserRoleId().toString());
 		companyCourseUserService.add(tCompanyCourseUser);
 		return courseId;
+	}
+
+	@Override
+	public Integer getCourseCount(Map<String, String> params) {
+		Integer courseCount = courseDao.queryCourseCount(params);
+		return courseCount;
 	}
 
 }

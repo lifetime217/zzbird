@@ -19,4 +19,15 @@ queryCourseDetail
 		WHERE
 		c.id =#courseId# AND
 		c.company_id = c1.id
-	
+
+		
+queryCourseCount
+===
+		* 查询公司下课程总数
+		
+		SELECT
+			count(tcc.id)
+		FROM
+			t_company_course tcc
+		WHERE
+			tcc.company_id = #companyId#

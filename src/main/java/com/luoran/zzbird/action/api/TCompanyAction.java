@@ -29,6 +29,7 @@ import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.entity.vo.UserRoleVo;
+import com.luoran.zzbird.service.ITCompanyCourseService;
 import com.luoran.zzbird.service.ITCompanyService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.GeohashUtil;
@@ -45,6 +46,9 @@ public class TCompanyAction implements BaseAction<TCompany> {
 
 	@Autowired
 	private ITCompanyService companyService;
+	
+	@Autowired
+	private ITCompanyCourseService companyCourseService;
 
 	@Autowired
 	Environment env;
@@ -128,13 +132,13 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping("/addCompany")
 	@ResponseBody()
-	public HttpResult addCompany(TCompany company, String sessionKey) {
+	public HttpResult addCompany(TCompany company, String zzbird_XcxSessionKey) {
 		JSONObject res = new JSONObject();
 		try {
 			//添加公司
-			TXcxUserRole userRole = companyService.addCompany(company, sessionKey);
+			TXcxUserRole userRole = companyService.addCompany(company, zzbird_XcxSessionKey);
 			// 重新赋值sessionmanager
-			SessionManager.init(sessionKey, new UserContextInfo(userRole));
+			SessionManager.init(zzbird_XcxSessionKey, new UserContextInfo(userRole));
 			res.put("companyId",userRole.getCompanyId());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
@@ -239,4 +243,38 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		return HttpResult.success("修改成功", res);
 
 	}
+	/**
+	 * @author tzx
+	 * @Description 查询个人中心企业相关信息
+	 * 
+	 */
+	@RequestMapping("/selectCompany")
+	@ResponseBody()
+	public HttpResult selectCompany(@RequestParam Map<String, String> params) {
+		HttpResult hr = new HttpResult();
+		UserContextInfo userContextInfo = UserContext.get();
+		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
+		params.put("roleId", xcxUserRoleId.toString());
+		params.put("companyId", userContextInfo.getCompanyId());
+		JSONObject data = new JSONObject();
+		try {
+			//封装角色信息
+			data.put("role", userContextInfo);
+			TCompany companyInfo = companyService.getCompanyInfo(params);
+			data.put("lookCount", companyInfo.getLookCount());
+			data.put("shareCount", companyInfo.getShareCount());
+			Integer courseCount = companyCourseService.getCourseCount(params);
+			data.put("courseCount", courseCount);
+			System.out.println("------------------------------------");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getCause());
+			e.printStackTrace();
+		}
+		hr.setData(data);
+		hr.setMsg("查询成功");
+		hr.setStatusCode(200);
+		return hr ;
+		
+	}
+	
 }

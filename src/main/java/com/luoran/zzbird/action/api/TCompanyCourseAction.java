@@ -66,7 +66,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	 */
 	@RequestMapping("/addCourse")
 	@ResponseBody()
-	public HttpResult addCourse(TCompanyCourse course, String sessionKey) {
+	public HttpResult addCourse(TCompanyCourse course) {
 		JSONObject res = new JSONObject();
 		try {
 			String courseId = courseService.addCourse(course);
