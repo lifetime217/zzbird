@@ -84,5 +84,5 @@ public interface ITDakaRecordService extends IBaseService<TDakaRecord> {
 	 * @Author wsl  
 	 * @Description:查询学生、老师、企业的上课总课时
 	 */
-	Integer queryUserClassHour(String companyId);
+	Integer queryUserClassHour();
 }
