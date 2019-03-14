@@ -126,8 +126,8 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 	}
 
 	@Override
-	public Integer queryUserClassHour(String companyId) {
+	public Integer queryUserClassHour() {
 		UserContextInfo user = UserContext.get();
-		return iTDakaRecordDao.queryUserClassHour(user.getXcxUserRoleId(), companyId, user.getRoleVal());
+		return iTDakaRecordDao.queryUserClassHour(user.getXcxUserRoleId(), user.getCompanyId(), user.getRoleVal());
 	}
 }
