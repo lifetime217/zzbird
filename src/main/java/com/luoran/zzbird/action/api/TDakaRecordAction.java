@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -33,7 +35,7 @@ import com.luoran.zzbird.service.ITDakaRecordService;
 @Controller
 @RequestMapping("api/dakarecord")
 public class TDakaRecordAction implements BaseAction<TDakaRecord> {
-
+	private final static Logger log = LoggerFactory.getLogger(TCompanyCourseUserAction.class);
 	@Autowired
 	private ITDakaRecordService service;
 
@@ -106,7 +108,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 				jarr.add(obj);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			hr.setMsg("服务器错误");
 			hr.setStatusCode(500);
 			return hr;
@@ -164,7 +166,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 				data.add(course);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			hr.setMsg("服务器错误");
 			hr.setStatusCode(500);
 			return hr;
@@ -234,7 +236,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 			// 封装未打卡的学生
 			data.put("weiDaka", weiDakaList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			hr.setMsg("服务器错误");
 			hr.setStatusCode(500);
 			return hr;
@@ -275,7 +277,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		try {
 			System.out.println();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			hr.setMsg("后台错误");
 			hr.setStatusCode(500);
 			return hr;
@@ -302,7 +304,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 				return hr;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			hr.setMsg("后台错误");
 			hr.setStatusCode(500);
 			return hr;

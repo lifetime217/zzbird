@@ -1,5 +1,7 @@
 package com.luoran.zzbird.dao;
 
+import java.util.Map;
+
 import org.beetl.sql.core.annotatoin.Param;
 import org.beetl.sql.core.engine.PageQuery;
 
@@ -20,5 +22,12 @@ public interface ITCompanyCourseDao extends BaseDao<TCompanyCourse> {
 	 * @Description:  根据课程id查询课程的详情
 	 */
 	TCompanyCourse queryCourseDetail(@Param(value = "courseId") String courseId);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询公司下课程总数
+	 * @param #companyId: 公司Id
+	 */
+	public Integer queryCourseCount(Map<String, String> params);
 
 }

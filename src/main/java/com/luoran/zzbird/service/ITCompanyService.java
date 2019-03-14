@@ -1,6 +1,7 @@
 package com.luoran.zzbird.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.beetl.sql.core.engine.PageQuery;
 
@@ -43,6 +44,13 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	 * @Description:  查询公司的老师 
 	 */
 	List<TXcxUserRole> queryCompanyTeacher(String companyId);
+	/**
+	 * 
+	 * @Author tzx  
+	 * @Description:  查询公司信息
+	 * @param #companyId: 公司的Id
+	 */
+	TCompany getCompanyInfo(Map<String, String> params);
 	
 	
 }

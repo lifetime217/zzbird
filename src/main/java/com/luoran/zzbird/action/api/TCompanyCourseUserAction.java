@@ -104,7 +104,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			}
 			System.out.println();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			hr.setMsg("服务器错误");
 			hr.setStatusCode(500);
 			return hr;
@@ -145,6 +145,9 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			return HttpResult.fail("查询失败!");
 		}
 		return HttpResult.success("查询成功!", res);
-
 	}
+	
+	
+	
+	
 }

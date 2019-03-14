@@ -2,6 +2,7 @@ package com.luoran.zzbird.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,11 +117,18 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		tXcxUserRole.setCurrentActive(1);
 		tXcxUserRole.setSign(ShortUuid.generateShortUuid());
 		tXcxUserRole.setIsdelete(0);
-		xcxUserRoleService.add(tXcxUserRole);
+		String xcxUserRoleId = xcxUserRoleService.add(tXcxUserRole);
 		// 返回给action重新赋值sesion
 		tXcxUserRole.set("openId", xcxUser.getOpenId());
+		tXcxUserRole.setId(Integer.parseInt(xcxUserRoleId));;
 		tXcxUserRole.set("companyName", company.getCompanyName());
 		return tXcxUserRole;
+	}
+
+	@Override
+	public TCompany getCompanyInfo(Map<String, String> params) {
+		TCompany company = companyDao.unique(params.get("companyId"));
+		return company;
 	}
 
 }
