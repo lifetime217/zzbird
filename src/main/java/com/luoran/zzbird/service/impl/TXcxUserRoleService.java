@@ -1,6 +1,7 @@
 package com.luoran.zzbird.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,20 @@ public class TXcxUserRoleService extends AbstractBaseService<TXcxUserRole> imple
 	@Override
 	public boolean updateCurrentActiveByZero(String xcxUserId) {
 		return xcxUserRoleDao.updateCurrentActiveByZero(xcxUserId) != 0;
+	}
+
+	@Override
+	public TXcxUserRole updataUserRole(Map<String, String> params) {
+		TXcxUserRole user = new TXcxUserRole();
+		user.setId(Integer.parseInt(params.get("roleId")));
+		user.setRoleName(params.get("nickName"));
+		user.setRoleHeadimg(params.get("imgUrl"));
+		int updateTemplateById = xcxUserRoleDao.updateTemplateById(user);
+		if (updateTemplateById > 0) {
+			TXcxUserRole unique = xcxUserRoleDao.unique(params.get("roleId"));
+			return unique;
+		}
+		return null;
 	}
 	
 	

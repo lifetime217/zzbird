@@ -1,6 +1,7 @@
 package com.luoran.zzbird.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
@@ -23,6 +24,14 @@ public interface ITXcxUserRoleService extends IBaseService<TXcxUserRole> {
 	 * @Description:  修改正在使用的角色为0
 	 */
 	boolean updateCurrentActiveByZero(String xcxUserId);
+	/**
+	 * 
+	 * @Author tzx
+	 * @param roleId 用户的角色ID
+	 * @param imgUrl 用户的头像
+	 * @param nickName 用户的名称
+	 */
+	TXcxUserRole updataUserRole(Map<String, String> params);
 	
 	
 	
