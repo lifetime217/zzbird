@@ -15,17 +15,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.luoran.wechat.facade.XcxFacade;
 import com.luoran.zzbird.core.HttpResult;
 import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
+import com.luoran.zzbird.entity.biz.TPoster;
+import com.luoran.zzbird.entity.biz.TSharePoster;
 import com.luoran.zzbird.entity.vo.CourseUserVo;
 import com.luoran.zzbird.service.ITCompanyCourseService;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
 import com.luoran.zzbird.service.ITDakaRecordService;
+import com.luoran.zzbird.service.ITPosterService;
+import com.luoran.zzbird.service.ITSharePosterService;
+import com.luoran.zzbird.utils.Base64Utils;
 import com.luoran.zzbird.utils.Convert;
+import com.luoran.zzbird.utils.Validate;
 
 /**
  * @author wsl
@@ -47,7 +54,18 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	private ITDakaRecordService dakaRecordService;
 
 	@Autowired
+	private ITPosterService posterService;
+	
+	@Autowired
+	private ITSharePosterService sharePOsterService;
+	
+	
+
+	@Autowired
 	Environment env;
+
+	@Autowired
+	XcxFacade xcxFacade;
 
 	@RequestMapping
 	public String index() {
@@ -67,6 +85,10 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	@RequestMapping("/addCourse")
 	@ResponseBody()
 	public HttpResult addCourse(TCompanyCourse course) {
+		HttpResult validate = Validate.Course(course);
+		if (validate != null) {
+			return validate;
+		}
 		JSONObject res = new JSONObject();
 		try {
 			String courseId = courseService.addCourse(course);
@@ -120,6 +142,13 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	@RequestMapping("/updateCourse")
 	@ResponseBody()
 	public HttpResult updateCourse(TCompanyCourse course) {
+		if (course.getId() == null || "".equals(course.getId())) {
+			return HttpResult.fail("请传入id!");
+		}
+		HttpResult validate = Validate.Course(course);
+		if (validate != null) {
+			return validate;
+		}
 		JSONObject res = new JSONObject();
 		try {
 			UserContextInfo user = UserContext.get();
@@ -136,7 +165,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description: 查询课程信息、公司名、课程老师的名字、如果是学生需要查询用户的学习周数和累计学习的课时
+	 * @Description: 查询课程信息、公司名、课程老师的名字、如果是学生需要查询用户的学习周数和累计学习的课时,二维码
 	 */
 	@RequestMapping(value = "/queryCourseAndCompany/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
@@ -165,13 +194,26 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			res.put("teacher", teacher);
 
 			UserContextInfo userContextInfo = UserContext.get();
-			
 			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 30) {
-				// 查询用户课程的上课课时
-				res.put("classHour", dakaRecordService.queryStuClassHourByCourseId(courseId));	
-				// 查询用户课程的上课周数
+				res.put("classHour", dakaRecordService.queryStuClassHourByCourseId(courseId));
+				res.put("studyWeek", dakaRecordService.queryStuStudyWeek(courseId));
+				// 默认为第一张海报
+				TPoster tPoster = posterService.get("t1");
+				if (tPoster != null) {
+					// 小程序二维码
+					String weixinCode = xcxFacade.getWeixinCode();
+					res.put("codeunlimit", weixinCode);
+		            String base64Img = Base64Utils.ImageToBase64ByOnline(tPoster.getPosterPageUrl());
+		            //海报的base64图片
+		            res.put("backgroundBase", base64Img);
+		            res.put("imgWidth",tPoster.getImgWidth());
+		            res.put("imgHeight",tPoster.getImgHeight());
+		            List<TSharePoster>  sharePosterDtoList = sharePOsterService.querySharePoster(tPoster.getId());
+		            res.put("sharePoster",sharePosterDtoList);
+		            
+		            res.put("userName",userContextInfo.getRoleName());
+				}
 			}
-
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");

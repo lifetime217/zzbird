@@ -45,8 +45,7 @@ public interface ITCompanyCourseUserDao extends BaseDao<TCompanyCourseUser> {
 	 * @Author wsl
 	 * @Description: 查询用户所属的公司对应角色的课程
 	 */
-	List<TCompanyCourse> queryCourseByUserList(@Param("openId") String openId, @Param("companyId") String companyId,
-			@Param("roleVal") Integer roleVal);
+	void queryCourseByUserList(PageQuery<TCompanyCourse> pageQuery);
 
 	/**
 	 * 

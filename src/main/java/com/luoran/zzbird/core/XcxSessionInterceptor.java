@@ -44,5 +44,8 @@ public class XcxSessionInterceptor extends HandlerInterceptorAdapter {
 		UserContext.init(SessionManager.get(sessionKey));
 		return true;
 	}
+	
+	
+	
 
 }

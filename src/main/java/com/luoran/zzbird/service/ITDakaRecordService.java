@@ -101,4 +101,12 @@ public interface ITDakaRecordService extends IBaseService<TDakaRecord> {
 	 * @param #roleId：学生的Id
 	 */
 	Integer getClassHourthIsMonth(Map<String, String> params);
+
+
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:查询学生单个课程学习的周数
+	 */
+	Integer queryStuStudyWeek(String courseId);
 }

@@ -28,12 +28,13 @@ import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
-import com.luoran.zzbird.entity.vo.UserRoleVo;
 import com.luoran.zzbird.service.ITCompanyCourseService;
 import com.luoran.zzbird.service.ITCompanyService;
 import com.luoran.zzbird.service.ITDakaRecordService;
+import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.GeohashUtil;
+import com.luoran.zzbird.utils.Validate;
 
 /**
  * @author wsl
@@ -47,9 +48,13 @@ public class TCompanyAction implements BaseAction<TCompany> {
 
 	@Autowired
 	private ITCompanyService companyService;
-	
+
 	@Autowired
 	private ITCompanyCourseService companyCourseService;
+	
+	
+	@Autowired
+	ITXcxUserService xcxUserService;
 	
 	@Autowired
 	private ITDakaRecordService dakaRecordService ;
@@ -69,7 +74,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description:   查询公司列表的分页 利用showV1 来区分查询 （1代表重点客户 0代表普通用户）
+	 * @Description: 查询公司列表的分页 利用showV1 来区分查询 （1代表重点客户 0代表普通用户）
 	 * @params lat 纬度 lng经度
 	 */
 	@RequestMapping("/queryCompanyPage")
@@ -79,7 +84,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			@RequestParam(value = "latitude", required = false, defaultValue = "0.0d") double latitude,
 			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude) {
 		JSONObject res = new JSONObject();
-		//   定位查询
+		// 定位查询
 		try {
 
 			// 拿到图片的访问地址
@@ -128,21 +133,27 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		return HttpResult.success("查询成功", res);
 	}
 
+	
+
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description:   新建企业
+	 * @Description: 新建企业
 	 */
 	@RequestMapping("/addCompany")
 	@ResponseBody()
 	public HttpResult addCompany(TCompany company, String zzbird_XcxSessionKey) {
+		HttpResult validate = Validate.Company(company);
+		if (validate != null) {
+			return validate;
+		}
 		JSONObject res = new JSONObject();
 		try {
-			//添加公司
+			// 添加公司
 			TXcxUserRole userRole = companyService.addCompany(company, zzbird_XcxSessionKey);
-			// 重新赋值sessionmanager
-			SessionManager.init(zzbird_XcxSessionKey, new UserContextInfo(userRole));
-			res.put("companyId",userRole.getCompanyId());
+			
+			xcxUserService.reloadSession(zzbird_XcxSessionKey);
+			res.put("companyId", userRole.getCompanyId());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("新增失败");
@@ -150,11 +161,10 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		return HttpResult.success("新增成功", res);
 	}
 
-
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description:   查詢公司详情页
+	 * @Description: 查詢公司详情页
 	 */
 	@RequestMapping("/queryCompanyDetail")
 	@ResponseBody()
@@ -181,7 +191,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description:   根据企业id查询企业的基本信息
+	 * @Description: 根据企业id查询企业的基本信息
 	 */
 	@RequestMapping(value = "/queryCompanyByCompanyId", method = RequestMethod.GET)
 	@ResponseBody()
@@ -228,11 +238,15 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description:   修改企业
+	 * @Description: 修改企业
 	 */
 	@RequestMapping("/updateCompany")
 	@ResponseBody()
 	public HttpResult updateCompany(TCompany company) {
+		HttpResult validate = Validate.Company(company);
+		if (validate != null) {
+			return validate;
+		}
 		JSONObject res = new JSONObject();
 		try {
 			UserContextInfo user = UserContext.get();
@@ -246,6 +260,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		return HttpResult.success("修改成功", res);
 
 	}
+
 	/**
 	 * @author tzx
 	 * @Description 查询个人中心企业相关信息
@@ -261,7 +276,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		params.put("companyId", userContextInfo.getCompanyId());
 		JSONObject data = new JSONObject();
 		try {
-			//封装角色信息
+			// 封装角色信息
 			data.put("role", userContextInfo);
 			TCompany companyInfo = companyService.getCompanyInfo(params);
 			data.put("lookCount", companyInfo.getLookCount());
@@ -289,8 +304,8 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		hr.setData(data);
 		hr.setMsg("查询成功");
 		hr.setStatusCode(200);
-		return hr ;
-		
+		return hr;
+
 	}
-	
+
 }

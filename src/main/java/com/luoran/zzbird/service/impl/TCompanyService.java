@@ -58,7 +58,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		companyDao.queryPage(pageQuery);
 		return pageQuery;
 	}
-
+	
 	@Override
 	public List<TCompany> queryPointUser(String url) {
 		List<TCompany> pointUser = companyDao.queryPointUser();
@@ -90,7 +90,6 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 	@Transactional
 	public TXcxUserRole addCompany(TCompany company, String sessionKey) {
 		UserContextInfo user = UserContext.get();
-		// 根据openid查询出用户的信息
 		TXcxUser xcxUser = xcxUserService.queryXcxUserByOpenId(user.getOpenid());
 		// 添加公司表
 		company.set("addTime", new Date());
@@ -103,10 +102,9 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		company.set("geohash", GeohashUtil.encode(company.getLat().doubleValue(), company.getLng().doubleValue()));
 		company.set("studentCount", 0);
 		company.set("sign", ShortUuid.generateShortUuid());
-		company.set("xcx_user_id", xcxUser.getId());
+		company.set("xcxUserId", xcxUser.getId());
 		String companyId = add(company);
 
-		// 修改用户上次登录的为0
 		xcxUserRoleService.updateCurrentActiveByZero(xcxUser.getId());
 
 		// 添加角色用户表（默认微信的头像和名字 ）
@@ -119,11 +117,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		tXcxUserRole.setCurrentActive(1);
 		tXcxUserRole.setSign(ShortUuid.generateShortUuid());
 		tXcxUserRole.setIsdelete(0);
-		String xcxUserRoleId = xcxUserRoleService.add(tXcxUserRole);
-		// 返回给action重新赋值sesion
-		tXcxUserRole.set("openId", xcxUser.getOpenId());
-		tXcxUserRole.setId(Integer.parseInt(xcxUserRoleId));;
-		tXcxUserRole.set("companyName", company.getCompanyName());
+		xcxUserRoleService.add(tXcxUserRole);
 		return tXcxUserRole;
 	}
 

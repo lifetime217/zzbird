@@ -9,6 +9,7 @@ import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
 import com.luoran.zzbird.entity.vo.CourseUserVo;
+import com.luoran.zzbird.entity.vo.InviteVo;
 
 /**
  * @author tzx
@@ -22,6 +23,7 @@ public interface ITCompanyCourseUserService extends IBaseService<TCompanyCourseU
 	 */
 	PageQuery<TCompanyCourseUser> getComUserByBoosRole(PageQuery<TCompanyCourseUser> pageQuery);
 
+	
 	/**
 	 * 
 	 * @Author tzx
@@ -41,7 +43,7 @@ public interface ITCompanyCourseUserService extends IBaseService<TCompanyCourseU
 	 * @Author wsl
 	 * @Description: 查询用户所属的公司对应角色的课程
 	 */
-	List<TCompanyCourse> queryCourseList();
+	PageQuery<TCompanyCourse> queryCourseList(String page);
 
 	/**
 	 * 
@@ -65,6 +67,14 @@ public interface ITCompanyCourseUserService extends IBaseService<TCompanyCourseU
 	 * @param #roleId:老师的角色ID
 	 */
 	PageQuery<TCompanyCourseUser> getTeaCourseStu(PageQuery<TCompanyCourseUser> pageQuery);
+
+
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:用户受邀请进来添加数据
+	 */
+	void addCourseUser(InviteVo inviteVo,String zzbird_XcxSessionKey);
 
 
 }

@@ -31,6 +31,11 @@ public class TXcxUserRoleService extends AbstractBaseService<TXcxUserRole> imple
 	}
 
 	@Override
+	public Integer insert(TXcxUserRole t) {
+		return super.insert(t);
+	}
+
+	@Override
 	public List<TXcxUserRole> queryCompanyUser(Integer roleVal, String companyId) {
 		return xcxUserRoleDao.queryCompanyUser(roleVal, companyId);
 	}
@@ -39,4 +44,7 @@ public class TXcxUserRoleService extends AbstractBaseService<TXcxUserRole> imple
 	public boolean updateCurrentActiveByZero(String xcxUserId) {
 		return xcxUserRoleDao.updateCurrentActiveByZero(xcxUserId) != 0;
 	}
+	
+	
+	
 }
