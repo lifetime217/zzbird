@@ -60,6 +60,10 @@ public class TXcxUserRoleService extends AbstractBaseService<TXcxUserRole> imple
 		return null;
 	}
 	
-	
+	@Override
+	public boolean updateActive(Integer id) {
+		return xcxUserRoleDao.updateActive(id) != 0;
+	}
+
 	
 }

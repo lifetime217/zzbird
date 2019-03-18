@@ -33,6 +33,11 @@ public interface ITXcxUserRoleService extends IBaseService<TXcxUserRole> {
 	 */
 	TXcxUserRole updataUserRole(Map<String, String> params);
 	
-	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:根据id修改正在使用
+	 */
+	boolean updateActive(Integer id);
 	
 }
