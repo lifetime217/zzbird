@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
@@ -55,11 +56,9 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 
 	@Autowired
 	private ITPosterService posterService;
-	
+
 	@Autowired
 	private ITSharePosterService sharePOsterService;
-	
-	
 
 	@Autowired
 	Environment env;
@@ -169,7 +168,8 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	 */
 	@RequestMapping(value = "/queryCourseAndCompany/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
-	public HttpResult queryCourseAndCompany(@PathVariable(value = "courseId") String courseId) {
+	public HttpResult queryCourseAndCompany(@PathVariable(value = "courseId") String courseId,
+			@RequestParam(value = "type") String type) {
 		JSONObject res = new JSONObject();
 		try {
 			TCompanyCourse course = courseService.queryCourseDetail(courseId);
@@ -194,7 +194,8 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			res.put("teacher", teacher);
 
 			UserContextInfo userContextInfo = UserContext.get();
-			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 30) {
+			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 30
+					&& !"inviteStu".equals(type)&& !"inviteTea".equals(type)) {
 				res.put("classHour", dakaRecordService.queryStuClassHourByCourseId(courseId));
 				res.put("studyWeek", dakaRecordService.queryStuStudyWeek(courseId));
 				// 默认为第一张海报
@@ -203,15 +204,15 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 					// 小程序二维码
 					String weixinCode = xcxFacade.getWeixinCode();
 					res.put("codeunlimit", weixinCode);
-		            String base64Img = Base64Utils.ImageToBase64ByOnline(tPoster.getPosterPageUrl());
-		            //海报的base64图片
-		            res.put("backgroundBase", base64Img);
-		            res.put("imgWidth",tPoster.getImgWidth());
-		            res.put("imgHeight",tPoster.getImgHeight());
-		            List<TSharePoster>  sharePosterDtoList = sharePOsterService.querySharePoster(tPoster.getId());
-		            res.put("sharePoster",sharePosterDtoList);
-		            
-		            res.put("userName",userContextInfo.getRoleName());
+					String base64Img = Base64Utils.ImageToBase64ByOnline(tPoster.getPosterPageUrl());
+					// 海报的base64图片
+					res.put("backgroundBase", base64Img);
+					res.put("imgWidth", tPoster.getImgWidth());
+					res.put("imgHeight", tPoster.getImgHeight());
+					List<TSharePoster> sharePosterDtoList = sharePOsterService.querySharePoster(tPoster.getId());
+					res.put("sharePoster", sharePosterDtoList);
+
+					res.put("userName", userContextInfo.getRoleName());
 				}
 			}
 		} catch (Exception e) {
