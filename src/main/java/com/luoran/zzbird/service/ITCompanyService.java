@@ -58,5 +58,10 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	 */
 	TCompany getCompanyInfo(Map<String, String> params);
 	
-	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description: 根据flag 修改公司的老师或者学生人数  0修改老师 1修改 学生
+	 */
+	boolean updateCompanyPersonNumber(String id, Integer flag);
 }

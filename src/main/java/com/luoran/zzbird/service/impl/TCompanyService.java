@@ -58,7 +58,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		companyDao.queryPage(pageQuery);
 		return pageQuery;
 	}
-	
+
 	@Override
 	public List<TCompany> queryPointUser(String url) {
 		List<TCompany> pointUser = companyDao.queryPointUser();
@@ -105,7 +105,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		company.set("xcxUserId", xcxUser.getId());
 		String companyId = add(company);
 
-		xcxUserRoleService.updateCurrentActiveByZero(xcxUser.getId());
+		xcxUserRoleService.updateCurrentActiveByZero(sessionKey);
 
 		// 添加角色用户表（默认微信的头像和名字 ）
 		TXcxUserRole tXcxUserRole = new TXcxUserRole();
@@ -125,6 +125,11 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 	public TCompany getCompanyInfo(Map<String, String> params) {
 		TCompany company = companyDao.unique(params.get("companyId"));
 		return company;
+	}
+
+	@Override
+	public boolean updateCompanyPersonNumber(String id, Integer flag) {
+		return companyDao.updateCompanyPersonNumber(id, flag) != 0;
 	}
 
 }

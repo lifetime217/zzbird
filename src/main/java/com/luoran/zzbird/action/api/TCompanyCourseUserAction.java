@@ -310,7 +310,6 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		try {
 			companyCourseUserService.addCourseUser(inviteVo,zzbird_XcxSessionKey);
 			xcxUserService.reloadSession(zzbird_XcxSessionKey);
-			System.out.println("测试拿到session==================="+UserContext.get().toString());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("接受失败!");

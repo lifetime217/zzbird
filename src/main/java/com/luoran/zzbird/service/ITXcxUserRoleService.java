@@ -22,7 +22,7 @@ public interface ITXcxUserRoleService extends IBaseService<TXcxUserRole> {
 	 * @Author wsl
 	 * @Description:  修改正在使用的角色为0
 	 */
-	boolean updateCurrentActiveByZero(String xcxUserId);
+	boolean updateCurrentActiveByZero(String sessionKey);
 	
 	/**
 	 * 

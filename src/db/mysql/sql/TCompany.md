@@ -87,7 +87,21 @@ queryCompanyDetail
 	t_company.id = #companyId#
 
 	
+updateCompanyPersonNumber
+===
+* 修改公司人数加一  0代表修改老师人数  1代表修改学生人数 
 
+update t_company
+set  
+ @if(flag==0){
+     teacher_count=teacher_count+1 
+ @}
+ @if(flag==1){
+     student_count=student_count+1
+ @}
+ where id =#id#
+    
+	
 
 	
 

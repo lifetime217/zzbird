@@ -15,6 +15,13 @@ import com.luoran.zzbird.entity.biz.TCompanyCourse;
 public interface ITCompanyCourseDao extends BaseDao<TCompanyCourse> {
 
 	public void queryPage(PageQuery<TCompanyCourse> pageQuery);
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:修改课程人数加一
+	 */
+	Integer updatePersonNumber(String id);
 
 	/**
 	 * 

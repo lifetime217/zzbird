@@ -27,8 +27,6 @@ public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> i
 	private ITCompanyCourseDao courseDao;
 	@Autowired
 	private ITCompanyCourseUserService companyCourseUserService;
-	
-	
 
 	@Override
 	public BaseDao<TCompanyCourse> getDao() {
@@ -52,7 +50,7 @@ public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> i
 		course.setCompanyId(user.getCompanyId());
 		course.setPersonNumber(0);
 		String courseId = add(course);
-		
+
 		TCompanyCourseUser tCompanyCourseUser = new TCompanyCourseUser();
 		tCompanyCourseUser.setCompanyCourseId(courseId);
 		tCompanyCourseUser.setAddTime(new Date());
@@ -65,6 +63,11 @@ public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> i
 	public Integer getCourseCount(Map<String, String> params) {
 		Integer courseCount = courseDao.queryCourseCount(params);
 		return courseCount;
+	}
+
+	@Override
+	public boolean updatePerson(String id) {
+		return courseDao.updatePersonNumber(id) != 0;
 	}
 
 }

@@ -31,3 +31,10 @@ queryCourseCount
 			t_company_course tcc
 		WHERE
 			tcc.company_id = #companyId#
+			
+updatePersonNumber
+===
+* 修改课程人数加一
+	update t_company_course 
+	set person_number=person_number+1 
+	where id=#id#

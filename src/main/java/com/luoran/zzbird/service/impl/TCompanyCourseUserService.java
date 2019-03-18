@@ -22,7 +22,9 @@ import com.luoran.zzbird.entity.biz.TXcxUser;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.entity.vo.CourseUserVo;
 import com.luoran.zzbird.entity.vo.InviteVo;
+import com.luoran.zzbird.service.ITCompanyCourseService;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
+import com.luoran.zzbird.service.ITCompanyService;
 import com.luoran.zzbird.service.ITMessageService;
 import com.luoran.zzbird.service.ITXcxUserRoleService;
 import com.luoran.zzbird.service.ITXcxUserService;
@@ -38,6 +40,12 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		implements ITCompanyCourseUserService {
 	@Autowired
 	private ITCompanyCourseUserDao companyCourseUserDao;
+	
+	@Autowired
+	ITCompanyCourseService companyCourseService;
+	
+	@Autowired
+	ITCompanyService companyService;
 
 	@Autowired
 	ITXcxUserService xcxUserService;
@@ -106,7 +114,7 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 			xcxUserId = xcxUser.getId();
 		}
 		// 修改正在使用为0
-		xcxUserRoleService.updateCurrentActiveByZero(xcxUserId);
+		xcxUserRoleService.updateCurrentActiveByZero(zzbird_XcxSessionKey);
 
 		Integer roleVal;// 邀请人的角色
 		String content;// 消息内容
@@ -114,10 +122,12 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 			// 邀请老师
 			roleVal = 20;
 			content = "你成为了(" + inviteVo.getCompanyName() + ")的老师";
+			companyService.updateCompanyPersonNumber(inviteVo.getCompanyId(), 0);
 		} else {
 			// 邀请学生
 			roleVal = 30;
 			content = "你成为了(" + inviteVo.getCourseName() + ")的学员";
+			companyService.updateCompanyPersonNumber(inviteVo.getCompanyId(), 1);
 		}
 		// 添加公司用户表
 		TXcxUserRole tXcxUserRole = new TXcxUserRole();
@@ -150,8 +160,11 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		msg.setIsdelete(0);
 		msg.setRead(0);
 		msg.setToUser(xcxUserRoleId.toString());
-		// TODO  添加消息时间
+		msg.setAddTime(new Date());
 		messageService.add(msg);
+		
+		companyCourseService.updatePerson(inviteVo.getCourseId());
+		
 		
 		
 	}

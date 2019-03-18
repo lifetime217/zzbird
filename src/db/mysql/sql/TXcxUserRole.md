@@ -19,11 +19,13 @@ updateCurrentActiveByZero
 ===
 * 修改正在使用的角色为0
 
-	UPDATE t_xcx_user_role 
-	SET current_active = 0 
+	UPDATE t_xcx_user_role r,
+	t_xcx_user u 
+	SET r.current_active = 0
 	WHERE
-	xcx_user_id = #xcxUserId# 
-	AND current_active = 1 
+	r.xcx_user_id = u.id
+	AND r.current_active = 1 
+	and u.session_key = #sessionKey#
 	
 updateActive
 ===

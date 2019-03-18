@@ -75,10 +75,11 @@ public class TXcxUserRoleAction implements BaseAction<TXcxUserRole> {
 
 	@RequestMapping("/updateActive")
 	@ResponseBody()
-	public HttpResult updateActive(@RequestParam(value = "id") Integer id, String zzbird_XcxSessionKey) {
+	public HttpResult updateActive(@RequestParam(value = "id") String id, String zzbird_XcxSessionKey) {
 		JSONObject res = new JSONObject();
 		try {
-			boolean updateActive = xcxUserRoleService.updateActive(id);
+			xcxUserRoleService.updateCurrentActiveByZero(zzbird_XcxSessionKey);
+			boolean updateActive = xcxUserRoleService.updateActive(Integer.parseInt(id));
 			if (updateActive) {
 				xcxUserService.reloadSession(zzbird_XcxSessionKey);
 				UserContextInfo userContextInfo = UserContext.get();

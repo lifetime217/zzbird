@@ -18,6 +18,14 @@ public interface ITCompanyCourseService extends IBaseService<TCompanyCourse> {
 	 */
 	TCompanyCourse queryCourseDetail(String courseId);
 	
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:修改课程人数加一
+	 */
+	boolean updatePerson(String id);
+	
 	/**
 	 * 
 	 * @Author wsl  

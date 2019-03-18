@@ -19,7 +19,18 @@ public interface ITCompanyDao extends BaseDao<TCompany> {
 
 	List<TCompany> queryPointUser();
 
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description: 查询公司详情
+	 */
 	TCompany queryCompanyDetail(@Param("companyId") String companyId);
 
-	TXcxUserRole queryCompanyUser(@Param("roleVal") Integer roleVal);
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description: 根据flag 修改公司的老师或者学生人数  0修改老师 1修改 学生
+	 */
+	Integer updateCompanyPersonNumber(String id, Integer flag);
 }
