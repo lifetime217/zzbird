@@ -24,3 +24,12 @@ updateCurrentActiveByZero
 	WHERE
 	xcx_user_id = #xcxUserId# 
 	AND current_active = 1 
+	
+updateActive
+===
+* 修改正在使用的橘色
+	UPDATE t_xcx_user_role 
+	SET current_active = 1
+	WHERE
+	id = #id# 
+	

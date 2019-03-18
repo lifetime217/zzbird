@@ -44,7 +44,10 @@ public class TXcxUserRoleService extends AbstractBaseService<TXcxUserRole> imple
 	public boolean updateCurrentActiveByZero(String xcxUserId) {
 		return xcxUserRoleDao.updateCurrentActiveByZero(xcxUserId) != 0;
 	}
-	
-	
-	
+
+	@Override
+	public boolean updateActive(Integer id) {
+		return xcxUserRoleDao.updateActive(id) != 0;
+	}
+
 }

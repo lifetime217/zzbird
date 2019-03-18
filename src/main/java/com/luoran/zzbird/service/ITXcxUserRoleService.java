@@ -24,6 +24,11 @@ public interface ITXcxUserRoleService extends IBaseService<TXcxUserRole> {
 	 */
 	boolean updateCurrentActiveByZero(String xcxUserId);
 	
-	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:根据id修改正在使用
+	 */
+	boolean updateActive(Integer id);
 	
 }

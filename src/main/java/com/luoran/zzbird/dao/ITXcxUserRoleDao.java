@@ -29,4 +29,11 @@ public interface ITXcxUserRoleDao extends BaseDao<TXcxUserRole> {
 	 * @Description:  修改正在使用的角色为0
 	 */
 	Integer updateCurrentActiveByZero(@Param("xcxUserId")String xcxUserId);
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:根据id修改正在使用
+	 */
+	Integer updateActive(Integer id);
 }
