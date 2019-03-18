@@ -22,9 +22,11 @@ import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
+import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
+import com.luoran.zzbird.service.ITDakaRecordService;
 
 /**
  * @author tzx
@@ -37,6 +39,9 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 
 	@Autowired
 	private ITCompanyCourseUserService companyCourseUserService;
+
+	@Autowired
+	private ITDakaRecordService dakaRecordService;
 
 	@Autowired
 	Environment env;
@@ -146,8 +151,137 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		}
 		return HttpResult.success("查询成功!", res);
 	}
-	
-	
-	
-	
+
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询个人中心老师相关信息
+	 */
+	@RequestMapping("/selectTeacher")
+	@ResponseBody()
+	public HttpResult selectCompany(@RequestParam Map<String, String> params) {
+		HttpResult hr = new HttpResult();
+		UserContextInfo userContextInfo = UserContext.get();
+		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
+		params.put("roleId", xcxUserRoleId.toString());
+		JSONObject data = new JSONObject();
+		try {
+			// 封装角色信息
+			data.put("role", userContextInfo);
+			// 初始化课程总数，学生总数，总课时
+			data.put("courseCount", 0);
+			data.put("stuCount", 0);
+			data.put("totalClassHour", 0);
+			// 查询课程总数，学生总数，总课时
+			Integer courseCount = companyCourseUserService.getUserCourseCount(params);
+			Integer stuCount = companyCourseUserService.getTeaCourseStuCount(params);
+			Integer userClassHour = dakaRecordService.queryUserClassHour();
+			// 封装课程总数，学生总数，总课时 判断查询的数据不是空的时候
+			if (courseCount != null) {
+				data.put("courseCount", courseCount);
+			}
+			if (stuCount != null) {
+				data.put("stuCount", stuCount);
+			}
+			if (userClassHour != null) {
+				data.put("totalClassHour", userClassHour);
+			}
+			System.out.println("------------------------------------");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getCause());
+			return HttpResult.fail("查询失败");
+		}
+		return HttpResult.success("查询成功", data);
+	}
+
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询个人中心学生相关信息
+	 */
+	@RequestMapping("/selectStudent")
+	@ResponseBody()
+	public HttpResult selectStudent(@RequestParam Map<String, String> params) {
+		UserContextInfo userContextInfo = UserContext.get();
+		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
+		params.put("roleId", xcxUserRoleId.toString());
+		JSONObject data = new JSONObject();
+		try {
+			// 封装角色信息
+			data.put("role", userContextInfo);
+			// 初始化课程数，本月课时，累计课时
+			data.put("courseCount", 0);
+			data.put("monthClassHourt", 0);
+			data.put("totalClassHour", 0);
+			// 查询课程数，本月课时，累计课时
+			Integer courseCount = companyCourseUserService.getUserCourseCount(params);
+			Integer classHourthIsMonth = dakaRecordService.getClassHourthIsMonth(params);
+			Integer userClassHour = dakaRecordService.queryUserClassHour();
+			// 封装课程数，本月课时，累计课时 封装时判断不为空
+			if (courseCount != null) {
+				data.put("courseCount", courseCount);
+			}
+			if (classHourthIsMonth != null) {
+				data.put("monthClassHourt", classHourthIsMonth);
+			}
+			if (userClassHour != null) {
+				data.put("totalClassHour", userClassHour);
+			}
+			System.out.println("------------------------------------");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getCause());
+			return HttpResult.fail("查询失败");
+		}
+		return HttpResult.success("查询成功", data);
+	}
+
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询老师下的学生
+	 */
+	@RequestMapping("/selectTeaCourseStu")
+	@ResponseBody()
+	public HttpResult selectTeaCourseStu(@RequestParam Map<String, String> params) {
+		UserContextInfo userContextInfo = UserContext.get();
+
+		// 存入roleId到参数map
+		params.put("roleId", userContextInfo.getXcxUserRoleId().toString());
+		if (StringUtils.isEmpty(params.get("page"))) {
+			return HttpResult.fail("前台page未传入");
+		}
+		// 初始化jarr
+		JSONArray data = new JSONArray();
+		// 放入查询的page页
+		PageQuery<TCompanyCourseUser> pageQuery = new PageQuery<TCompanyCourseUser>(Integer.parseInt(params.get("page")),10,params);
+		// 查询出来的Page页
+		PageQuery<TCompanyCourseUser> userQueryPage = null;
+		try {
+			JSONArray js = new JSONArray();
+			userQueryPage = companyCourseUserService.getTeaCourseStu(pageQuery);
+			List<TCompanyCourseUser> userlist = userQueryPage.getList();
+			for (TCompanyCourseUser user : userlist) {
+				JSONArray jACourseList = new JSONArray();
+				JSONObject jUser = new JSONObject();
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("roleId", user.getString("userRoleid"));
+				jUser.putAll(user.values());
+				List<TCompanyCourseUser> courseList = companyCourseUserService.getCourseByUserRoleId(map);
+				for (TCompanyCourseUser course : courseList) {
+					// 存入课程集合
+					JSONObject jCourse = new JSONObject();
+					jCourse.putAll(course.values());
+					jACourseList.add(jCourse);
+				}
+				jUser.put("courseList", jACourseList);
+				data.add(jUser);
+			}
+			System.out.println("--------------------------------------");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getCause());
+			return HttpResult.fail("查询失败");
+		}
+		return HttpResult.success("查询成功", data, userQueryPage.getPageNumber(), userQueryPage.getPageSize(), userQueryPage.getTotalRow(),userQueryPage.getTotalPage());
+	}
+
 }

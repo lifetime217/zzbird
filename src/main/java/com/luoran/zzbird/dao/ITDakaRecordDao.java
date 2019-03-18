@@ -78,5 +78,20 @@ public interface ITDakaRecordDao extends BaseDao<TDakaRecord> {
 	 * @Description:查询学生的总课时（个人 中心） roleVal来区分是用户(30)、老师(20)、企业(10)
 	 */
 	Integer queryUserClassHour(@Param("roleId")Integer roleId,@Param("companyId")String companyId,@Param("roleVal")Integer roleVal);
+	/**
+	 * 
+	 * @Author tzx  
+	 * @Description:查询公司下的课程打卡总共打卡了多少周
+	 * @param #companyId:公司的id
+	 */
+	public Integer queryDakaWeekCount(Map<String, String> params);
+	
+	/**
+	 * 
+	 * @Author tzx  
+	 * @Description:查询学生的本月课时
+	 * @param #roleId：学生的Id
+	 */
+	public Integer queryClassHourthIsMonth(Map<String, String> params);
 	
 }

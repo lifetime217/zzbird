@@ -18,29 +18,53 @@ public interface ITCompanyCourseUserService extends IBaseService<TCompanyCourseU
 	/**
 	 * 
 	 * @Author tzx
-	 * @Description:  根据Boos的角色id查询企业下的用户并且分页
+	 * @Description: 根据Boos的角色id查询企业下的用户并且分页
 	 */
 	PageQuery<TCompanyCourseUser> getComUserByBoosRole(PageQuery<TCompanyCourseUser> pageQuery);
 
 	/**
 	 * 
 	 * @Author tzx
-	 * @Description:  根据用户的角色id查询所有课程
+	 * @Description: 根据用户的角色id查询所有课程
 	 */
 	List<TCompanyCourseUser> getCourseByUserRoleId(Map<String, String> map);
 
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description:  根据传入的课程id和角色身份来查询这个课程下的学生或者老师
+	 * @Description: 根据传入的课程id和角色身份来查询这个课程下的学生或者老师
 	 */
 	List<CourseUserVo> queryCourseUserByCourseId(String courseId, Integer roleVal);
 
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description:  查询用户所属的公司对应角色的课程
+	 * @Description: 查询用户所属的公司对应角色的课程
 	 */
 	List<TCompanyCourse> queryCourseList();
+
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description: 查询用户下的课程总数，仅限老师和学生
+	 * @param #roleId:老师或学生的角色ID
+	 */
+	Integer getUserCourseCount(Map<String, String> params);
+
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description: 查询老师的学生人数
+	 * @param #roleId:老师的角色ID
+	 */
+	Integer getTeaCourseStuCount(Map<String, String> params);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description: 查询老师的学生，page分页查询
+	 * @param #roleId:老师的角色ID
+	 */
+	PageQuery<TCompanyCourseUser> getTeaCourseStu(PageQuery<TCompanyCourseUser> pageQuery);
+
 
 }

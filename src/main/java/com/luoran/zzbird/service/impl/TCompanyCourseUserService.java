@@ -18,7 +18,7 @@ import com.luoran.zzbird.entity.vo.CourseUserVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
 
 /**
- * @author lifetime
+ * @author tzx
  *
  */
 @Service
@@ -61,5 +61,24 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		List<TCompanyCourse> courseList = companyCourseUserDao.queryCourseByUserList(user.getOpenid(), user.getCompanyId(), user.getRoleVal());
 		return courseList;
 	}
+
+	@Override
+	public Integer getUserCourseCount(Map<String, String> params) {
+		Integer userCourseCount = companyCourseUserDao.queryUserCourseCount(params);
+		return userCourseCount;
+	}
+
+	@Override
+	public Integer getTeaCourseStuCount(Map<String, String> params) {
+		Integer queryTeaCourseStuCount = companyCourseUserDao.queryTeaCourseStuCount(params);
+		return queryTeaCourseStuCount;
+	}
+
+	@Override
+	public PageQuery<TCompanyCourseUser> getTeaCourseStu(PageQuery<TCompanyCourseUser> pageQuery) {
+		companyCourseUserDao.queryTeaCourseStu(pageQuery);
+		return pageQuery;
+	}
+
 
 }

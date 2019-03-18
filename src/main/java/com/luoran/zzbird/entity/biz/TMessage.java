@@ -97,5 +97,17 @@ public class TMessage extends BaseInfo implements Serializable {
 	public void setIsdelete(Integer isdelete) {
 		set("isdelete", isdelete);
 	}
+	
+	
+	/**
+	 * 发送消息的时间
+	 *
+	 */
+	public Date getAddTime() {
+		return getDate("addTime");
+	}
 
+	public void setAddTime(Date addTime) {
+		set("addTime", addTime);
+	}
 }

@@ -123,5 +123,18 @@ public class HttpResult implements Serializable {
 		obj.setData(data);
 		return obj;
 	}
+	
+	
+	public static final HttpResult success(String msg, Object data,Long page,Long pageSize,Long totalRow,Long totalPage) {
+		HttpResult obj = new HttpResult();
+		obj.setMsg(msg);
+		obj.setStatusCode(200);
+		obj.setData(data);
+		obj.setPage(page);
+		obj.setPageSize(pageSize);
+		obj.setTotalRow(totalRow);
+		obj.setTotalPage(totalPage);
+		return obj;
+	}
 
 }

@@ -31,6 +31,7 @@ import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.entity.vo.UserRoleVo;
 import com.luoran.zzbird.service.ITCompanyCourseService;
 import com.luoran.zzbird.service.ITCompanyService;
+import com.luoran.zzbird.service.ITDakaRecordService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.GeohashUtil;
 
@@ -49,7 +50,9 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	
 	@Autowired
 	private ITCompanyCourseService companyCourseService;
-
+	
+	@Autowired
+	private ITDakaRecordService dakaRecordService ;
 	@Autowired
 	Environment env;
 
@@ -263,8 +266,21 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			TCompany companyInfo = companyService.getCompanyInfo(params);
 			data.put("lookCount", companyInfo.getLookCount());
 			data.put("shareCount", companyInfo.getShareCount());
+			//查询总课程数
 			Integer courseCount = companyCourseService.getCourseCount(params);
-			data.put("courseCount", courseCount);
+			if (courseCount!=null) {
+				data.put("courseCount", courseCount);
+			}else {
+				data.put("courseCount", 0);
+			}
+			//用总课时除以打卡跨度的课时
+			Integer totalClassHour = dakaRecordService.queryUserClassHour();
+			Integer dakaWeekCount = dakaRecordService.getDakaWeekCount(params);
+			Integer average = 0;
+			if (totalClassHour!=null && dakaWeekCount != null) {
+				average = totalClassHour / dakaWeekCount;
+			}
+			data.put("average", average);
 			System.out.println("------------------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());

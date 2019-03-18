@@ -172,6 +172,39 @@ queryUserClassHour
 		 and r.company_course_id = #courseId#
 	@}
 	@if(!isEmpty(companyId)){
-		 and  c.company_id = = #companyId#
+		 and  c.company_id = #companyId#
 	@} 
 	 ORDER BY r.daka_time
+	 
+	 
+queryDakaWeekCount
+===
+	* 查询公司下的课程打卡总共打卡了多少周
+	
+	SELECT
+		WEEKOFYEAR(MAX(tdr.daka_time)) - WEEKOFYEAR(MIN(tdr.daka_time)) + 1
+	FROM
+		t_daka_record tdr
+	INNER JOIN t_company_course tcc ON tdr.company_course_id = tcc.id
+	WHERE
+		tdr.isdelete = 0
+		and tcc.company_id = #companyId#
+		
+		
+queryClassHourthIsMonth
+===
+	* 查询学生的本月课时
+	SELECT
+		SUM(CAST(LEFT(c.course_hour,1) AS SIGNED))
+		FROM
+		t_daka_record AS r ,
+		t_company_course AS c
+		WHERE
+	r.isdelete =0
+	AND r.company_course_id = c.id
+	AND r.student_id = #roleId#
+	AND r.daka_time > (DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00'))
+	AND r.daka_time < (DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59'))
+	ORDER BY r.daka_time
+
+	

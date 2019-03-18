@@ -1,5 +1,6 @@
 package com.luoran.zzbird.service.impl;
 
+import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +18,28 @@ import com.luoran.zzbird.service.ITMessageService;
 @Service
 public class TMessageService extends AbstractBaseService<TMessage> implements ITMessageService{
 	@Autowired
-	private ITMessageDao dao;
+	private ITMessageDao messageDao;
 
 	@Override
 	public BaseDao<TMessage> getDao() {
-		return dao;
+		return messageDao;
 	}
 	
 	@Override
 	public String add(TMessage t) {
 		return super.add(t);
+	}
+
+	@Override
+	public PageQuery<TMessage> getPageMessageList(PageQuery<TMessage> pageQuery) {
+		messageDao.queryPageMessageList(pageQuery);
+		return pageQuery;
+	}
+
+	@Override
+	public TMessage getMsgById(String roleId) {
+		TMessage msg = messageDao.queryMsgById(roleId);
+		return msg ;
 	}
 
 }

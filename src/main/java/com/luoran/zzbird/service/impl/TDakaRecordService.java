@@ -130,4 +130,16 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 		UserContextInfo user = UserContext.get();
 		return iTDakaRecordDao.queryUserClassHour(user.getXcxUserRoleId(), user.getCompanyId(), user.getRoleVal());
 	}
+
+	@Override
+	public Integer getDakaWeekCount(Map<String, String> params) {
+		Integer dakaWeekCount = iTDakaRecordDao.queryDakaWeekCount(params);
+		return dakaWeekCount;
+	}
+
+	@Override
+	public Integer getClassHourthIsMonth(Map<String, String> params) {
+		Integer queryClassHourthIsMonth = iTDakaRecordDao.queryClassHourthIsMonth(params);
+		return queryClassHourthIsMonth;
+	}
 }

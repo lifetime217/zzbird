@@ -80,5 +80,73 @@ queryCourseByUserList
 	ur.role_val = #roleVal# AND
 	c.company_id = c1.id
 
-	
-	
+queryUserCourseCount
+===
+	 * 查询用户下的课程总数，仅限老师和学生
+	 select 
+		count(1)
+	from t_company_course_user tccu
+	inner join t_xcx_user_role txur on tccu.xcx_user_role_id = txur.id
+	where 
+		txur.isdelete = 0
+		and tccu.xcx_user_role_id = #roleId#
+		
+		
+		
+queryTeaCourseStuCount
+===
+		* 查询老师的学生人数
+		SELECT
+			COUNT(1)
+		FROM
+			(
+				SELECT
+					COUNT(txurStu.id) stu
+				FROM
+					t_company_course_user tccuTea
+				LEFT JOIN t_company_course_user tccuStu ON tccuStu.company_course_id = tccuTea.company_course_id
+				INNER JOIN t_xcx_user_role txurTea ON tccuTea.xcx_user_role_id = txurTea.id
+				INNER JOIN t_xcx_user_role txurStu ON tccuStu.xcx_user_role_id = txurStu.id
+				WHERE
+					txurTea.isdelete = 0
+				AND txurStu.isdelete = 0
+				AND txurTea.id = #roleId#
+				AND txurStu.role_val = 30
+				GROUP BY
+					txurStu.id
+			) stu
+			
+			
+			
+queryTeaCourseStu
+===
+		* 查询老师下的学生
+		select 
+			@pageTag(){
+				stu.user_roleid,
+				stu.user_name,
+				stu.user_img,
+				stu.user_company_name
+			@}
+		FROM(
+				SELECT
+				
+					txurStu.id user_roleid,
+					txurStu.role_name user_name,
+					txurStu.role_headimg user_img,
+					tc.company_name user_company_name
+				FROM
+					t_company_course_user tccuTea
+				LEFT JOIN t_company_course_user tccuStu ON tccuStu.company_course_id = tccuTea.company_course_id
+				INNER JOIN t_xcx_user_role txurTea ON tccuTea.xcx_user_role_id = txurTea.id
+				INNER JOIN t_xcx_user_role txurStu ON tccuStu.xcx_user_role_id = txurStu.id
+				INNER JOIN t_company tc on txurStu.company_id = tc.id 
+				@where(){
+					txurTea.isdelete = 0
+				AND txurStu.isdelete = 0
+				AND txurTea.id = #roleId#
+				AND txurStu.role_val = 30
+				GROUP BY
+					txurStu.id
+				@} 
+			) stu
