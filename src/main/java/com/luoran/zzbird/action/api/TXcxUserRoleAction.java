@@ -33,14 +33,12 @@ import com.luoran.zzbird.service.ITXcxUserService;
 @Controller
 @RequestMapping("api/xcxuserrole")
 public class TXcxUserRoleAction implements BaseAction<TXcxUserRole> {
-	private final static Logger log = LoggerFactory.getLogger(TCompanyCourseAction.class);
 	private static final Logger log = LoggerFactory.getLogger(TXcxUserRoleAction.class);
 
 	@Autowired
 	private ITXcxUserRoleService xcxUserRoleService;
 	@Autowired
-	private ITXcxUserService xcxUserService;	@Autowired
-	ITXcxUserService xcxUserService;
+	private ITXcxUserService xcxUserService;
 	
 	@RequestMapping
 	public String index() {
