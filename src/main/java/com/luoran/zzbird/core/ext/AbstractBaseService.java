@@ -6,6 +6,7 @@ import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.util.StringUtils;
 
 import com.luoran.zzbird.core.BaseInfo;
+import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
 
 /**
  * @author lifetime217
@@ -19,6 +20,11 @@ public  abstract class AbstractBaseService<T> implements IBaseService<T> {
 	public String add(T t) {
 		getDao().insert(t);
 		return ((BaseInfo)t).getString("id");
+	}
+	
+	public Integer insert(T t) {
+		getDao().insert(t,true);
+		return ((BaseInfo)t).getInteger("id");
 	}
 
 	@Override
@@ -57,5 +63,6 @@ public  abstract class AbstractBaseService<T> implements IBaseService<T> {
 		getDao().queryPage(pageQuery);
 		return pageQuery;
 	}
+
 
 }

@@ -8,6 +8,7 @@ import java.util.Date;
 import org.beetl.sql.core.annotatoin.AssignID;
 import org.beetl.sql.core.annotatoin.AutoID;
 import com.luoran.zzbird.core.BaseInfo;
+import com.luoran.zzbird.entity.vo.InviteVo;
 
 
 /**

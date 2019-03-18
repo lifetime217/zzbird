@@ -58,7 +58,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		companyDao.queryPage(pageQuery);
 		return pageQuery;
 	}
-
+	
 	@Override
 	public List<TCompany> queryPointUser(String url) {
 		List<TCompany> pointUser = companyDao.queryPointUser();
@@ -102,7 +102,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		company.set("geohash", GeohashUtil.encode(company.getLat().doubleValue(), company.getLng().doubleValue()));
 		company.set("studentCount", 0);
 		company.set("sign", ShortUuid.generateShortUuid());
-		company.set("xcx_user_id", xcxUser.getId());
+		company.set("xcxUserId", xcxUser.getId());
 		String companyId = add(company);
 
 		xcxUserRoleService.updateCurrentActiveByZero(xcxUser.getId());
@@ -117,11 +117,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		tXcxUserRole.setCurrentActive(1);
 		tXcxUserRole.setSign(ShortUuid.generateShortUuid());
 		tXcxUserRole.setIsdelete(0);
-		String xcxUserRoleId = xcxUserRoleService.add(tXcxUserRole);
-		// 返回给action重新赋值sesion
-		tXcxUserRole.set("openId", xcxUser.getOpenId());
-		tXcxUserRole.setId(Integer.parseInt(xcxUserRoleId));;
-		tXcxUserRole.set("companyName", company.getCompanyName());
+		xcxUserRoleService.add(tXcxUserRole);
 		return tXcxUserRole;
 	}
 

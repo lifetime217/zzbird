@@ -24,7 +24,10 @@ import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
+import com.luoran.zzbird.entity.vo.InviteVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
+import com.luoran.zzbird.service.ITXcxUserService;
+import com.luoran.zzbird.utils.Validate;
 
 /**
  * @author tzx
@@ -37,6 +40,9 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 
 	@Autowired
 	private ITCompanyCourseUserService companyCourseUserService;
+
+	@Autowired
+	ITXcxUserService xcxUserService;
 
 	@Autowired
 	Environment env;
@@ -127,27 +133,52 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 	 */
 	@RequestMapping("queryCourseByUser")
 	@ResponseBody()
-	public HttpResult queryCourseByUser() {
+	public HttpResult queryCourseByUser(@RequestParam(value = "page") String page) {
 		JSONObject res = new JSONObject();
 		try {
-			List<TCompanyCourse> courseList = companyCourseUserService.queryCourseList();
+			PageQuery<TCompanyCourse> pageQuery = companyCourseUserService.queryCourseList(page);
+
 			String url = env.getProperty("file.path.url");
 			JSONArray json = new JSONArray();
-			for (TCompanyCourse course : courseList) {
+			for (TCompanyCourse course : pageQuery.getList()) {
 				JSONObject jsonObject = new JSONObject();
 				course.setCourseImg(url + "/" + course.getCourseImg());
 				jsonObject.putAll(course.values());
 				json.add(jsonObject);
 			}
 			res.put("courseList", json);
+			res.put("totalRow", pageQuery.getTotalRow());
+			res.put("pageNumber", pageQuery.getPageNumber());
+			res.put("pageSize", pageQuery.getPageSize());
+
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败!");
 		}
 		return HttpResult.success("查询成功!", res);
 	}
-	
-	
-	
-	
+
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description:用户受邀请进来添加信息
+	 */
+	@RequestMapping("addCourseUser")
+	@ResponseBody()
+	public HttpResult addCourseUser(InviteVo inviteVo, String zzbird_XcxSessionKey) {
+		HttpResult invite = Validate.invite(inviteVo);
+		if (invite != null) {
+			return invite;
+		}
+		try {
+			companyCourseUserService.addCourseUser(inviteVo,zzbird_XcxSessionKey);
+			xcxUserService.reloadSession(zzbird_XcxSessionKey);
+			System.out.println("测试拿到session==================="+UserContext.get().toString());
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getCause());
+			return HttpResult.fail("接受失败!");
+		}
+		return HttpResult.success("接受成功");
+	}
+
 }

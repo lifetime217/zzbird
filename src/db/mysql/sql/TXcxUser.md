@@ -67,3 +67,21 @@ queryAllRoleUser
 		@if(!isEmpty(currentActive)){
 		 and r.current_active = #currentActive#
 		@}
+		
+		
+queryXcxUserRole
+===
+* 根据sessionKey、roleVal和companyId查询用户角色的id
+	SELECT
+	r.id
+	FROM
+	t_xcx_user_role AS r ,
+	t_xcx_user AS u
+	WHERE
+	u.session_key =#sessionKey# AND
+	r.role_val = #roleVal# AND
+	r.company_id = #companyId# AND
+	r.xcx_user_id = u.id
+
+
+

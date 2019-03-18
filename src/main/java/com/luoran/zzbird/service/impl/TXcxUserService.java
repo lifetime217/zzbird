@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.luoran.zzbird.core.SessionManager;
+import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
@@ -48,6 +49,14 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 	}
 
 	@Override
+	public String addUser(TXcxUser xcxUser, String zzbird_XcxSessionKey) {
+		UserContextInfo user = UserContext.get();
+		xcxUser.setOpenId(user.getOpenid());
+		xcxUser.setSessionKey(zzbird_XcxSessionKey);
+		return add(xcxUser);
+	}
+
+	@Override
 	public List<TXcxUserRole> queryAllRoleUser(String sessionKey) {
 		return userDao.queryAllRoleUser(sessionKey);
 	}
@@ -71,6 +80,7 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 				SessionManager.init(sessionKey, new UserContextInfo(userRoleVo));
 			}
 		}
+
 	}
 
 	@Override
@@ -87,6 +97,25 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 				logger.error("用户session不存在");
 			}
 		}
+
+	}
+
+	public void reloadSession(String sessionKey) {
+		// 判断正在使用的角色
+		TXcxUserRole userRoleVo = queryActiveUserRole(sessionKey);
+		if (userRoleVo != null) {
+			UserContext.clear();
+			SessionManager.init(sessionKey, new UserContextInfo(userRoleVo));
+			UserContext.init(SessionManager.get(sessionKey));
+			System.out.println("用户更新session=============="+UserContext.get().toString());
+		} else {
+			logger.error("用户session不存在");
+		}
+	}
+
+	@Override
+	public String queryXcxUserRole(String sessionKey, String roleVal, String companyId) {
+		return userDao.queryXcxUserRole(sessionKey, roleVal, companyId);
 	}
 
 }

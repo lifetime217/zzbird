@@ -22,7 +22,13 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	 */
 	List<TCompany> queryPointUser(String url);
 	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:用户添加公司
+	 */
 	TXcxUserRole addCompany(TCompany company, String sessionKey);
+	
 	
 	/**
 	 * 

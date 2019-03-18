@@ -7,6 +7,8 @@ import org.beetl.sql.core.engine.PageQuery;
 public interface IBaseService<T> {
 
 	public String add(T t);
+	
+	public Integer insert(T t);
 
 	public String save(T t);
 

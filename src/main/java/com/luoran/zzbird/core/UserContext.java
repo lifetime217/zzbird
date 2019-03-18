@@ -7,16 +7,16 @@ package com.luoran.zzbird.core;
 public class UserContext {
 	private static String CtxPath;
 	private static ThreadLocal<UserContextInfo> local = new ThreadLocal<UserContextInfo>();
-	
-	static void init(UserContextInfo contextInfo){
+
+	public static void init(UserContextInfo contextInfo) {
 		local.set(contextInfo);
 	}
-	
-	static void clear(){
+
+	public static void clear() {
 		local.remove();
 	}
-	
-	public static UserContextInfo get(){
+
+	public static UserContextInfo get() {
 		return local.get();
 	}
 
@@ -27,5 +27,5 @@ public class UserContext {
 	public static void setCtxPath(String ctxPath) {
 		CtxPath = ctxPath;
 	}
-	
+
 }

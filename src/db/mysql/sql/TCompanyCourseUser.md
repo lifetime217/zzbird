@@ -57,14 +57,16 @@ queryCourseByUserList
 * 查询用户所属的公司对应角色的课程
 
 	SELECT
-	c.id,
-	c.company_id,
-	c.course_name,
-	c.start_time,
-	c.end_time,
-	c.person_number,
-	c.course_img,
-	c1.company_name AS companyName
+	@pageTag(){
+		c.id,
+		c.company_id,
+		c.course_name,
+		c.start_time,
+		c.end_time,
+		c.person_number,
+		c.course_img,
+		c1.company_name AS companyName
+	@}
 	FROM
 	t_company_course_user AS cu ,
 	t_company_course AS c ,

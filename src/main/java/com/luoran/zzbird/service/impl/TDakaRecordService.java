@@ -112,7 +112,7 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 		tDakaRecord.setId(params.get("id").toString());
 		tDakaRecord.setIsdelete(1);
 		int updateById = iTDakaRecordDao.updateTemplateById(tDakaRecord);
-		if(updateById > 0) {
+		if (updateById > 0) {
 			return true;
 		}
 		return false;
@@ -121,7 +121,8 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 	@Override
 	public Integer queryStuClassHourByCourseId(String courseId) {
 		UserContextInfo user = UserContext.get();
-		return iTDakaRecordDao.queryUserClassHour(courseId, user.getXcxUserRoleId(), 30);
+		Integer classHour = iTDakaRecordDao.queryUserClassHour(courseId, user.getXcxUserRoleId(), 30);
+		return classHour == null ? 0 : classHour;
 	}
 
 	@Override
@@ -133,6 +134,7 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 	@Override
 	public Integer queryStuStudyWeek(String courseId) {
 		UserContextInfo user = UserContext.get();
-		return iTDakaRecordDao.queryStuStudyWeek(user.getXcxUserRoleId(), courseId);
+		Integer studyWeek = iTDakaRecordDao.queryStuStudyWeek(user.getXcxUserRoleId(), courseId);
+		return studyWeek == null ? 0 : studyWeek;
 	}
 }

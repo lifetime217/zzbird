@@ -1,14 +1,12 @@
 package com.luoran.zzbird.entity.biz;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-
 import java.util.Date;
 
 import org.beetl.sql.core.annotatoin.AssignID;
-import org.beetl.sql.core.annotatoin.AutoID;
-import com.luoran.zzbird.core.BaseInfo;
 
+import com.luoran.zzbird.core.BaseInfo;
+import com.luoran.zzbird.entity.vo.InviteVo;
 
 /**
  * 小程序用户基本信息表
@@ -18,6 +16,16 @@ public class TXcxUser extends BaseInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public TXcxUser() {
+	}
+
+	public TXcxUser(InviteVo inviteVo) {
+		setAvatarUrl(inviteVo.getAvatarUrl());
+		setCity(inviteVo.getCity());
+		setCountry(inviteVo.getCountry());
+		setGender(inviteVo.getGender());
+		setLanguage(inviteVo.getLanguage());
+		setNickName(inviteVo.getNickName());
+		setProvince(inviteVo.getProvince());
 	}
 
 	/**
