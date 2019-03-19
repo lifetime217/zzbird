@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
@@ -130,6 +131,46 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 	@Override
 	public boolean updateCompanyPersonNumber(String id, Integer flag) {
 		return companyDao.updateCompanyPersonNumber(id, flag) != 0;
+	}
+
+	@Override
+	public void updateLookCount(Integer xcxUserRoleId, TCompany oldCompany) {
+		// 创建公司模型
+		TCompany newCompany = new TCompany();
+		newCompany.setId(oldCompany.getId());
+		newCompany.setLookCount(oldCompany.getLookCount() + 1);
+		// 如果是老用户
+		if (xcxUserRoleId != null) {
+			// 如果‘xcxUserRoleId’不是公司创建人的roleId
+			if (!xcxUserRoleId.toString().equals(oldCompany.getXcxUserId())) {
+				companyDao.updateTemplateById(newCompany);
+			}
+			// 如果是新用户登录
+		} else {
+			companyDao.updateTemplateById(newCompany);
+		}
+
+	}
+
+	@Override
+	public boolean updateShareCount(Integer roleId, String conpanyId) {
+		// 查询公司
+		TCompany oldCompany = companyDao.unique(conpanyId);
+		// 创建公司模型
+		TCompany newCompany = new TCompany();
+		newCompany.setId(oldCompany.getId());
+		newCompany.setShareCount(oldCompany.getShareCount() + 1);
+		// 如果是老用户
+		if (roleId != null) {
+			if (!roleId.toString().equals(oldCompany.getXcxUserId())) {
+				companyDao.updateTemplateById(newCompany);
+			}else {
+				return false;
+			}
+		} else {
+			companyDao.updateTemplateById(newCompany);
+		}
+		return true;
 	}
 
 }

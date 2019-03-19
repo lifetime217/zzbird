@@ -80,7 +80,10 @@ queryCompanyDetail
 	t_company.banner_imgs,
 	t_company.teacher_count,
 	t_company.student_count,
-	t_company.sign
+	t_company.sign,
+	t_company.lat,
+	t_company.lng,
+	t_company.xcx_user_id
 	FROM
 	t_company
 	WHERE
