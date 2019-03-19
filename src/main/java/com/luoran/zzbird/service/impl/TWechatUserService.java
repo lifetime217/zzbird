@@ -25,13 +25,13 @@ import com.luoran.zzbird.service.ITWechatUserService;
 @Service
 public class TWechatUserService extends AbstractBaseService<TWechatUser> implements ITWechatUserService {
 	@Autowired
-	private ITWechatUserDao dao;
+	private ITWechatUserDao wechatUserDao;
 	@Resource
 	private GzhFacade gzhFacade;
 
 	@Override
 	public BaseDao<TWechatUser> getDao() {
-		return dao;
+		return wechatUserDao;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class TWechatUserService extends AbstractBaseService<TWechatUser> impleme
 		TWechatUser WechatUser = new TWechatUser();
 		WechatUser.setOpenId(openId);
 		//查询表中是否有这个用户的数据
-		List<TWechatUser> template = dao.template(WechatUser);
+		List<TWechatUser> template = wechatUserDao.template(WechatUser);
 		//将获取到的数据存入对象
 		WechatUser.set("nickName", jsObj.getString("nickname"));
 		WechatUser.set("sex", jsObj.getInteger("sex"));
@@ -58,7 +58,7 @@ public class TWechatUserService extends AbstractBaseService<TWechatUser> impleme
 		WechatUser.set("language", jsObj.getString("language"));
 		WechatUser.set("headimgUrl", jsObj.getString("headimgurl"));
 		WechatUser.set("headimgMd5", "");
-		WechatUser.set("subscribeTime", jsObj.getInteger("subscribe_time"));
+		WechatUser.set("subscribeTime", jsObj.getLong("subscribe_time"));
 		WechatUser.set("remark", jsObj.getString("remark"));
 		WechatUser.set("groupid", jsObj.getInteger("groupid"));
 		JSONArray jsonArray = jsObj.getJSONArray("tagid_list");
@@ -70,9 +70,9 @@ public class TWechatUserService extends AbstractBaseService<TWechatUser> impleme
 		//判断如果有的话就跟新数据
 		if(template.size() > 0 && template.get(0).getOpenId().equals(openId)) {
 			WechatUser.setId(template.get(0).getId());
-			dao.updateTemplateById(WechatUser);
+			wechatUserDao.updateTemplateById(WechatUser);
 		}else{
-			dao.insert(WechatUser, true);
+			wechatUserDao.insert(WechatUser, true);
 		}
 		return true;
 	}
@@ -95,12 +95,12 @@ public class TWechatUserService extends AbstractBaseService<TWechatUser> impleme
 
 	@Override
 	public TWechatUser queryGzhUserByOpenId(String openId) {
-		return dao.queryGzhUserByOpenId(openId);
+		return wechatUserDao.queryGzhUserByOpenId(openId);
 	}
 
 	@Override
 	public List<TWechatUser> queryGzhUserByNickName(String nickName) {
-		return dao.queryGzhUserByNickName(nickName);
+		return wechatUserDao.queryGzhUserByNickName(nickName);
 	}
 
 }

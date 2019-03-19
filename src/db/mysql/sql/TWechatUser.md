@@ -3,22 +3,28 @@ queryGzhUserByOpenId
 * 根据openId查询公众号用户
 	
 	SELECT
-	t_xcx_user.id,
-	t_xcx_user.open_id,
-	t_xcx_user.session_key,
-	t_xcx_user.nick_name,
-	t_xcx_user.avatar_url,
-	t_xcx_user.avatar_url_md5,
-	t_xcx_user.gender,
-	t_xcx_user.country,
-	t_xcx_user.province,
-	t_xcx_user.city,
-	t_xcx_user.`language`,
-	t_xcx_user.add_time
-	FROM
-	t_xcx_user
-	WHERE
-	t_xcx_user.open_id =#openId#
+	w.id,
+	w.open_id,
+	w.nick_name,
+	w.sex,
+	w.city,
+	w.country,
+	w.province,
+	w.`language`,
+	w.headimg_url,
+	w.headimg_md5,
+	w.subscribe_time,
+	w.remark,
+	w.groupid,
+	w.tagid_list,
+	w.subscribe_scene,
+	w.qr_scene,
+	w.qr_scene_str,
+	w.subscribe 
+FROM
+	t_wechat_user AS w 
+WHERE
+	w.open_id = #openId#
 
 	
 queryGzhUserByNickName
@@ -26,19 +32,25 @@ queryGzhUserByNickName
 * 根据用户名查询公众号用户
 
 	SELECT
-	t_xcx_user.id,
-	t_xcx_user.open_id,
-	t_xcx_user.session_key,
-	t_xcx_user.nick_name,
-	t_xcx_user.avatar_url,
-	t_xcx_user.avatar_url_md5,
-	t_xcx_user.gender,
-	t_xcx_user.country,
-	t_xcx_user.province,
-	t_xcx_user.city,
-	t_xcx_user.`language`,
-	t_xcx_user.add_time
-	FROM
-	t_xcx_user
-	WHERE
-	t_xcx_user.nick_name =#nickName#
+	w.id,
+	w.open_id,
+	w.nick_name,
+	w.sex,
+	w.city,
+	w.country,
+	w.province,
+	w.`language`,
+	w.headimg_url,
+	w.headimg_md5,
+	w.subscribe_time,
+	w.remark,
+	w.groupid,
+	w.tagid_list,
+	w.subscribe_scene,
+	w.qr_scene,
+	w.qr_scene_str,
+	w.subscribe 
+FROM
+	t_wechat_user AS w 
+WHERE
+	w.nick_name = #nickName#

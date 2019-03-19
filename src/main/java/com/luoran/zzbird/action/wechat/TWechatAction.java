@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.luoran.zzbird.service.ITWechatUserService;
+import com.luoran.zzbird.service.IWechatUserRelationService;
 import com.luoran.zzbird.utils.GzhUtils;
 /**
  * 
@@ -24,7 +25,9 @@ import com.luoran.zzbird.utils.GzhUtils;
 public class TWechatAction {
 	
 	@Autowired
-	private ITWechatUserService iTWechatUserService;
+	private ITWechatUserService wechatUserService;
+	@Autowired
+	IWechatUserRelationService wechatUserRelationService;
 	private String TOKEN = "luoran";
 	/**
 	 *  用于注册微信公众号服务器
@@ -62,16 +65,17 @@ public class TWechatAction {
 			Map<String, String> parseXml = GzhUtils.parseXml(req);
 			//关注后进入
 			if("subscribe".equals(parseXml.get("Event"))) {
-				iTWechatUserService.saveUserInfo(params.get("openid"));
+				wechatUserService.saveUserInfo(params.get("openid"));
+				wechatUserRelationService.notifyAddWxUser(params.get("openid"));
 				System.out.println("点击了关注");
-				String sendSubscribeMsg = iTWechatUserService.sendSubscribeMsg(params,parseXml);
+				String sendSubscribeMsg = wechatUserService.sendSubscribeMsg(params,parseXml);
 				rpe.getWriter().write(sendSubscribeMsg);
 				//取消关注
 			}else if("unsubscribe".equals(parseXml.get("Event"))){
 				System.out.println("取消关注");
 				//发送了消息
 			}else if(parseXml.get("Event") == null){
-				
+				System.out.println(parseXml);
 			}
 			
 		} catch (Exception e) {
