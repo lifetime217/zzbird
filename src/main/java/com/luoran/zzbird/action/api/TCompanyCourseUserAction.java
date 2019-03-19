@@ -22,14 +22,13 @@ import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
-import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
 import com.luoran.zzbird.entity.vo.InviteVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
+import com.luoran.zzbird.service.ITDakaRecordService;
 import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Validate;
-import com.luoran.zzbird.service.ITDakaRecordService;
 /**
  * @author tzx
  *
@@ -170,7 +169,6 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 	@RequestMapping("/selectTeacher")
 	@ResponseBody()
 	public HttpResult selectCompany(@RequestParam Map<String, String> params) {
-		HttpResult hr = new HttpResult();
 		UserContextInfo userContextInfo = UserContext.get();
 		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
 		params.put("roleId", xcxUserRoleId.toString());
@@ -267,7 +265,6 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		// 查询出来的Page页
 		PageQuery<TCompanyCourseUser> userQueryPage = null;
 		try {
-			JSONArray js = new JSONArray();
 			userQueryPage = companyCourseUserService.getTeaCourseStu(pageQuery);
 			List<TCompanyCourseUser> userlist = userQueryPage.getList();
 			for (TCompanyCourseUser user : userlist) {

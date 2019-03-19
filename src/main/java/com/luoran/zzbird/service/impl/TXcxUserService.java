@@ -28,7 +28,7 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 
 	@Autowired
 	private ITXcxUserDao userDao;
-	
+
 	@Autowired
 	private IWechatUserRelationService wechatUserRelationService;
 
@@ -57,6 +57,11 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 		UserContextInfo user = UserContext.get();
 		xcxUser.setOpenId(user.getOpenid());
 		xcxUser.setSessionKey(zzbird_XcxSessionKey);
+
+		TXcxUser xcxUserByOpenId = queryXcxUserByOpenId(user.getOpenid());
+		if (xcxUserByOpenId != null) {
+			return xcxUserByOpenId.getId();
+		}
 		String xcxUserId = add(xcxUser);
 		wechatUserRelationService.notifyAddXcxUser(user.getOpenid());
 		return xcxUserId;
@@ -120,7 +125,7 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 	}
 
 	@Override
-	public String queryXcxUserRole(String sessionKey, String roleVal, String companyId) {
+	public TXcxUserRole queryXcxUserRole(String sessionKey, String roleVal, String companyId) {
 		return userDao.queryXcxUserRole(sessionKey, roleVal, companyId);
 	}
 

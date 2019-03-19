@@ -51,7 +51,7 @@ public interface ITXcxUserDao extends BaseDao<TXcxUser> {
 	 * @Author wsl  
 	 * @Description: 根据sessionKey、roleVal和companyId查询用户角色id
 	 */
-	String  queryXcxUserRole(String sessionKey,String roleVal,String companyId);
+	TXcxUserRole  queryXcxUserRole(String sessionKey,String roleVal,String companyId);
 	
 	
 
