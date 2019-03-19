@@ -50,13 +50,12 @@ public class TCompanyAction implements BaseAction<TCompany> {
 
 	@Autowired
 	private ITCompanyCourseService companyCourseService;
-	
-	
+
 	@Autowired
 	ITXcxUserService xcxUserService;
-	
+
 	@Autowired
-	private ITDakaRecordService dakaRecordService ;
+	private ITDakaRecordService dakaRecordService;
 	@Autowired
 	Environment env;
 
@@ -132,8 +131,6 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		return HttpResult.success("查询成功", res);
 	}
 
-	
-
 	/**
 	 * 
 	 * @Author wsl
@@ -150,7 +147,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		try {
 			// 添加公司
 			TXcxUserRole userRole = companyService.addCompany(company, zzbird_XcxSessionKey);
-			
+
 			xcxUserService.reloadSession(zzbird_XcxSessionKey);
 			res.put("companyId", userRole.getCompanyId());
 		} catch (Exception e) {
@@ -169,6 +166,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	@ResponseBody()
 	public HttpResult queryCompanyDetail(@RequestParam(value = "companyId") String companyId) {
 		JSONObject res = new JSONObject();
+		UserContextInfo userContextInfo = UserContext.get();
 		try {
 			String url = env.getProperty("file.path.url");
 			TCompany companyDetail = companyService.queryCompanyDetail(companyId);
@@ -176,11 +174,14 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			res.put("bannerList", Convert.convertImgList(companyDetail.getBannerImgs(), url));
 			res.put("industry", Arrays.asList(companyDetail.getIndustryListName().split(",")));
 			res.put("companyDetail", companyDetail);
+
 			// 查询老师的数组
 			List<TXcxUserRole> queryCompanyTeacher = companyService.queryCompanyTeacher(companyId);
 			res.put("companyTeacher", queryCompanyTeacher);
+			companyService.updateLookCount(userContextInfo.getXcxUserRoleId(), companyDetail);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
+			e.printStackTrace();
 			return HttpResult.fail("查询失败");
 		}
 		return HttpResult.success("查询成功", res);
@@ -280,18 +281,18 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			TCompany companyInfo = companyService.getCompanyInfo(params);
 			data.put("lookCount", companyInfo.getLookCount());
 			data.put("shareCount", companyInfo.getShareCount());
-			//查询总课程数
+			// 查询总课程数
 			Integer courseCount = companyCourseService.getCourseCount(params);
-			if (courseCount!=null) {
+			if (courseCount != null) {
 				data.put("courseCount", courseCount);
-			}else {
+			} else {
 				data.put("courseCount", 0);
 			}
-			//用总课时除以打卡跨度的课时
+			// 用总课时除以打卡跨度的课时
 			Integer totalClassHour = dakaRecordService.queryUserClassHour();
 			Integer dakaWeekCount = dakaRecordService.getDakaWeekCount(params);
 			Integer average = 0;
-			if (totalClassHour!=null && dakaWeekCount != null) {
+			if (totalClassHour != null && dakaWeekCount != null) {
 				average = totalClassHour / dakaWeekCount;
 			}
 			data.put("average", average);
@@ -299,6 +300,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			e.printStackTrace();
+			return HttpResult.fail("查询失败");
 		}
 		hr.setData(data);
 		hr.setMsg("查询成功");
@@ -307,4 +309,28 @@ public class TCompanyAction implements BaseAction<TCompany> {
 
 	}
 
+	/**
+	 * @author tzx
+	 * @Description 累加分享的次数
+	 * 
+	 */
+	@RequestMapping("/updateShareCount")
+	@ResponseBody()
+	public HttpResult updateShareCount(@RequestParam Map<String, String> params) {
+		UserContextInfo userContextInfo = UserContext.get();
+		if (StringUtils.isEmpty(params.get("companyId"))) {
+			return HttpResult.fail("前台CompanyId为空");
+		}
+		try {
+			boolean success = companyService.updateShareCount(userContextInfo.getXcxUserRoleId(),params.get("companyId"));
+			if (!success) {
+				return HttpResult.fail("是自己人");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getCause());
+			e.printStackTrace();
+			return HttpResult.fail("累加失败");
+		}
+		return HttpResult.success("累加成功");
+	}
 }

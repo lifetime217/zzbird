@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.beetl.sql.core.engine.PageQuery;
 
+import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
@@ -64,4 +65,16 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	 * @Description: 根据flag 修改公司的老师或者学生人数  0修改老师 1修改 学生
 	 */
 	boolean updateCompanyPersonNumber(String id, Integer flag);
+	/**
+	 * 
+	 * @Author tzx  
+	 * @Description:根据公司 id 和userRoleId 累加公司的查看次数，如果是公司创建者查看，则累加
+	 */
+	void updateLookCount(Integer xcxUserRoleId, TCompany oldCompany);
+	/**
+	 * 
+	 * @Author tzx  
+	 * @Description:根据公司 id 和userRoleId 累加公司的分享次数，如果是公司创建者分享，则累加
+	 */
+	boolean updateShareCount(Integer roleId, String string);
 }
