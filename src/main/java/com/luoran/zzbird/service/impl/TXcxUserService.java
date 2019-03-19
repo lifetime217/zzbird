@@ -16,6 +16,7 @@ import com.luoran.zzbird.dao.ITXcxUserDao;
 import com.luoran.zzbird.entity.biz.TXcxUser;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.service.ITXcxUserService;
+import com.luoran.zzbird.service.IWechatUserRelationService;
 
 /**
  * @author wsl
@@ -27,6 +28,9 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 
 	@Autowired
 	private ITXcxUserDao userDao;
+	
+	@Autowired
+	private IWechatUserRelationService wechatUserRelationService;
 
 	@Override
 	public BaseDao<TXcxUser> getDao() {
@@ -53,7 +57,9 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 		UserContextInfo user = UserContext.get();
 		xcxUser.setOpenId(user.getOpenid());
 		xcxUser.setSessionKey(zzbird_XcxSessionKey);
-		return add(xcxUser);
+		String xcxUserId = add(xcxUser);
+		wechatUserRelationService.notifyAddXcxUser(user.getOpenid());
+		return xcxUserId;
 	}
 
 	@Override
@@ -107,7 +113,7 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 			UserContext.clear();
 			SessionManager.init(sessionKey, new UserContextInfo(userRoleVo));
 			UserContext.init(SessionManager.get(sessionKey));
-			System.out.println("用户更新session=============="+UserContext.get().toString());
+			System.out.println("用户更新session==============" + UserContext.get().toString());
 		} else {
 			logger.error("用户session不存在");
 		}

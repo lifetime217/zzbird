@@ -40,4 +40,10 @@ public interface ITXcxUserRoleService extends IBaseService<TXcxUserRole> {
 	 */
 	boolean updateActive(Integer id);
 	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description: 用户收邀请进来查询该课程下是否是老师或者是学生
+	 */
+	List<TXcxUserRole> queryUserRoleExist(String sessionKey,String courseId);
 }

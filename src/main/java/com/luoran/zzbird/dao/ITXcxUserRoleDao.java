@@ -37,4 +37,11 @@ public interface ITXcxUserRoleDao extends BaseDao<TXcxUserRole> {
 	 * @Description:根据id修改正在使用
 	 */
 	Integer updateActive(Integer id);
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description: 用户收邀请进来查询该公司和该课程下是否是老师或者是学生
+	 */
+	List<TXcxUserRole> queryUserRoleExist(String sessionKey,String courseId);
 }

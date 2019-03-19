@@ -28,6 +28,7 @@ import com.luoran.zzbird.service.ITCompanyService;
 import com.luoran.zzbird.service.ITMessageService;
 import com.luoran.zzbird.service.ITXcxUserRoleService;
 import com.luoran.zzbird.service.ITXcxUserService;
+import com.luoran.zzbird.service.IWechatUserRelationService;
 import com.luoran.zzbird.utils.ShortUuid;
 import com.luoran.zzbird.utils.UUID;
 
@@ -55,6 +56,9 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 
 	@Autowired
 	ITMessageService messageService;
+	
+	@Autowired
+	IWechatUserRelationService wechatUserRelationService;
 
 	@Override
 	public BaseDao<TCompanyCourseUser> getDao() {
@@ -165,7 +169,7 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		
 		companyCourseService.updatePerson(inviteVo.getCourseId());
 		
-		
+		wechatUserRelationService.notifyAddXcxUser(userContextInfo.getOpenid());
 		
 	}
 

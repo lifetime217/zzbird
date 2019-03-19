@@ -65,5 +65,10 @@ public class TXcxUserRoleService extends AbstractBaseService<TXcxUserRole> imple
 		return xcxUserRoleDao.updateActive(id) != 0;
 	}
 
+	@Override
+	public List<TXcxUserRole> queryUserRoleExist(String sessionKey, String courseId) {
+		return xcxUserRoleDao.queryUserRoleExist(sessionKey, courseId);
+	}
+
 	
 }
