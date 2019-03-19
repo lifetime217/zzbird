@@ -35,3 +35,19 @@ updateActive
 	WHERE
 	id = #id# 
 	
+queryUserRoleExist
+===
+* 用户收邀请进来查询该公司和该课程下是否是老师或者是学生
+	SELECT
+	r.*,c.company_course_id
+	FROM
+	t_xcx_user_role AS r ,
+	t_xcx_user AS u ,
+	t_company_course_user AS c
+	WHERE
+	r.xcx_user_id = u.id AND
+	u.session_key = #sessionKey# AND
+	r.id = c.xcx_user_role_id AND
+	c.company_course_id = #courseId# 
+	and  r.role_val in(20,30)
+	
