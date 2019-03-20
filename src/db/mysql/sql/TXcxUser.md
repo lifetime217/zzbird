@@ -73,7 +73,8 @@ queryXcxUserRole
 ===
 * 根据sessionKey、roleVal和companyId查询用户角色的id
 	SELECT
-	r.id
+	r.id,
+	r.role_name
 	FROM
 	t_xcx_user_role AS r ,
 	t_xcx_user AS u

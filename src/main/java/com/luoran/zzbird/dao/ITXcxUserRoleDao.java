@@ -17,7 +17,7 @@ public interface ITXcxUserRoleDao extends BaseDao<TXcxUserRole> {
 	public void queryPage(PageQuery<TXcxUserRole> pageQuery);
 
 	/**
-	 * 查询公司的用户 （根据传入的参数来判断查询公司老师，还是公司学生）
+	 * 查询公司的用户 （根据传入的参数来判断查询公司老师，还是公司学生，或者企业创建者）
 	 * @Author wsl  
 	 * @Description:
 	 */

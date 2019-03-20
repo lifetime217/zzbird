@@ -121,17 +121,18 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		xcxUserRoleService.updateCurrentActiveByZero(zzbird_XcxSessionKey);
 
 		Integer roleVal;// 邀请人的角色
-		String content;// 消息内容
+		String content;// 邀请人和被邀请人的接受消息内容
 		if ("10".equals(inviteVo.getInviteRoleVal())) {
 			// 邀请老师
 			roleVal = 20;
-			content = "你成为了(" + inviteVo.getCompanyName() + ")的老师";
+			content = "您成为了(" + inviteVo.getCompanyName() + ")的老师";
 			companyService.updateCompanyPersonNumber(inviteVo.getCompanyId(), 0);
 		} else {
 			// 邀请学生
 			roleVal = 30;
-			content = "你成为了(" + inviteVo.getCourseName() + ")的学员";
+			content = "您成为了(" + inviteVo.getCourseName() + ")的学员";
 			companyService.updateCompanyPersonNumber(inviteVo.getCompanyId(), 1);
+			companyCourseService.updatePerson(inviteVo.getCourseId());
 		}
 		// 添加公司用户表
 		TXcxUserRole tXcxUserRole = new TXcxUserRole();
@@ -153,21 +154,37 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		add(tCompanyCourseUser);
 
 		// 邀请人的角色id
-		String inviteRoleId = xcxUserService.queryXcxUserRole(inviteVo.getInviteSessionKey(),
+		TXcxUserRole inviteRole = xcxUserService.queryXcxUserRole(inviteVo.getInviteSessionKey(),
 				inviteVo.getInviteRoleVal(), inviteVo.getCompanyId());
-		// 添加消息表
+		// 添加受邀请人的接受消息表
 		TMessage msg = new TMessage();
 		msg.setId(UUID.get());
 		msg.setContent(content);
-		msg.setTitle("邀请");
-		msg.setFromUser(inviteRoleId);
+		msg.setTitle("邀请信息");
+		msg.setFromUser(inviteRole.getId().toString());
 		msg.setIsdelete(0);
 		msg.setRead(0);
 		msg.setToUser(xcxUserRoleId.toString());
 		msg.setAddTime(new Date());
 		messageService.add(msg);
 		
-		companyCourseService.updatePerson(inviteVo.getCourseId());
+		// 添加发送者人的接受消息表
+		msg.setId(UUID.get());
+		msg.setContent(inviteVo.getNickName()+"接受了您的邀请");
+		msg.setFromUser(xcxUserRoleId.toString());
+		msg.setToUser(inviteRole.getId().toString());
+		messageService.add(msg);
+		
+		// 添加课程所属的创建者的接受消息表
+		if("20".equals(inviteVo.getInviteRoleVal())) {
+			//找出课程所属的公司创建者
+			List<TXcxUserRole> companyCreator = xcxUserRoleService.queryCompanyUser(10,inviteVo.getCompanyId());
+			msg.setId(UUID.get());
+			msg.setContent("您公司下的"+inviteRole.getRoleName()+"成功邀请了"+inviteVo.getNickName()+"成为了学员");
+			msg.setFromUser(inviteRole.getId().toString());
+			msg.setToUser(companyCreator.get(0).getId().toString());
+			messageService.add(msg);
+		}
 		
 		wechatUserRelationService.notifyAddXcxUser(userContextInfo.getOpenid());
 		

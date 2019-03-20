@@ -16,21 +16,21 @@ public class Validate {
 		if (xcxUser.getAvatarUrl() == null || "".equals(xcxUser.getAvatarUrl())) {
 			return HttpResult.fail("请传入图片!");
 		}
-		if (xcxUser.getCity() == null || "".equals(xcxUser.getCity())) {
-			return HttpResult.fail("请传入城市!");
-		}
-		if (xcxUser.getCountry() == null || "".equals(xcxUser.getCountry())) {
-			return HttpResult.fail("请传入国家!");
-		}
-		if (xcxUser.getGender() == null || "".equals(xcxUser.getGender())) {
-			return HttpResult.fail("请传入性别!");
-		}
-		if (xcxUser.getLanguage() == null || "".equals(xcxUser.getLanguage())) {
-			return HttpResult.fail("请传入语言!");
-		}
-		if (xcxUser.getAvatarUrl() == null || "".equals(xcxUser.getAvatarUrl())) {
-			return HttpResult.fail("请传入身份!");
-		}
+//		if (xcxUser.getCity() == null || "".equals(xcxUser.getCity())) {
+//			return HttpResult.fail("请传入城市!");
+//		}
+//		if (xcxUser.getCountry() == null || "".equals(xcxUser.getCountry())) {
+//			return HttpResult.fail("请传入国家!");
+//		}
+//		if (xcxUser.getGender() == null || "".equals(xcxUser.getGender())) {
+//			return HttpResult.fail("请传入性别!");
+//		}
+//		if (xcxUser.getLanguage() == null || "".equals(xcxUser.getLanguage())) {
+//			return HttpResult.fail("请传入语言!");
+//		}
+//		if (xcxUser.getAvatarUrl() == null || "".equals(xcxUser.getAvatarUrl())) {
+//			return HttpResult.fail("请传入身份!");
+//		}
 		return null;
 	}
 	

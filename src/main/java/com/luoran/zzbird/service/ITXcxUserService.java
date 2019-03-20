@@ -76,5 +76,5 @@ public interface ITXcxUserService extends IBaseService<TXcxUser> {
 	 * @Author wsl
 	 * @Description: 根据sessionKey、roleVal和companyId查询用户角色id
 	 */
-	String queryXcxUserRole(String sessionKey, String roleVal, String companyId);
+	TXcxUserRole queryXcxUserRole(String sessionKey, String roleVal, String companyId);
 }
