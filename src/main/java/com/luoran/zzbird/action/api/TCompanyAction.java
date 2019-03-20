@@ -105,8 +105,12 @@ public class TCompanyAction implements BaseAction<TCompany> {
 				queryParams.put("showV1", "0");
 			}
 			if (latitude != 0.0d && longitude != 0.0d) {
-				List<String> geohashList = GeohashUtil.encodes(latitude, longitude, 6);
-				geohashList.add(GeohashUtil.encode(latitude, longitude));
+				List<String> geohashList = GeohashUtil.encodes(latitude, longitude, 5);
+				for (int i = 0; i < geohashList.size(); i++) {
+					geohashList.set(i, geohashList.get(i).concat("%"));
+					 
+				}
+				geohashList.add(GeohashUtil.encode(latitude, longitude).substring(0, 5).concat("%"));
 				queryParams.put("geohashList", geohashList);
 			}
 
