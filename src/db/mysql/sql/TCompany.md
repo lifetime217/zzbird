@@ -25,11 +25,11 @@ queryPage
 		 and show_v1 = #showV1#
 		@}
 		@if(!isEmpty(search)){
-		 and CONCAT(IFNUll(`company_name`,''),IFNUll(`company_address`,''),IFNUll(`industry_list_name`,'')) LIKE CONCAT('%',#search#,'%')
+		 and CONCAT( IFNUll( `company_name`, '' ), IFNUll( `company_address`, '' ), IFNUll( `industry_list_name`, '' ) ) LIKE CONCAT('%',#search#,'%')
 		@}
 		@if(!isEmpty(geohashList)){
-		and geohash like CONCAT(left(geohash,6),'%') or geohash like CONCAT(#geohashList[0]#,'%') or geohash like CONCAT(#geohashList[1]#,'%') or geohash like CONCAT(#geohashList[2]#,'%') or geohash like CONCAT(#geohashList[3]#,'%') or geohash like CONCAT(#geohashList[4]#,'%') 
-		or geohash like CONCAT(#geohashList[5]#,'%') or geohash like CONCAT(#geohashList[6]#,'%') or geohash like CONCAT(#geohashList[7]#,'%') 
+		and  geohash like CONCAT(#geohashList[0]#,'%') or geohash like CONCAT(#geohashList[1]#,'%') or geohash like CONCAT(#geohashList[2]#,'%') or geohash like CONCAT(#geohashList[3]#,'%') or geohash like CONCAT(#geohashList[4]#,'%') 
+		or geohash like CONCAT(#geohashList[5]#,'%') or geohash like CONCAT(#geohashList[6]#,'%') or geohash like CONCAT(#geohashList[7]#,'%') or geohash like CONCAT(left(#geohashList[8]#,6),'%') 
 		@}
 	@}
 	

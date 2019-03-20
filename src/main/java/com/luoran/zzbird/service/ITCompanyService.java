@@ -33,10 +33,10 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	
 	/**
 	 * 
-	 * @Title: getQueryList
-	 * @Description:重写分页查询的servcie
+	 * @Author wsl  
+	 * @Description:分页查询用户的数据
 	 */
-	PageQuery<TCompany> getQueryList(PageQuery<TCompany> pageQuery);
+	PageQuery<TCompany> getQueryList(String page,Map<String, Object> queryParams);
 
 	/**
 	 * 

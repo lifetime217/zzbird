@@ -1,6 +1,7 @@
 package com.luoran.zzbird.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.dao.ITCompanyDao;
 import com.luoran.zzbird.entity.biz.TCompany;
+import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TXcxUser;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.service.ITCompanyService;
@@ -55,7 +57,12 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		return super.add(t);
 	}
 
-	public PageQuery<TCompany> getQueryList(PageQuery<TCompany> pageQuery) {
+	public PageQuery<TCompany> getQueryList(String page, Map<String, Object> queryParams) {
+		PageQuery<TCompany> pageQuery = new PageQuery<TCompany>();
+		// 存入分页参数
+		pageQuery.setPageNumber(Integer.parseInt(page));
+		pageQuery.setPageSize(10);
+		pageQuery.setParas(queryParams);
 		companyDao.queryPage(pageQuery);
 		return pageQuery;
 	}
@@ -164,7 +171,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		if (roleId != null) {
 			if (!roleId.toString().equals(oldCompany.getXcxUserId())) {
 				companyDao.updateTemplateById(newCompany);
-			}else {
+			} else {
 				return false;
 			}
 		} else {

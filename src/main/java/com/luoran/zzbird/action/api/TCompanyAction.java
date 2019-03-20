@@ -82,7 +82,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	@RequestMapping("/queryCompanyPage")
 	@ResponseBody()
 	public HttpResult queryCompanyPage(@RequestParam(value = "search") String search,
-			@RequestParam(value = "page") String page,
+			@RequestParam(value = "page", defaultValue = "1") String page,
 			@RequestParam(value = "latitude", required = false, defaultValue = "0.0d") double latitude,
 			@RequestParam(value = "longitude", required = false, defaultValue = "0.0d") double longitude) {
 		JSONObject res = new JSONObject();
@@ -106,30 +106,30 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			}
 			if (latitude != 0.0d && longitude != 0.0d) {
 				List<String> geohashList = GeohashUtil.encodes(latitude, longitude, 6);
+				geohashList.add(GeohashUtil.encode(latitude, longitude));
 				queryParams.put("geohashList", geohashList);
 			}
 
 			// 分页查询
-			PageQuery<TCompany> pageQuery = new PageQuery<TCompany>();
-			pageQuery.setPageNumber(StringUtils.isEmpty(page) ? 1 : Integer.parseInt(page));
-			pageQuery.setPageSize(10);
-			pageQuery.setParas(queryParams);
-			JSONObject ordinaryUser = pager(companyService.getQueryList(pageQuery));
+			PageQuery<TCompany> pageQuery = companyService.getQueryList(page, queryParams);
+
 			// 拼接图片url
-			@SuppressWarnings("unchecked")
-			List<TCompany> companyList = (List<TCompany>) ordinaryUser.get("list");
+			List<TCompany> companyList = (List<TCompany>) pageQuery.getList();
 			for (int i = 0; i < companyList.size(); i++) {
 				String companyImg = companyList.get(i).getBannerImgs();
 				companyList.get(i).setBannerImgs(Convert.convertImgString(companyImg, url));
 			}
-			res.put("ordinaryUser", ordinaryUser);
+			res.put("ordinaryUser", companyList);
+			res.put("ordRotalRow", pageQuery.getTotalRow());
+			res.put("ordPageNumber", pageQuery.getPageNumber());
+			res.put("ordPageSize", pageQuery.getPageSize());
 
 			// 首页的头部轮播图
 			List<String> bannersList = new ArrayList<String>();
 			bannersList.add(url + "/fengjing.jpg");
 			res.put("bannerList", bannersList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
 		}
 		return HttpResult.success("查询成功", res);

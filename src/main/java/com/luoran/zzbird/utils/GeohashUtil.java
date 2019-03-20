@@ -153,7 +153,7 @@ public class GeohashUtil {
 		System.out.println("位置1：" + encode(lat1, lon1));
 		System.out.println("位置1的周边：" + Arrays.toString(encodes(lat1, lon1,5).toArray()));
 		
-		System.out.println("位置2：" + encode(lat2, lon2));
+//		System.out.println("位置2：" + encode(lat2, lon2));
 //		double dist;
 //		String geocode;
 //		

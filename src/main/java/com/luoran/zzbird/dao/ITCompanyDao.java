@@ -7,7 +7,6 @@ import org.beetl.sql.core.engine.PageQuery;
 
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.entity.biz.TCompany;
-import com.luoran.zzbird.entity.biz.TXcxUserRole;
 
 /**
  * @author wsl
@@ -15,6 +14,11 @@ import com.luoran.zzbird.entity.biz.TXcxUserRole;
  */
 public interface ITCompanyDao extends BaseDao<TCompany> {
 
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: 查询用户所属的公司对应角色的课程
+	 */
 	public void queryPage(PageQuery<TCompany> pageQuery);
 
 	List<TCompany> queryPointUser();
@@ -33,4 +37,5 @@ public interface ITCompanyDao extends BaseDao<TCompany> {
 	 * @Description: 根据flag 修改公司的老师或者学生人数  0修改老师 1修改 学生
 	 */
 	Integer updateCompanyPersonNumber(String id, Integer flag);
+	
 }

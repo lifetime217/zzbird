@@ -1,5 +1,6 @@
 package com.luoran.zzbird.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -57,6 +58,7 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 		UserContextInfo user = UserContext.get();
 		xcxUser.setOpenId(user.getOpenid());
 		xcxUser.setSessionKey(zzbird_XcxSessionKey);
+		xcxUser.setAddTime(new Date());
 
 		TXcxUser xcxUserByOpenId = queryXcxUserByOpenId(user.getOpenid());
 		if (xcxUserByOpenId != null) {
