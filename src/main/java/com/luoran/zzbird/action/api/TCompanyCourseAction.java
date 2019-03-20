@@ -46,13 +46,13 @@ import com.luoran.zzbird.utils.Validate;
 public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 
 	private final static Logger log = LoggerFactory.getLogger(TCompanyCourseAction.class);
-	
+
 	@Autowired
 	private ITCompanyCourseService courseService;
 
 	@Autowired
 	private ITCompanyCourseUserService companyCourseUserService;
-	
+
 	@Autowired
 	private ITXcxUserRoleService xcxUserRoleSerivce;
 
@@ -174,7 +174,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	@RequestMapping(value = "/queryCourseAndCompany/{courseId}", method = RequestMethod.GET)
 	@ResponseBody()
 	public HttpResult queryCourseAndCompany(@PathVariable(value = "courseId") String courseId,
-			@RequestParam(value = "type") String type,String zzbird_XcxSessionKey) {
+			@RequestParam(value = "type") String type, String zzbird_XcxSessionKey) {
 		JSONObject res = new JSONObject();
 		try {
 			TCompanyCourse course = courseService.queryCourseDetail(courseId);
@@ -199,19 +199,20 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			res.put("teacher", teacher);
 
 			UserContextInfo userContextInfo = UserContext.get();
-			
-			//根据sessionKey（用户）查询出该课程下有数据
-			if("inviteStu".equals(type) || "inviteTea".equals(type)) {
-				List<TXcxUserRole> userRoleExist = xcxUserRoleSerivce.queryUserRoleExist(zzbird_XcxSessionKey, courseId);
-				if(userRoleExist!=null && !userRoleExist.isEmpty()) {
+
+			// 根据sessionKey（用户）查询出该课程下有数据
+			if ("inviteStu".equals(type) || "inviteTea".equals(type)) {
+				List<TXcxUserRole> userRoleExist = xcxUserRoleSerivce.queryUserRoleExist(zzbird_XcxSessionKey,
+						courseId);
+				if (userRoleExist != null && !userRoleExist.isEmpty()) {
 					res.put("exist", true);
 					return HttpResult.success("查询成功", res);
 				}
-				
+
 			}
-			
-			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 30
-					&& !"inviteStu".equals(type)&& !"inviteTea".equals(type)) {
+
+			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 30 && !"inviteStu".equals(type)
+					&& !"inviteTea".equals(type)) {
 				res.put("classHour", dakaRecordService.queryStuClassHourByCourseId(courseId));
 				res.put("studyWeek", dakaRecordService.queryStuStudyWeek(courseId));
 				// 默认为第一张海报
@@ -229,6 +230,16 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 					res.put("sharePoster", sharePosterDtoList);
 					res.put("userName", userContextInfo.getRoleName());
 				}
+			}
+			if (	
+					userContextInfo.getRoleVal() != null 
+					&& userContextInfo.getRoleVal() == 10
+					&& userContextInfo.getCompanyId() != null
+					&& userContextInfo.getCompanyId().equals(course.getCompanyId())
+				) {
+				res.put("isEdit", true);
+			}else {
+				res.put("isEdit", false);
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
