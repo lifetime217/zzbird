@@ -22,6 +22,8 @@ queryPageMessageList
 			AND txurTo.id = #roleId#
 			ORDER BY tm.add_time desc
 		@}
+		
+		
 queryMsgById
 ===
 		* 根据id获取消息
@@ -44,7 +46,6 @@ queryMsgById
 		
 		
 queryUnreadMessageCountByRoleId
-
 ===
   * 查询就收人的未读消息数量
 		SELECT
