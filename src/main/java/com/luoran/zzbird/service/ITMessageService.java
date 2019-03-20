@@ -22,4 +22,10 @@ public interface ITMessageService extends IBaseService<TMessage>{
 	 */
 	TMessage getMsgById(String id);
 	
+	
+	/**
+	 * @author tzx  查询就收人的未读消息数量
+	 * @param roleId ： 接收人的角色Id
+	 */
+	public Integer getUnreadMessageCountByRoleId(String roleId);
 }

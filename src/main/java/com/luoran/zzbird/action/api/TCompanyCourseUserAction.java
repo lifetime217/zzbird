@@ -30,6 +30,7 @@ import com.luoran.zzbird.service.ITCompanyCourseUserService;
 import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Validate;
 import com.luoran.zzbird.service.ITDakaRecordService;
+import com.luoran.zzbird.service.ITMessageService;
 /**
  * @author tzx
  *
@@ -47,6 +48,9 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 
 	@Autowired
 	private ITDakaRecordService dakaRecordService;
+	
+	@Autowired
+	private ITMessageService messageService;
 
 	@Autowired
 	Environment env;
@@ -196,6 +200,8 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			if (userClassHour != null) {
 				data.put("totalClassHour", userClassHour);
 			}
+			Integer messageCount = messageService.getUnreadMessageCountByRoleId(params.get("roleId"));
+			data.put("messageCount", messageCount);
 			System.out.println("------------------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
@@ -237,6 +243,8 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			if (userClassHour != null) {
 				data.put("totalClassHour", userClassHour);
 			}
+			Integer messageCount = messageService.getUnreadMessageCountByRoleId(params.get("roleId"));
+			data.put("messageCount", messageCount);
 			System.out.println("------------------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());

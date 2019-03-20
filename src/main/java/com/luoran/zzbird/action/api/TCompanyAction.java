@@ -31,6 +31,7 @@ import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.service.ITCompanyCourseService;
 import com.luoran.zzbird.service.ITCompanyService;
 import com.luoran.zzbird.service.ITDakaRecordService;
+import com.luoran.zzbird.service.ITMessageService;
 import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.GeohashUtil;
@@ -57,6 +58,9 @@ public class TCompanyAction implements BaseAction<TCompany> {
 
 	@Autowired
 	private ITDakaRecordService dakaRecordService;
+
+	@Autowired
+	private ITMessageService messageService;
 	@Autowired
 	Environment env;
 
@@ -297,6 +301,9 @@ public class TCompanyAction implements BaseAction<TCompany> {
 				average = totalClassHour / dakaWeekCount;
 			}
 			data.put("average", average);
+			Integer messageCount = messageService.getUnreadMessageCountByRoleId(params.get("roleId"));
+			data.put("messageCount", messageCount);
+
 			System.out.println("------------------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
@@ -323,7 +330,8 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			return HttpResult.fail("前台CompanyId为空");
 		}
 		try {
-			boolean success = companyService.updateShareCount(userContextInfo.getXcxUserRoleId(),params.get("companyId"));
+			boolean success = companyService.updateShareCount(userContextInfo.getXcxUserRoleId(),
+					params.get("companyId"));
 			if (!success) {
 				return HttpResult.fail("是自己人");
 			}

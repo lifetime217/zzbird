@@ -41,3 +41,16 @@ queryMsgById
 		AND txurFrom.isdelete = 0
 		AND txurTo.isdelete = 0
 		AND tm.id = #roleId#
+		
+		
+queryUnreadMessageCountByRoleId
+
+===
+  * 查询就收人的未读消息数量
+		SELECT
+			count(1) 
+		FROM
+			t_message AS tm 
+		WHERE
+			tm.`read` = 0 
+			AND tm.to_user = #roleId#

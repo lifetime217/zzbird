@@ -24,8 +24,11 @@ public interface ITMessageDao extends BaseDao<TMessage> {
 	 */
 	public TMessage queryMsgById(String roleId);
 	
-	
-	
+	/**
+	 * @author tzx  查询就收人的未读消息数量
+	 * @param roleId ： 接收人的角色Id
+	 */
+	public Integer queryUnreadMessageCountByRoleId(String roleId);
 	
 
 }

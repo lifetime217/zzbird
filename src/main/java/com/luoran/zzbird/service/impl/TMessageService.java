@@ -10,13 +10,12 @@ import com.luoran.zzbird.dao.ITMessageDao;
 import com.luoran.zzbird.entity.biz.TMessage;
 import com.luoran.zzbird.service.ITMessageService;
 
-
 /**
  * @author lifetime
  *
  */
 @Service
-public class TMessageService extends AbstractBaseService<TMessage> implements ITMessageService{
+public class TMessageService extends AbstractBaseService<TMessage> implements ITMessageService {
 	@Autowired
 	private ITMessageDao messageDao;
 
@@ -24,7 +23,7 @@ public class TMessageService extends AbstractBaseService<TMessage> implements IT
 	public BaseDao<TMessage> getDao() {
 		return messageDao;
 	}
-	
+
 	@Override
 	public String add(TMessage t) {
 		return super.add(t);
@@ -39,7 +38,13 @@ public class TMessageService extends AbstractBaseService<TMessage> implements IT
 	@Override
 	public TMessage getMsgById(String roleId) {
 		TMessage msg = messageDao.queryMsgById(roleId);
-		return msg ;
+		return msg;
+	}
+
+	@Override
+	public Integer getUnreadMessageCountByRoleId(String roleId) {
+		Integer queryUnreadMessageCountByRoleId = messageDao.queryUnreadMessageCountByRoleId(roleId);
+		return queryUnreadMessageCountByRoleId;
 	}
 
 }
