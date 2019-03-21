@@ -43,5 +43,12 @@ public interface ITXcxUserRoleDao extends BaseDao<TXcxUserRole> {
 	 * @Author wsl  
 	 * @Description: 用户收邀请进来查询该公司和该课程下是否是老师或者是学生
 	 */
-	List<TXcxUserRole> queryUserRoleExist(String sessionKey,String courseId);
+	List<TXcxUserRole> queryCourseUserExist(String sessionKey,String courseId);
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:  查询用户是否在用户角色表存在数据 
+	 */
+	TXcxUserRole queryCompanyUser(String userId,Integer roleVal,String companyId);
 }
