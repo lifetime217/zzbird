@@ -59,16 +59,20 @@ public class TXcxUserRoleService extends AbstractBaseService<TXcxUserRole> imple
 		}
 		return null;
 	}
-	
+
 	@Override
 	public boolean updateActive(Integer id) {
 		return xcxUserRoleDao.updateActive(id) != 0;
 	}
 
 	@Override
-	public List<TXcxUserRole> queryUserRoleExist(String sessionKey, String courseId) {
-		return xcxUserRoleDao.queryUserRoleExist(sessionKey, courseId);
+	public List<TXcxUserRole> queryCourseUserExist(String sessionKey, String courseId) {
+		return xcxUserRoleDao.queryCourseUserExist(sessionKey, courseId);
 	}
 
-	
+	@Override
+	public TXcxUserRole queryUserRoleExist(String userId, Integer roleVal, String companyId) {
+		return xcxUserRoleDao.queryCompanyUser(userId, roleVal, companyId);
+	}
+
 }

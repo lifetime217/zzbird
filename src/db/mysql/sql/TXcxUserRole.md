@@ -12,7 +12,11 @@ queryCompanyUser
 	t_xcx_user_role
 	WHERE
 	t_xcx_user_role.company_id=#companyId#
-	and  role_val = #roleVal#
+	AND  t_xcx_user_role.role_val = #roleVal#
+	AND t_xcx_user_role.isdelete = 0
+	@if(!isEmpty(userId)){
+		 and t_xcx_user_role.xcx_user_id = #userId#
+	@}
 
 	
 updateCurrentActiveByZero
@@ -35,7 +39,7 @@ updateActive
 	WHERE
 	id = #id# 
 	
-queryUserRoleExist
+queryCourseUserExist
 ===
 * 用户收邀请进来查询该公司和该课程下是否是老师或者是学生
 	SELECT

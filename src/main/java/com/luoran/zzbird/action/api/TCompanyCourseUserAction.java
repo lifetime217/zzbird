@@ -22,15 +22,14 @@ import com.luoran.zzbird.core.UserContext;
 import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
-import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
 import com.luoran.zzbird.entity.vo.InviteVo;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
 import com.luoran.zzbird.service.ITDakaRecordService;
+import com.luoran.zzbird.service.ITMessageService;
 import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Validate;
-import com.luoran.zzbird.service.ITMessageService;
 /**
  * @author tzx
  *

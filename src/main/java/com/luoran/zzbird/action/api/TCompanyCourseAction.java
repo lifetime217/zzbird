@@ -202,7 +202,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 
 			// 根据sessionKey（用户）查询出该课程下有数据
 			if ("inviteStu".equals(type) || "inviteTea".equals(type)) {
-				List<TXcxUserRole> userRoleExist = xcxUserRoleSerivce.queryUserRoleExist(zzbird_XcxSessionKey,
+				List<TXcxUserRole> userRoleExist = xcxUserRoleSerivce.queryCourseUserExist(zzbird_XcxSessionKey,
 						courseId);
 				if (userRoleExist != null && !userRoleExist.isEmpty()) {
 					res.put("exist", true);

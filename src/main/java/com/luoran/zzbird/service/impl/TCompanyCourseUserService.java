@@ -41,10 +41,10 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		implements ITCompanyCourseUserService {
 	@Autowired
 	private ITCompanyCourseUserDao companyCourseUserDao;
-	
+
 	@Autowired
 	ITCompanyCourseService companyCourseService;
-	
+
 	@Autowired
 	ITCompanyService companyService;
 
@@ -56,7 +56,7 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 
 	@Autowired
 	ITMessageService messageService;
-	
+
 	@Autowired
 	IWechatUserRelationService wechatUserRelationService;
 
@@ -69,7 +69,7 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 	public String add(TCompanyCourseUser t) {
 		return super.add(t);
 	}
-	
+
 	@Override
 	public PageQuery<TCompanyCourseUser> getComUserByBoosRole(PageQuery<TCompanyCourseUser> pageQuery) {
 		companyCourseUserDao.queryComUserByBoosRole(pageQuery);
@@ -134,17 +134,24 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 			companyService.updateCompanyPersonNumber(inviteVo.getCompanyId(), 1);
 			companyCourseService.updatePerson(inviteVo.getCourseId());
 		}
-		// 添加公司用户表
-		TXcxUserRole tXcxUserRole = new TXcxUserRole();
-		tXcxUserRole.setCompanyId(inviteVo.getCompanyId());
-		tXcxUserRole.setRoleVal(roleVal);
-		tXcxUserRole.setCurrentActive(1);
-		tXcxUserRole.setRoleName(inviteVo.getNickName());
-		tXcxUserRole.setRoleHeadimg(inviteVo.getAvatarUrl());
-		tXcxUserRole.setXcxUserId(xcxUserId);
-		tXcxUserRole.setIsdelete(0);
-		tXcxUserRole.setSign(ShortUuid.generateShortUuid());
-		Integer xcxUserRoleId = xcxUserRoleService.insert(tXcxUserRole);
+		TXcxUserRole xcxUserRole = xcxUserRoleService.queryUserRoleExist(xcxUserId, roleVal, inviteVo.getCompanyId());
+		Integer xcxUserRoleId;
+		// 公司用户表判断
+		if (xcxUserRole == null) {
+			// 添加公司用户表
+			TXcxUserRole tXcxUserRole = new TXcxUserRole();
+			tXcxUserRole.setCompanyId(inviteVo.getCompanyId());
+			tXcxUserRole.setRoleVal(roleVal);
+			tXcxUserRole.setCurrentActive(1);
+			tXcxUserRole.setRoleName(inviteVo.getNickName());
+			tXcxUserRole.setRoleHeadimg(inviteVo.getAvatarUrl());
+			tXcxUserRole.setXcxUserId(xcxUserId);
+			tXcxUserRole.setIsdelete(0);
+			tXcxUserRole.setSign(ShortUuid.generateShortUuid());
+			xcxUserRoleId = xcxUserRoleService.insert(tXcxUserRole);
+		} else {
+			xcxUserRoleId = xcxUserRole.getId();
+		}
 
 		// 添加课程用户表
 		TCompanyCourseUser tCompanyCourseUser = new TCompanyCourseUser();
@@ -167,29 +174,28 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		msg.setToUser(xcxUserRoleId.toString());
 		msg.setAddTime(new Date());
 		messageService.add(msg);
-		
+
 		// 添加发送者人的接受消息表
 		msg.setId(UUID.get());
-		msg.setContent(inviteVo.getNickName()+"接受了您的邀请");
+		msg.setContent(inviteVo.getNickName() + "接受了您的邀请");
 		msg.setFromUser(xcxUserRoleId.toString());
 		msg.setToUser(inviteRole.getId().toString());
 		messageService.add(msg);
-		
+
 		// 添加课程所属的创建者的接受消息表
-		if("20".equals(inviteVo.getInviteRoleVal())) {
-			//找出课程所属的公司创建者
-			List<TXcxUserRole> companyCreator = xcxUserRoleService.queryCompanyUser(10,inviteVo.getCompanyId());
+		if ("20".equals(inviteVo.getInviteRoleVal())) {
+			// 找出课程所属的公司创建者
+			List<TXcxUserRole> companyCreator = xcxUserRoleService.queryCompanyUser(10, inviteVo.getCompanyId());
 			msg.setId(UUID.get());
-			msg.setContent("您公司下的"+inviteRole.getRoleName()+"成功邀请了"+inviteVo.getNickName()+"成为了学员");
+			msg.setContent("您公司下的" + inviteRole.getRoleName() + "成功邀请了" + inviteVo.getNickName() + "成为了学员");
 			msg.setFromUser(inviteRole.getId().toString());
 			msg.setToUser(companyCreator.get(0).getId().toString());
 			messageService.add(msg);
 		}
-		
-		wechatUserRelationService.notifyAddXcxUser(userContextInfo.getOpenid());
-		
-	}
 
+		wechatUserRelationService.notifyAddXcxUser(userContextInfo.getOpenid());
+
+	}
 
 	@Override
 	public Integer getUserCourseCount(Map<String, String> params) {
@@ -208,7 +214,5 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		companyCourseUserDao.queryTeaCourseStu(pageQuery);
 		return pageQuery;
 	}
-
-	
 
 }
