@@ -117,8 +117,7 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		} else {
 			xcxUserId = xcxUser.getId();
 		}
-		// 修改正在使用为0
-		xcxUserRoleService.updateCurrentActiveByZero(zzbird_XcxSessionKey);
+		
 
 		Integer roleVal;// 邀请人的角色
 		String content;// 邀请人和被邀请人的接受消息内容
@@ -138,6 +137,8 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		Integer xcxUserRoleId;
 		// 公司用户表判断
 		if (xcxUserRole == null) {
+			// 修改正在使用为0
+			xcxUserRoleService.updateCurrentActiveByZero(zzbird_XcxSessionKey);
 			// 添加公司用户表
 			TXcxUserRole tXcxUserRole = new TXcxUserRole();
 			tXcxUserRole.setCompanyId(inviteVo.getCompanyId());
