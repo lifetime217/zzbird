@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.luoran.zzbird.dao.ITXcxUserDao;
 import com.luoran.zzbird.entity.biz.TWechatUser;
 import com.luoran.zzbird.entity.biz.TXcxUser;
 import com.luoran.zzbird.service.ITWechatUserService;
@@ -51,6 +52,8 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 
 	@Autowired
 	private ITXcxUserService xcxService;
+	@Autowired
+	private ITXcxUserDao xcxUserDao;
 
 	@Override
 	public void notifyAddWxUser(String wxOpenId) {
@@ -74,8 +77,8 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 				for (TXcxUser oUser : likeList) {
 					BufferedImage uimg = getImgObject(oUser.getAvatarUrl());
 					float likeVal = getImageLikeVal(wxImgObj, uimg);
-					if (likeVal > 90) {
-						// 如果相似度高于90%，则认为是同一个用户。如果存在多个，则取相似度最高的那个
+					if (likeVal > 80) {
+						// 如果相似度高于80%，则认为是同一个用户。如果存在多个，则取相似度最高的那个
 						if (likeVal > maxLikeVal) {
 							maxXcxOpenId = oUser.getOpenId();
 							maxLikeVal = likeVal;
@@ -97,7 +100,11 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 	 * @param wxOpenId
 	 */
 	public void relation(String xcxOpenId, String wxOpenId) {
-
+		TXcxUser user = xcxUserDao.queryXcxUserByOpenId(xcxOpenId);
+		if (StringUtils.isEmpty(user.getWxOpenId())) {
+			user.setWxOpenId(xcxOpenId);
+			xcxUserDao.updateByUserId(user.getId(), wxOpenId);
+		}
 	}
 
 	/**
@@ -129,7 +136,8 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 				int g2 = rgb2 >> 8 & 0xff;
 				int b2 = rgb2 & 0xff;
 				total++;
-				if (Math.abs(r - r2) > diff_factor || Math.abs(g - g2) > diff_factor || Math.abs(b - b2) > diff_factor) {
+				if (Math.abs(r - r2) > diff_factor || Math.abs(g - g2) > diff_factor
+						|| Math.abs(b - b2) > diff_factor) {
 					diff++;
 				}
 			}
@@ -206,8 +214,8 @@ public class WechatUserRelationService implements IWechatUserRelationService {
 				for (TWechatUser oUser : likeList) {
 					BufferedImage uimg = getImgObject(oUser.getHeadimgUrl());
 					float likeVal = getImageLikeVal(wxImgObj, uimg);
-					if (likeVal > 90) {
-						// 如果相似度高于90%，则认为是同一个用户。如果存在多个，则取相似度最高的那个
+					if (likeVal > 80) {
+						// 如果相似度高于80%，则认为是同一个用户。如果存在多个，则取相似度最高的那个
 						if (likeVal > maxLikeVal) {
 							maxWechatOpenId = oUser.getOpenId();
 							maxLikeVal = likeVal;
