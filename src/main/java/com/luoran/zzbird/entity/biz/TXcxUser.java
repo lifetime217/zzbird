@@ -160,5 +160,17 @@ public class TXcxUser extends BaseInfo implements Serializable {
 	public void setAddTime(Date addTime) {
 		set("addTime", addTime);
 	}
+	
+	
+	/**
+	 * 微信公众号openId
+	 */
+	public String getWxOpenId() {
+		return getString("WxOpenId");
+	}
+
+	public void setWxOpenId(String WxOpenId) {
+		set("WxOpenId", WxOpenId);
+	}
 
 }

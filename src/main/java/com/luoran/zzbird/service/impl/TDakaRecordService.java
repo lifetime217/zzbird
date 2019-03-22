@@ -14,7 +14,9 @@ import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.dao.ITDakaRecordDao;
+import com.luoran.zzbird.dao.ITMessageDao;
 import com.luoran.zzbird.entity.biz.TDakaRecord;
+import com.luoran.zzbird.entity.biz.TMessage;
 import com.luoran.zzbird.service.ITDakaRecordService;
 
 /**
@@ -25,11 +27,13 @@ import com.luoran.zzbird.service.ITDakaRecordService;
 @Transactional
 public class TDakaRecordService extends AbstractBaseService<TDakaRecord> implements ITDakaRecordService {
 	@Autowired
-	private ITDakaRecordDao iTDakaRecordDao;
+	private ITDakaRecordDao dakaRecordDao;
+	@Autowired
+	private ITMessageDao messageDao;
 
 	@Override
 	public BaseDao<TDakaRecord> getDao() {
-		return iTDakaRecordDao;
+		return dakaRecordDao;
 	}
 
 	@Override
@@ -39,31 +43,31 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 
 	@Override
 	public List<TDakaRecord> getPunchMonth(Map<String, String> map) {
-		List<TDakaRecord> queryPunchMonth = iTDakaRecordDao.queryPunchMonth(map);
+		List<TDakaRecord> queryPunchMonth = dakaRecordDao.queryPunchMonth(map);
 		return queryPunchMonth;
 	}
 
 	@Override
 	public List<TDakaRecord> getPunchList(Map<String, String> map) {
-		List<TDakaRecord> queryPunchList = iTDakaRecordDao.queryPunchList(map);
+		List<TDakaRecord> queryPunchList = dakaRecordDao.queryPunchList(map);
 		return queryPunchList;
 	}
 
 	@Override
 	public List<TDakaRecord> getPunchCourseList(Map<String, String> map) {
-		List<TDakaRecord> queryPunchCourseList = iTDakaRecordDao.queryPunchCourseList(map);
+		List<TDakaRecord> queryPunchCourseList = dakaRecordDao.queryPunchCourseList(map);
 		return queryPunchCourseList;
 	}
 
 	@Override
 	public List<TDakaRecord> getPunchListByCourse(Map<String, String> map) {
-		List<TDakaRecord> queryPunchListByCourse = iTDakaRecordDao.queryPunchListByCourse(map);
+		List<TDakaRecord> queryPunchListByCourse = dakaRecordDao.queryPunchListByCourse(map);
 		return queryPunchListByCourse;
 	}
 
 	@Override
 	public TDakaRecord getTeaInfo(Map<String, Object> params) {
-		TDakaRecord teaInfo = iTDakaRecordDao.queryTeaInfo(params);
+		TDakaRecord teaInfo = dakaRecordDao.queryTeaInfo(params);
 		if (teaInfo == null) {
 			return null;
 		}
@@ -73,19 +77,19 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 
 	@Override
 	public TDakaRecord getTeaDays(Map<String, Object> params) {
-		TDakaRecord queryTeaDakaTime = iTDakaRecordDao.queryTeaDakaTime(params);
+		TDakaRecord queryTeaDakaTime = dakaRecordDao.queryTeaDakaTime(params);
 		return queryTeaDakaTime;
 	}
 
 	@Override
 	public List<TDakaRecord> getYidaka(Map<String, Object> params) {
-		List<TDakaRecord> yiDakaList = iTDakaRecordDao.queryYidaka(params);
+		List<TDakaRecord> yiDakaList = dakaRecordDao.queryYidaka(params);
 		return yiDakaList;
 	}
 
 	@Override
 	public List<TDakaRecord> getWeidaka(Map<String, Object> params) {
-		List<TDakaRecord> weiDakaList = iTDakaRecordDao.queryWeidaka(params);
+		List<TDakaRecord> weiDakaList = dakaRecordDao.queryWeidaka(params);
 		return weiDakaList;
 	}
 
@@ -111,7 +115,7 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 		TDakaRecord tDakaRecord = new TDakaRecord();
 		tDakaRecord.setId(params.get("id").toString());
 		tDakaRecord.setIsdelete(1);
-		int updateById = iTDakaRecordDao.updateTemplateById(tDakaRecord);
+		int updateById = dakaRecordDao.updateTemplateById(tDakaRecord);
 		if (updateById > 0) {
 			return true;
 		}
@@ -121,25 +125,25 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 	@Override
 	public Integer queryStuClassHourByCourseId(String courseId) {
 		UserContextInfo user = UserContext.get();
-		Integer classHour = iTDakaRecordDao.queryUserClassHour(courseId, user.getXcxUserRoleId(), 30);
+		Integer classHour = dakaRecordDao.queryUserClassHour(courseId, user.getXcxUserRoleId(), 30);
 		return classHour == null ? 0 : classHour;
 	}
 
 	@Override
 	public Integer queryUserClassHour() {
 		UserContextInfo user = UserContext.get();
-		return iTDakaRecordDao.queryUserClassHour(user.getXcxUserRoleId(), user.getCompanyId(), user.getRoleVal());
+		return dakaRecordDao.queryUserClassHour(user.getXcxUserRoleId(), user.getCompanyId(), user.getRoleVal());
 	}
 
 	@Override
 	public Integer getDakaWeekCount(Map<String, String> params) {
-		Integer dakaWeekCount = iTDakaRecordDao.queryDakaWeekCount(params);
+		Integer dakaWeekCount = dakaRecordDao.queryDakaWeekCount(params);
 		return dakaWeekCount;
 	}
 
 	@Override
 	public Integer getClassHourthIsMonth(Map<String, String> params) {
-		Integer queryClassHourthIsMonth = iTDakaRecordDao.queryClassHourthIsMonth(params);
+		Integer queryClassHourthIsMonth = dakaRecordDao.queryClassHourthIsMonth(params);
 		return queryClassHourthIsMonth;
 	}
 
@@ -147,7 +151,7 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 	@Override
 	public Integer queryStuStudyWeek(String courseId) {
 		UserContextInfo user = UserContext.get();
-		Integer studyWeek = iTDakaRecordDao.queryStuStudyWeek(user.getXcxUserRoleId(), courseId);
+		Integer studyWeek = dakaRecordDao.queryStuStudyWeek(user.getXcxUserRoleId(), courseId);
 		return studyWeek == null ? 0 : studyWeek;
 	}
 }

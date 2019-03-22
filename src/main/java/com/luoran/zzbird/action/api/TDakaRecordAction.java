@@ -25,6 +25,7 @@ import com.luoran.zzbird.core.ext.BaseAction;
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TDakaRecord;
 import com.luoran.zzbird.service.ITDakaRecordService;
+import com.luoran.zzbird.service.ITMessageService;
 
 /**
  * 打卡操作接口
@@ -37,7 +38,9 @@ import com.luoran.zzbird.service.ITDakaRecordService;
 public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 	private final static Logger log = LoggerFactory.getLogger(TCompanyCourseUserAction.class);
 	@Autowired
-	private ITDakaRecordService service;
+	private ITDakaRecordService dakaRecordService;
+	@Autowired
+	private ITMessageService messageService;
 
 	@RequestMapping
 	public String index() {
@@ -46,7 +49,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 
 	@Override
 	public IBaseService<TDakaRecord> getService() {
-		return service;
+		return dakaRecordService;
 	}
 
 	/**
@@ -60,7 +63,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 	@ResponseBody
 	public HttpResult getPunchListByMonth(@RequestParam Map<String, String> params, HttpServletRequest req) {
 		HttpResult hr = new HttpResult();
-		//获取用户roleId
+		// 获取用户roleId
 		UserContextInfo userContextInfo = UserContext.get();
 		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
 		params.put("roleId", xcxUserRoleId.toString());
@@ -83,7 +86,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		JSONArray jarr = new JSONArray();
 		try {
 			// 查询出月份字段和月开始和月结束
-			List<TDakaRecord> punchMonth = service.getPunchMonth(params);
+			List<TDakaRecord> punchMonth = dakaRecordService.getPunchMonth(params);
 
 			for (TDakaRecord monthList : punchMonth) {
 				// 查询具体每月的月份
@@ -95,7 +98,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 				map.put("roleId", params.get("roleId"));
 				map.put("statDate", monthList.get("statdate").toString());
 				map.put("endDate", monthList.get("enddate").toString());
-				List<TDakaRecord> punchList = service.getPunchList(map);
+				List<TDakaRecord> punchList = dakaRecordService.getPunchList(map);
 				// 封装具体打卡记录
 				for (TDakaRecord tdr : punchList) {
 					JSONObject objList = new JSONObject();
@@ -131,7 +134,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 	@ResponseBody()
 	public HttpResult getPunchListByCourse(@RequestParam Map<String, String> params, HttpServletRequest req) {
 		HttpResult hr = new HttpResult();
-		//获取用户roleId
+		// 获取用户roleId
 		UserContextInfo userContextInfo = UserContext.get();
 		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
 		params.put("roleId", xcxUserRoleId.toString());
@@ -142,7 +145,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		}
 		JSONArray data = new JSONArray();
 		try {
-			List<TDakaRecord> punchCourseList = service.getPunchCourseList(params);
+			List<TDakaRecord> punchCourseList = dakaRecordService.getPunchCourseList(params);
 			// 封装抬头信息
 			for (TDakaRecord courseGroup : punchCourseList) {
 				JSONObject course = new JSONObject();
@@ -153,7 +156,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 				course.put("courseName", courseGroup.get("coursename"));
 				course.put("courseId", courseGroup.get("courseid"));
 				course.put("punCount", courseGroup.get("puncount"));
-				List<TDakaRecord> punchListByCourse = service.getPunchListByCourse(map);
+				List<TDakaRecord> punchListByCourse = dakaRecordService.getPunchListByCourse(map);
 				// 封装具体打卡记录
 				for (TDakaRecord dakaInfo : punchListByCourse) {
 					JSONObject dakaJiLu = new JSONObject();
@@ -181,7 +184,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 	@ResponseBody()
 	public HttpResult queryYidakaWeidaka(@RequestParam Map<String, Object> params) {
 		HttpResult hr = new HttpResult();
-		//获取用户roleId
+		// 获取用户roleId
 		UserContextInfo userContextInfo = UserContext.get();
 		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
 		params.put("roleId", xcxUserRoleId.toString());
@@ -199,7 +202,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		try {
 
 			// 查询老师是否拥有这个课程
-			TDakaRecord teaInfo = service.getTeaInfo(params);
+			TDakaRecord teaInfo = dakaRecordService.getTeaInfo(params);
 			if (teaInfo == null) {
 				hr.setStatusCode(100);
 				hr.setMsg("您不是本课的老师");
@@ -207,10 +210,10 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 			}
 			data.putAll(teaInfo.values());
 			// 查询老师这个课程打卡天数累计
-			TDakaRecord teaDays = service.getTeaDays(params);
+			TDakaRecord teaDays = dakaRecordService.getTeaDays(params);
 			data.putAll(teaDays.values());
 			// 查询已打卡的学生 按当天的课程
-			List<TDakaRecord> yiDaka = service.getYidaka(params);
+			List<TDakaRecord> yiDaka = dakaRecordService.getYidaka(params);
 			JSONArray yiDakaList = new JSONArray();
 			for (int i = 0; i < yiDaka.size(); i++) {
 				JSONObject obj = new JSONObject();
@@ -226,7 +229,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 			}
 			params.put("list", paList);
 			// 根据学生id集合not in 方法查询未打卡的学生
-			List<TDakaRecord> weiDaka = service.getWeidaka(params);
+			List<TDakaRecord> weiDaka = dakaRecordService.getWeidaka(params);
 			JSONArray weiDakaList = new JSONArray();
 			for (int i = 0; i < weiDaka.size(); i++) {
 				JSONObject obj = new JSONObject();
@@ -254,7 +257,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 	@ResponseBody()
 	public HttpResult daka(@RequestParam Map<String, Object> params) {
 		HttpResult hr = new HttpResult();
-		//获取用户roleId
+		// 获取用户roleId
 		UserContextInfo userContextInfo = UserContext.get();
 		Integer xcxUserRoleId = userContextInfo.getXcxUserRoleId();
 		params.put("roleId", xcxUserRoleId.toString());
@@ -263,16 +266,17 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 			hr.setStatusCode(100);
 			return hr;
 		}
-		//解析前台传过来的学生id数组
+		// 解析前台传过来的学生id数组
 		JSONArray parseArray = JSONArray.parseArray(params.get("clickList").toString());
 		List<Map> studentList = parseArray.toJavaList(Map.class);
-		//打卡操作
-		boolean success = service.daka(studentList, params);
+		// 打卡操作
+		boolean success = dakaRecordService.daka(studentList, params);
 		if (!success) {
 			hr.setMsg("打卡失败，数据错误");
 			hr.setStatusCode(500);
 			return hr;
 		}
+		messageService.sendDakaMessage(userContextInfo,params,studentList);
 		System.out.println("-------------------------------");
 		try {
 			System.out.println();
@@ -296,7 +300,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		HttpResult hr = new HttpResult();
 		try {
 			// 设置行数据isdelete字段为1
-			boolean success = service.quXiaoDaka(params);
+			boolean success = dakaRecordService.quXiaoDaka(params);
 			// 未成功返回信息
 			if (!success) {
 				hr.setMsg("取消打卡失败");
