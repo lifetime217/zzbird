@@ -1,0 +1,27 @@
+{
+	"touser": "as",
+	"template_id": "",
+	"topcolor": "#FF0000",
+	"data": {
+		"title": {
+			"value": "恭喜打卡成功",
+			"color": "#FF0000"
+		},
+		"course": {
+			"value": "",
+			"color": "#173177"
+		},
+		"dakaTime": {
+			"value": "",
+			"color": "#FF0000"
+		},
+		"teacher": {
+			"value": "",
+			"color": "#173177"
+		},
+		"company": {
+			"value": "",
+			"color": "#173177"
+		}
+	}
+}

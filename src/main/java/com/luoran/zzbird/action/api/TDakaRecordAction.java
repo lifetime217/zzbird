@@ -26,6 +26,7 @@ import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TDakaRecord;
 import com.luoran.zzbird.service.ITDakaRecordService;
 import com.luoran.zzbird.service.ITMessageService;
+import com.luoran.zzbird.service.ITWechatUserService;
 
 /**
  * 打卡操作接口
@@ -41,7 +42,8 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 	private ITDakaRecordService dakaRecordService;
 	@Autowired
 	private ITMessageService messageService;
-
+	@Autowired
+	ITWechatUserService wechatUserService;
 	@RequestMapping
 	public String index() {
 		return "tdakarecord";
@@ -277,6 +279,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 			return hr;
 		}
 		messageService.sendDakaMessage(userContextInfo,params,studentList);
+		//wechatUserService.sendGZHMessage(userContextInfo,params,studentList);
 		System.out.println("-------------------------------");
 		try {
 			System.out.println();
