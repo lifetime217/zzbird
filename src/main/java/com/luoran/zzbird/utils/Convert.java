@@ -17,7 +17,8 @@ public class Convert {
 		String[] imgs = companyImg.split(",");
 		StringBuffer imgBuffer = new StringBuffer();
 		for (int j = 0; j < imgs.length; j++) {
-			imgs[j] = url + "/" + imgs[j];
+			imgs[j] = url + "/" + imgs[j];  
+//			imgs[j] = url + "/kaka/" + imgs[j];//线上版本的图片访问
 			imgBuffer.append(imgs[j] + ",");
 		}
 		return imgBuffer.replace(imgBuffer.length() - 1, imgBuffer.length(), "").toString();
@@ -32,6 +33,7 @@ public class Convert {
 		for (int j = 0; j < imgs.size(); j++) {
 			String img = imgs.get(j);
 			imgs.set(j, url + "/" + img);
+//			imgs.set(j, url + "/kaka/" + img);//线上版本的图片访问
 		}
 		return imgs;
 	}

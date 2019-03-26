@@ -150,6 +150,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			for (TCompanyCourse course : pageQuery.getList()) {
 				JSONObject jsonObject = new JSONObject();
 				course.setCourseImg(url + "/" + course.getCourseImg());
+//				course.setCourseImg(url + "/kaka/" + course.getCourseImg());//线上版本需要修改
 				jsonObject.putAll(course.values());
 				json.add(jsonObject);
 			}
