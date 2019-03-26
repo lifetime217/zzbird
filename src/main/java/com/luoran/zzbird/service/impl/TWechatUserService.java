@@ -128,7 +128,7 @@ public class TWechatUserService extends AbstractBaseService<TWechatUser> impleme
 			TCompanyCourse courseInfo = companyCourseDao.unique(params.get("courseId").toString());
 			for (int i = 0; i < studentList.size(); i++) {
 				message = obj;
-				String gzhOpenid = xcxUserDao.queryUserByRoleId(studentList.get(i).get("id").toString());
+				String gzhOpenid = xcxUserDao.queryWechatUserIdByRoleId(studentList.get(i).get("id").toString());
 				Date date = new Date();
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				if (!StringUtils.isEmpty(gzhOpenid)) {

@@ -17,6 +17,7 @@ import com.luoran.zzbird.core.UserContextInfo;
 import com.luoran.zzbird.core.ext.AbstractBaseService;
 import com.luoran.zzbird.core.ext.BaseDao;
 import com.luoran.zzbird.dao.ITCompanyDao;
+import com.luoran.zzbird.dao.ITXcxUserDao;
 import com.luoran.zzbird.entity.biz.TCompany;
 import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TXcxUser;
@@ -43,6 +44,9 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 
 	@Autowired
 	private ITXcxUserService xcxUserService;
+
+	@Autowired
+	private ITXcxUserDao xcxUserDao;
 
 	@Autowired
 	Environment env;
@@ -146,10 +150,18 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		TCompany newCompany = new TCompany();
 		newCompany.setId(oldCompany.getId());
 		newCompany.setLookCount(oldCompany.getLookCount() + 1);
+		//如果是新用户
+		if (xcxUserRoleId == null) {
+			companyDao.updateTemplateById(newCompany);
+			return;
+		}
+		// 查询小程序用户的id
+		String queryUserByRoleId = xcxUserDao.queryXcxUserIdByRoleId(xcxUserRoleId.toString());
+
 		// 如果是老用户
-		if (xcxUserRoleId != null) {
+		if (queryUserByRoleId != null) {
 			// 如果‘xcxUserRoleId’不是公司创建人的roleId
-			if (!xcxUserRoleId.toString().equals(oldCompany.getXcxUserId())) {
+			if (!queryUserByRoleId.equals(oldCompany.getXcxUserId())) {
 				companyDao.updateTemplateById(newCompany);
 			}
 			// 如果是新用户登录
@@ -167,9 +179,17 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		TCompany newCompany = new TCompany();
 		newCompany.setId(oldCompany.getId());
 		newCompany.setShareCount(oldCompany.getShareCount() + 1);
+		//如果是新用户
+		if (roleId == null) {
+			companyDao.updateTemplateById(newCompany);
+			return true;
+		}
+		// 查询小程序用户的id
+		String queryUserByRoleId = xcxUserDao.queryXcxUserIdByRoleId(roleId.toString());
+
 		// 如果是老用户
-		if (roleId != null) {
-			if (!roleId.toString().equals(oldCompany.getXcxUserId())) {
+		if (queryUserByRoleId != null) {
+			if (!queryUserByRoleId.toString().equals(oldCompany.getXcxUserId())) {
 				companyDao.updateTemplateById(newCompany);
 			} else {
 				return false;

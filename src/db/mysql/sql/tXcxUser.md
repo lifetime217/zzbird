@@ -95,15 +95,24 @@ updateByUserId
 	WHERE
 		`id` = #id#
 		
-queryUserByRoleId
+queryWechatUserIdByRoleId
 ===
 * 根据小程序角色id 查询小程序用户的公众号openId
-SELECT
-txu.wechat_open_id
-FROM
-t_xcx_user_role AS txur
-INNER JOIN t_xcx_user AS txu ON txur.xcx_user_id = txu.id
-WHERE
-txur.id = #id#
+	SELECT
+	txu.wechat_open_id
+	FROM
+	t_xcx_user_role AS txur
+	INNER JOIN t_xcx_user AS txu ON txur.xcx_user_id = txu.id
+	WHERE
+	txur.id = #id#
 
-
+queryXcxUserIdByRoleId
+===
+* 根据小程序角色id 查询小程序用户id
+	SELECT
+	txu.id
+	FROM
+	t_xcx_user_role AS txur
+	INNER JOIN t_xcx_user AS txu ON txur.xcx_user_id = txu.id
+	WHERE
+	txur.id = #id#
