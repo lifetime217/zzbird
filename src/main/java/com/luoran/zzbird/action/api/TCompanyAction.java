@@ -131,6 +131,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			// 首页的头部轮播图
 			List<String> bannersList = new ArrayList<String>();
 			bannersList.add(url + "/fengjing.jpg");
+//			bannersList.add(url + "/kaka/fengjing.jpg");//线上版本的访问图片
 			res.put("bannerList", bannersList);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
