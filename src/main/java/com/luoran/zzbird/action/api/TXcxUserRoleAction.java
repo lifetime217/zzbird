@@ -55,7 +55,6 @@ public class TXcxUserRoleAction implements BaseAction<TXcxUserRole> {
 		UserContextInfo userContextInfo = null;
 		try {
 			userContextInfo = UserContext.get();
-			System.out.println("-------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
@@ -85,7 +84,6 @@ public class TXcxUserRoleAction implements BaseAction<TXcxUserRole> {
 				return HttpResult.fail("修改失败");
 			}
 			xcxUserService.reloadSession(params.get("zzbird_XcxSessionKey"));
-			System.out.println("-------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("修改失败");

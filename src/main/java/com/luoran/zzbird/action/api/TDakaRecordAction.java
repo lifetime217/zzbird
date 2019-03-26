@@ -280,7 +280,6 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		}
 		messageService.sendDakaMessage(userContextInfo,params,studentList);
 		//wechatUserService.sendGZHMessage(userContextInfo,params,studentList);
-		System.out.println("-------------------------------");
 		try {
 			System.out.println();
 		} catch (Exception e) {
