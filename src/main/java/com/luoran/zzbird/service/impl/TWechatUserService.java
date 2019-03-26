@@ -137,21 +137,23 @@ public class TWechatUserService extends AbstractBaseService<TWechatUser> impleme
 					message.put("template_id", env.getProperty("weixin.templateid"));
 					JSONObject data = (JSONObject) message.get("data");
 
-					JSONObject title = (JSONObject) data.get("title");
-					title.put("value", "恭喜打卡成功");
+					JSONObject first = (JSONObject) data.get("first");
+					first.put("value", "恭喜打卡成功！！");
 					//课程名
-					JSONObject course = (JSONObject) data.get("course");
-					course.put("value", courseInfo.getCourseName());
+					JSONObject keyword1 = (JSONObject) data.get("keyword1");
+					keyword1.put("value", courseInfo.getCourseName());
 					//打卡时间
-					JSONObject dakaTime = (JSONObject) data.get("dakaTime");
-					dakaTime.put("value", formatter.format(date));
+					JSONObject keyword2 = (JSONObject) data.get("keyword2");
+					keyword2.put("value", formatter.format(date));
 					//打卡老师
-					JSONObject teacher = (JSONObject) data.get("teacher");
-					teacher.put("value", userContextInfo.getRoleName());
+					JSONObject keyword3 = (JSONObject) data.get("keyword3");
+					keyword3.put("value", userContextInfo.getRoleName());
 					//打卡公司
-					JSONObject company = (JSONObject) data.get("company");
-					company.put("value", userContextInfo.getCompanyName());
-					
+					JSONObject keyword4 = (JSONObject) data.get("keyword4");
+					keyword4.put("value", userContextInfo.getCompanyName());
+					//结束语
+					JSONObject remark = (JSONObject) data.get("remark");
+					remark.put("value", "再接再厉！！");
 					String sendTemplateMsg = gzhFacade.sendTemplateMsg("", message.toString());
 					System.out.println(sendTemplateMsg);
 				}

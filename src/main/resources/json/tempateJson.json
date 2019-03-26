@@ -1,25 +1,29 @@
 {
 	"touser": "as",
 	"template_id": "",
-	"topcolor": "#FF0000",
+	"topcolor": "#173177",
 	"data": {
-		"title": {
+		"first": {
 			"value": "恭喜打卡成功",
-			"color": "#FF0000"
+			"color": "#173177"
 		},
-		"course": {
+		"keyword1": {
 			"value": "",
 			"color": "#173177"
 		},
-		"dakaTime": {
-			"value": "",
-			"color": "#FF0000"
-		},
-		"teacher": {
+		"keyword2": {
 			"value": "",
 			"color": "#173177"
 		},
-		"company": {
+		"keyword3": {
+			"value": "",
+			"color": "#173177"
+		},
+		"keyword4": {
+			"value": "",
+			"color": "#173177"
+		},
+		"remark": {
 			"value": "",
 			"color": "#173177"
 		}
