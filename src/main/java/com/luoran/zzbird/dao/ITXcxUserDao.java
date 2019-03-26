@@ -59,6 +59,12 @@ public interface ITXcxUserDao extends BaseDao<TXcxUser> {
 	 */
 	public void updateByUserId(String id, String xcxOpenId);
 	
+	/**
+	 * 
+	 * @Author tzx  
+	 * @Description: 根据小程序角色id 查询小程序用户的公众号openId
+	 */
+	public String queryUserByRoleId(String id);
 	
 
 }
