@@ -74,7 +74,7 @@ public class TWechatUserService extends AbstractBaseService<TWechatUser> impleme
 		WechatUser.set("language", jsObj.getString("language"));
 		WechatUser.set("headimgUrl", jsObj.getString("headimgurl"));
 		WechatUser.set("headimgMd5", "");
-		WechatUser.set("subscribeTime", jsObj.getLong("subscribe_time"));
+		WechatUser.setSubscribeTime(new Date(jsObj.getLong("subscribe_time")*1000));
 		WechatUser.set("remark", jsObj.getString("remark"));
 		WechatUser.set("groupid", jsObj.getInteger("groupid"));
 		JSONArray jsonArray = jsObj.getJSONArray("tagid_list");
