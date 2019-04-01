@@ -1,6 +1,7 @@
 package com.luoran.zzbird.action.api;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -269,16 +270,17 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 			return hr;
 		}
 		// 解析前台传过来的学生id数组
+		Date date = new Date();
 		JSONArray parseArray = JSONArray.parseArray(params.get("clickList").toString());
 		List<Map> studentList = parseArray.toJavaList(Map.class);
 		// 打卡操作
-		boolean success = dakaRecordService.daka(studentList, params);
+		boolean success = dakaRecordService.daka(studentList, params, date);
 		if (!success) {
 			hr.setMsg("打卡失败，数据错误");
 			hr.setStatusCode(500);
 			return hr;
 		}
-		messageService.sendDakaMessage(userContextInfo,params,studentList);
+		messageService.sendDakaMessage(userContextInfo,params,studentList,date);
 		//wechatUserService.sendGZHMessage(userContextInfo,params,studentList);
 		try {
 			System.out.println();
@@ -303,6 +305,8 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		try {
 			// 设置行数据isdelete字段为1
 			boolean success = dakaRecordService.quXiaoDaka(params);
+			//取消打卡发送的消息
+			dakaRecordService.quXiaoDakaMessage(params);
 			// 未成功返回信息
 			if (!success) {
 				hr.setMsg("取消打卡失败");

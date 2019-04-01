@@ -52,8 +52,8 @@ public class UploadPictureAction {
 				String path = env.getProperty("file.path");// 获取图片存储目录
 				String newFileName = ShortUuid.generateShortUuid() + suffix;// 根据UUID生成新的文件名称带后缀
 				String depositUrl = path + "/" + newFileName;// 储存路劲
-//				String url = env.getProperty("file.path.url") + req.getContextPath() + "/" + newFileName;// 根据配置的虚拟路径可以直接用url访问本地图片,正式上线可以通过nginx反向代理访问linux图片目录
-				String url = env.getProperty("file.path.url") + "/kaka/" + newFileName;
+				String url = env.getProperty("file.path.url") + req.getContextPath() + "/" + newFileName;// 根据配置的虚拟路径可以直接用url访问本地图片,正式上线可以通过nginx反向代理访问linux图片目录
+//				String url = env.getProperty("file.path.url") + "/kaka/" + newFileName;
 				File dest = new File(depositUrl);// 上传目标路径
 				if (!dest.getParentFile().exists()) {
 					dest.getParentFile().mkdirs();

@@ -1,5 +1,7 @@
 package com.luoran.zzbird.dao;
 
+import java.util.Date;
+
 import org.beetl.sql.core.engine.PageQuery;
 
 import com.luoran.zzbird.core.ext.BaseDao;
@@ -30,5 +32,10 @@ public interface ITMessageDao extends BaseDao<TMessage> {
 	 */
 	public Integer queryUnreadMessageCountByRoleId(String roleId);
 	
-
+	/**
+	 * @author tzx 打卡取消后打卡消息 isdelete= 1
+	 * @param id ： 学生id，
+	 * @param date ： 打卡时间，
+	 */
+	public Integer quXiaoDakaMessage(String id,Date date);
 }

@@ -1,5 +1,6 @@
 package com.luoran.zzbird.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,6 @@ public interface ITMessageService extends IBaseService<TMessage>{
 	 * @param courseId ：课程ID
 	 * @param studentList ：学生id集合
 	 */
-	void sendDakaMessage(UserContextInfo userContextInfo, Map<String, Object> params, List<Map> studentList);
+	void sendDakaMessage(UserContextInfo userContextInfo, Map<String, Object> params, List<Map> studentList,Date date);
 	
 }
