@@ -161,6 +161,5 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 		String studentId = dakaRecord.getStudentId();
 		Date dakaTime = dakaRecord.getDakaTime();
 		messageDao.quXiaoDakaMessage(studentId, dakaTime);
-		System.err.println();
 	}
 }
