@@ -89,7 +89,7 @@ queryXcxUserRole
 updateByUserId
 ===
    *根据小程序用户的Id 更新xcxOpenId字段
-	UPDATE `zzbird_test`.`t_xcx_user` 
+	UPDATE `t_xcx_user` 
 	SET
 	`wx_open_id` = #xcxOpenId#
 	WHERE
