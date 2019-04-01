@@ -1,5 +1,6 @@
 package com.luoran.zzbird.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -159,7 +160,11 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 	public void quXiaoDakaMessage(Map<String, Object> params) {
 		TDakaRecord dakaRecord = dakaRecordDao.unique(params.get("id"));
 		String studentId = dakaRecord.getStudentId();
+		
 		Date dakaTime = dakaRecord.getDakaTime();
-		messageDao.quXiaoDakaMessage(studentId, dakaTime);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String format = sdf.format(dakaTime);
+		
+		Integer quXiaoDakaMessage = messageDao.quXiaoDakaMessage(studentId, format);
 	}
 }

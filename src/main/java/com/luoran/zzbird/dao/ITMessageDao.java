@@ -37,5 +37,5 @@ public interface ITMessageDao extends BaseDao<TMessage> {
 	 * @param id ： 学生id，
 	 * @param date ： 打卡时间，
 	 */
-	public Integer quXiaoDakaMessage(String id,Date date);
+	public Integer quXiaoDakaMessage(String id,String date);
 }
