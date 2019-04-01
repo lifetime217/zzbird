@@ -1,5 +1,6 @@
 package com.luoran.zzbird.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +64,7 @@ public interface ITDakaRecordService extends IBaseService<TDakaRecord> {
 	 * @author tzx 打卡
 	 * @param #courseId：课程id #roleId：老师的角色id #list：学生的id list集合中的Map<"id","...">
 	 */
-	boolean daka(List<Map> javaList, Map<String, Object> params);
+	boolean daka(List<Map> javaList, Map<String, Object> params ,Date date);
 
 	/**
 	 * @author tzx 取消打卡
@@ -109,4 +110,11 @@ public interface ITDakaRecordService extends IBaseService<TDakaRecord> {
 	 * @Description:查询学生单个课程学习的周数
 	 */
 	Integer queryStuStudyWeek(String courseId);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:取消打卡消息
+	 * @param id 打卡记录ID
+	 */
+	void quXiaoDakaMessage(Map<String, Object> params);
 }

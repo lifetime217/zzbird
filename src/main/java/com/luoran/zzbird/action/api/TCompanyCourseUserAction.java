@@ -201,7 +201,6 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			}
 			Integer messageCount = messageService.getUnreadMessageCountByRoleId(params.get("roleId"));
 			data.put("messageCount", messageCount);
-			System.out.println("------------------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
@@ -244,7 +243,6 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			}
 			Integer messageCount = messageService.getUnreadMessageCountByRoleId(params.get("roleId"));
 			data.put("messageCount", messageCount);
-			System.out.println("------------------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
@@ -292,7 +290,6 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 				jUser.put("courseList", jACourseList);
 				data.add(jUser);
 			}
-			System.out.println("--------------------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");

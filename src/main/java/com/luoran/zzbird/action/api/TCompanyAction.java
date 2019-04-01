@@ -307,8 +307,6 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			data.put("average", average);
 			Integer messageCount = messageService.getUnreadMessageCountByRoleId(params.get("roleId"));
 			data.put("messageCount", messageCount);
-
-			System.out.println("------------------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			e.printStackTrace();

@@ -74,7 +74,6 @@ public class TMessageAction implements BaseAction<TMessage> {
 				obj.putAll(message.values());
 				data.add(obj);
 			}
-			System.out.println("-----------------------------------------------");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error(e.getMessage(), e.getCause());
@@ -100,7 +99,6 @@ public class TMessageAction implements BaseAction<TMessage> {
 			msg.setRead(1);
 			//此方法为baseMapper的接口
 			messageService.updatePart(msg);
-			System.out.println("---------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("update失败");
@@ -122,7 +120,6 @@ public class TMessageAction implements BaseAction<TMessage> {
 		TMessage msg = null;
 		try {
 			msg = messageService.getMsgById(params.get("id"));
-			System.out.println("---------------------------");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");

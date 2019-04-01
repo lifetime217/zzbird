@@ -94,11 +94,11 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 	}
 
 	@Override
-	public boolean daka(List<Map> javaList, Map<String, Object> params) {
+	public boolean daka(List<Map> javaList, Map<String, Object> params , Date date) {
 		for (int i = 0; i < javaList.size(); i++) {
 			TDakaRecord tDakaRecord = new TDakaRecord();
 			tDakaRecord.setCompanyCourseId(params.get("courseId").toString());
-			tDakaRecord.setDakaTime(new Date());
+			tDakaRecord.setDakaTime(date);
 			tDakaRecord.setIsdelete(0);
 			tDakaRecord.setStudentId(javaList.get(i).get("id").toString());
 			tDakaRecord.setTeacherId(params.get("roleId").toString());
@@ -153,5 +153,14 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 		UserContextInfo user = UserContext.get();
 		Integer studyWeek = dakaRecordDao.queryStuStudyWeek(user.getXcxUserRoleId(), courseId);
 		return studyWeek == null ? 0 : studyWeek;
+	}
+
+	@Override
+	public void quXiaoDakaMessage(Map<String, Object> params) {
+		TDakaRecord dakaRecord = dakaRecordDao.unique(params.get("id"));
+		String studentId = dakaRecord.getStudentId();
+		Date dakaTime = dakaRecord.getDakaTime();
+		messageDao.quXiaoDakaMessage(studentId, dakaTime);
+		System.err.println();
 	}
 }

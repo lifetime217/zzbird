@@ -60,11 +60,11 @@ public class TMessageService extends AbstractBaseService<TMessage> implements IT
 	}
 
 	@Override
-	public void sendDakaMessage(UserContextInfo user, Map<String, Object> params, List<Map> studentList) {
+	public void sendDakaMessage(UserContextInfo user, Map<String, Object> params, List<Map> studentList,Date date) {
 		TCompanyCourse course = companyCourseDao.unique(params.get("courseId").toString());
 		for (int i = 0; i < studentList.size(); i++) {
 			TMessage mess = new TMessage();
-			mess.setAddTime(new Date());
+			mess.setAddTime(date);
 			mess.setContent(user.getRoleName()+"老师已经在 “"+course.getCourseName()+"”课程中为你打卡。");
 			mess.setTitle("打卡");
 			mess.setToUser(studentList.get(i).get("id").toString());

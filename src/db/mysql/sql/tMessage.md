@@ -55,3 +55,16 @@ queryUnreadMessageCountByRoleId
 		WHERE
 			tm.`read` = 0 
 			AND tm.to_user = #roleId#
+			and tm.isdelete = 0
+			
+			
+			
+quXiaoDakaMessage
+===
+* 取消打卡后打卡的消息isdelete = 1
+	UPDATE `zzbird_test`.`t_message` 
+	SET 
+	`isdelete` = 1
+	WHERE
+		`to_user` = #id#
+		and `add_time` = #date#
