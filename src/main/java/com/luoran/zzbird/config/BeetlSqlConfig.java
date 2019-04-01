@@ -66,7 +66,6 @@ public class BeetlSqlConfig {
 			}
 		});
 		factory.setIdAutoGens(idGens);
-		factory.setInterceptors(new Interceptor[]{new DebugInterceptor()});
 		return factory;
 	}
 	
