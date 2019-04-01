@@ -62,7 +62,7 @@ queryUnreadMessageCountByRoleId
 quXiaoDakaMessage
 ===
 * 取消打卡后打卡的消息isdelete = 1
-	UPDATE `zzbird_test`.`t_message` 
+	UPDATE `t_message` 
 	SET 
 	`isdelete` = 1
 	WHERE
