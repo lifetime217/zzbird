@@ -28,7 +28,7 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	 * @Author wsl  
 	 * @Description:用户添加公司
 	 */
-	TXcxUserRole addCompany(TCompany company, String sessionKey);
+	TXcxUserRole addCompany(TCompany company, String sessionKey,String imgs);
 	
 	
 	/**
@@ -77,4 +77,11 @@ public interface ITCompanyService extends IBaseService<TCompany> {
 	 * @Description:根据公司 id 和userRoleId 累加公司的分享次数，如果是公司创建者分享，则累加
 	 */
 	boolean updateShareCount(Integer roleId, String string);
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:修改公司
+	 */
+	String updateCompany(TCompany company,String imgs);
 }

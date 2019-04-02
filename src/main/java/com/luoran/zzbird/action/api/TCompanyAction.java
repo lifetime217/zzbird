@@ -108,7 +108,6 @@ public class TCompanyAction implements BaseAction<TCompany> {
 				List<String> geohashList = GeohashUtil.encodes(latitude, longitude, 5);
 				for (int i = 0; i < geohashList.size(); i++) {
 					geohashList.set(i, geohashList.get(i).concat("%"));
-					 
 				}
 				geohashList.add(GeohashUtil.encode(latitude, longitude).substring(0, 5).concat("%"));
 				queryParams.put("geohashList", geohashList);
@@ -130,8 +129,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 
 			// 首页的头部轮播图
 			List<String> bannersList = new ArrayList<String>();
-			bannersList.add(url + "/fengjing.jpg");
-//			bannersList.add(url + "/kaka/fengjing.jpg");//线上版本的访问图片
+			bannersList.add(Convert.imgToUrl("fengjing.jpg", url));
 			res.put("bannerList", bannersList);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
@@ -147,7 +145,8 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping("/addCompany")
 	@ResponseBody()
-	public HttpResult addCompany(TCompany company, String zzbird_XcxSessionKey) {
+	public HttpResult addCompany(TCompany company, String zzbird_XcxSessionKey,
+			@RequestParam(name = "deleteImg") String imgs) {
 		HttpResult validate = Validate.Company(company);
 		if (validate != null) {
 			return validate;
@@ -155,7 +154,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 		JSONObject res = new JSONObject();
 		try {
 			// 添加公司
-			TXcxUserRole userRole = companyService.addCompany(company, zzbird_XcxSessionKey);
+			TXcxUserRole userRole = companyService.addCompany(company, zzbird_XcxSessionKey, imgs);
 
 			xcxUserService.reloadSession(zzbird_XcxSessionKey);
 			res.put("companyId", userRole.getCompanyId());
@@ -251,17 +250,15 @@ public class TCompanyAction implements BaseAction<TCompany> {
 	 */
 	@RequestMapping("/updateCompany")
 	@ResponseBody()
-	public HttpResult updateCompany(TCompany company) {
+	public HttpResult updateCompany(TCompany company,@RequestParam(name = "deleteImg") String imgs) {
 		HttpResult validate = Validate.Company(company);
 		if (validate != null) {
 			return validate;
 		}
 		JSONObject res = new JSONObject();
 		try {
-			UserContextInfo user = UserContext.get();
-			company.setId(user.getCompanyId());
-			companyService.save(company);
-			res.put("companyId", user.getCompanyId());
+			String companyId  = companyService.updateCompany(company, imgs);
+			res.put("companyId", companyId);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("修改失败");

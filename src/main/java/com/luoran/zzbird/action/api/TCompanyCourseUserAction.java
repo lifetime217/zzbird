@@ -29,6 +29,7 @@ import com.luoran.zzbird.service.ITCompanyCourseUserService;
 import com.luoran.zzbird.service.ITDakaRecordService;
 import com.luoran.zzbird.service.ITMessageService;
 import com.luoran.zzbird.service.ITXcxUserService;
+import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.Validate;
 /**
  * @author tzx
@@ -149,8 +150,7 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			JSONArray json = new JSONArray();
 			for (TCompanyCourse course : pageQuery.getList()) {
 				JSONObject jsonObject = new JSONObject();
-				course.setCourseImg(url + "/" + course.getCourseImg());
-//				course.setCourseImg(url + "/kaka/" + course.getCourseImg());//线上版本需要修改
+				course.setCourseImg(Convert.imgToUrl(course.getCourseImg(), url));
 				jsonObject.putAll(course.values());
 				json.add(jsonObject);
 			}

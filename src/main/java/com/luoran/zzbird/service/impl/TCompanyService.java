@@ -23,6 +23,7 @@ import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TXcxUser;
 import com.luoran.zzbird.entity.biz.TXcxUserRole;
 import com.luoran.zzbird.service.ITCompanyService;
+import com.luoran.zzbird.service.ITImgDeleteService;
 import com.luoran.zzbird.service.ITXcxUserRoleService;
 import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Convert;
@@ -47,6 +48,9 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 
 	@Autowired
 	private ITXcxUserDao xcxUserDao;
+	
+	@Autowired
+	private ITImgDeleteService imgService;
 
 	@Autowired
 	Environment env;
@@ -74,13 +78,6 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 	@Override
 	public List<TCompany> queryPointUser(String url) {
 		List<TCompany> pointUser = companyDao.queryPointUser();
-//		JSONArray array = new JSONArray();
-//		for (TCompany tCompany : pointUser) {
-//			JSONObject obj = new JSONObject();
-//			obj.putAll(tCompany.values());
-//			obj.put("aaa", tCompany.get("aaa"));
-//			array.add(obj);
-//		}
 		// 拼接url数据
 		for (int i = 0; i < pointUser.size(); i++) {
 			String companyImg = pointUser.get(i).getBannerImgs();
@@ -100,7 +97,7 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 
 	@Override
 	@Transactional
-	public TXcxUserRole addCompany(TCompany company, String sessionKey) {
+	public TXcxUserRole addCompany(TCompany company, String sessionKey,String imgs) {
 		UserContextInfo user = UserContext.get();
 		TXcxUser xcxUser = xcxUserService.queryXcxUserByOpenId(user.getOpenid());
 		// 添加公司表
@@ -130,6 +127,9 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 		tXcxUserRole.setSign(ShortUuid.generateShortUuid());
 		tXcxUserRole.setIsdelete(0);
 		xcxUserRoleService.add(tXcxUserRole);
+		
+		imgService.addImg(imgs);
+		
 		return tXcxUserRole;
 	}
 
@@ -198,6 +198,16 @@ public class TCompanyService extends AbstractBaseService<TCompany> implements IT
 			companyDao.updateTemplateById(newCompany);
 		}
 		return true;
+	}
+
+	@Override
+	@Transactional
+	public String updateCompany(TCompany company,String imgs) {
+		UserContextInfo user = UserContext.get();
+		company.setId(user.getCompanyId());
+		save(company);
+		imgService.addImg(imgs);
+		return user.getCompanyId();
 	}
 
 }

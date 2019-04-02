@@ -16,6 +16,7 @@ import com.luoran.zzbird.entity.biz.TCompanyCourse;
 import com.luoran.zzbird.entity.biz.TCompanyCourseUser;
 import com.luoran.zzbird.service.ITCompanyCourseService;
 import com.luoran.zzbird.service.ITCompanyCourseUserService;
+import com.luoran.zzbird.service.ITImgDeleteService;
 
 /**
  * @author wsl
@@ -25,8 +26,12 @@ import com.luoran.zzbird.service.ITCompanyCourseUserService;
 public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> implements ITCompanyCourseService {
 	@Autowired
 	private ITCompanyCourseDao courseDao;
+	
 	@Autowired
 	private ITCompanyCourseUserService companyCourseUserService;
+	
+	@Autowired
+	private ITImgDeleteService imgService;
 
 	@Override
 	public BaseDao<TCompanyCourse> getDao() {
@@ -45,7 +50,7 @@ public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> i
 
 	@Override
 	@Transactional
-	public String addCourse(TCompanyCourse course) {
+	public String addCourse(TCompanyCourse course,String deleteImg) {
 		UserContextInfo user = UserContext.get();
 		course.setCompanyId(user.getCompanyId());
 		course.setPersonNumber(0);
@@ -56,6 +61,9 @@ public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> i
 		tCompanyCourseUser.setAddTime(new Date());
 		tCompanyCourseUser.setXcxUserRoleId(user.getXcxUserRoleId().toString());
 		companyCourseUserService.add(tCompanyCourseUser);
+		
+		imgService.addImg(deleteImg);
+		
 		return courseId;
 	}
 
@@ -68,6 +76,16 @@ public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> i
 	@Override
 	public boolean updatePerson(String id) {
 		return courseDao.updatePersonNumber(id) != 0;
+	}
+
+	@Override
+	@Transactional
+	public void updateCourse(TCompanyCourse course,String imgs) {
+		UserContextInfo user = UserContext.get();
+		course.setCompanyId(user.getCompanyId());
+		save(course);
+		
+		imgService.addImg(imgs);
 	}
 
 }

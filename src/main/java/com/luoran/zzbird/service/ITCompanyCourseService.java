@@ -14,24 +14,24 @@ public interface ITCompanyCourseService extends IBaseService<TCompanyCourse> {
 	/**
 	 * 
 	 * @Author wsl
-	 * @Description:  根据课程id查询课程的详情
+	 * @Description: 根据课程id查询课程的详情
 	 */
 	TCompanyCourse queryCourseDetail(String courseId);
-	
-	
+
 	/**
 	 * 
-	 * @Author wsl  
+	 * @Author wsl
 	 * @Description:修改课程人数加一
 	 */
 	boolean updatePerson(String id);
-	
+
 	/**
 	 * 
-	 * @Author wsl  
+	 * @Author wsl
 	 * @Description:添加课程
 	 */
-	String addCourse(TCompanyCourse course);
+	String addCourse(TCompanyCourse course, String imgs);
+
 	/**
 	 * 
 	 * @Author tzx
@@ -39,4 +39,11 @@ public interface ITCompanyCourseService extends IBaseService<TCompanyCourse> {
 	 * @param #companyId: 公司Id
 	 */
 	Integer getCourseCount(Map<String, String> params);
+	
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description: 修改课程
+	 */
+	void updateCourse(TCompanyCourse course,String imgs);
 }

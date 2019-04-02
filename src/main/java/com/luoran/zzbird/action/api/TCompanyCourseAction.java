@@ -88,14 +88,14 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	 */
 	@RequestMapping("/addCourse")
 	@ResponseBody()
-	public HttpResult addCourse(TCompanyCourse course) {
+	public HttpResult addCourse(TCompanyCourse course, @RequestParam(name = "deleteImg") String imgs) {
 		HttpResult validate = Validate.Course(course);
 		if (validate != null) {
 			return validate;
 		}
 		JSONObject res = new JSONObject();
 		try {
-			String courseId = courseService.addCourse(course);
+			String courseId = courseService.addCourse(course, imgs);
 			res.put("courseId", courseId);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
@@ -145,7 +145,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 	 */
 	@RequestMapping("/updateCourse")
 	@ResponseBody()
-	public HttpResult updateCourse(TCompanyCourse course) {
+	public HttpResult updateCourse(TCompanyCourse course, @RequestParam(name = "deleteImg") String imgs) {
 		if (course.getId() == null || "".equals(course.getId())) {
 			return HttpResult.fail("请传入id!");
 		}
@@ -155,9 +155,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 		}
 		JSONObject res = new JSONObject();
 		try {
-			UserContextInfo user = UserContext.get();
-			course.setCompanyId(user.getCompanyId());
-			courseService.save(course);
+			courseService.updateCourse(course, imgs);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("修改失败");
@@ -231,14 +229,11 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 					res.put("userName", userContextInfo.getRoleName());
 				}
 			}
-			if (	
-					userContextInfo.getRoleVal() != null 
-					&& userContextInfo.getRoleVal() == 10
+			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 10
 					&& userContextInfo.getCompanyId() != null
-					&& userContextInfo.getCompanyId().equals(course.getCompanyId())
-				) {
+					&& userContextInfo.getCompanyId().equals(course.getCompanyId())) {
 				res.put("isEdit", true);
-			}else {
+			} else {
 				res.put("isEdit", false);
 			}
 		} catch (Exception e) {
