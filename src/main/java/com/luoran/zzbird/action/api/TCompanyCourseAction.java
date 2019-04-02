@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +34,7 @@ import com.luoran.zzbird.service.ITDakaRecordService;
 import com.luoran.zzbird.service.ITPosterService;
 import com.luoran.zzbird.service.ITSharePosterService;
 import com.luoran.zzbird.service.ITXcxUserRoleService;
+import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Base64Utils;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.Validate;
@@ -64,6 +66,8 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 
 	@Autowired
 	private ITSharePosterService sharePOsterService;
+	@Autowired
+	private ITXcxUserService xcxUserService;
 
 	@Autowired
 	Environment env;
@@ -241,6 +245,18 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			}else {
 				res.put("isEdit", false);
 			}
+			
+			if (userContextInfo.getRoleVal() == 30) {
+				String wxgzhopid = xcxUserService.getWechatUserIdByRoleId(userContextInfo.getXcxUserRoleId().toString());
+				if (StringUtils.isEmpty(wxgzhopid)) {
+					res.put("isFollow", false);
+				}else {
+					res.put("isFollow", true);
+				}
+			}else {
+				res.put("isFollow", false);
+			}
+			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");

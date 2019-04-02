@@ -77,4 +77,10 @@ public interface ITXcxUserService extends IBaseService<TXcxUser> {
 	 * @Description: 根据sessionKey、roleVal和companyId查询用户角色id
 	 */
 	TXcxUserRole queryXcxUserRole(String sessionKey, String roleVal, String companyId);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:根据小程序的角色id查询小程序用户的已关注的公众号id
+	 */
+	String getWechatUserIdByRoleId(String string);
 }

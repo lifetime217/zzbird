@@ -131,4 +131,10 @@ public class TXcxUserService extends AbstractBaseService<TXcxUser> implements IT
 		return userDao.queryXcxUserRole(sessionKey, roleVal, companyId);
 	}
 
+	@Override
+	public String getWechatUserIdByRoleId(String string) {
+		String wxgzhopid = userDao.queryWechatUserIdByRoleId(string);
+		return wxgzhopid;
+	}
+
 }
