@@ -102,5 +102,12 @@ public interface ITDakaRecordDao extends BaseDao<TDakaRecord> {
 	 * @param #roleId：学生的Id
 	 */
 	public Integer queryClassHourthIsMonth(Map<String, String> params);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询总打卡数按月分组
+	 * @param companyId 公司id
+	 */
+	public void queryCompanyDakaGourpByMonth(PageQuery<TDakaRecord> pageQuery);
 	
 }

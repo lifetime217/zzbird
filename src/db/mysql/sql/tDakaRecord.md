@@ -235,3 +235,27 @@ from  (
 		LIMIT 1
 ) p
 
+
+queryCompanyDakaGourpByMonth
+===
+* 查询公司打卡跨度按月份
+SELECT 
+	@pageTag(){
+		MONTH.monthDate,
+		MONTH.statDate,
+		MONTH.endDate
+	@}
+FROM
+	(
+		select 
+			DATE_FORMAT(tdr.daka_time, '%Y-%m')  monthDate,
+			UNIX_TIMESTAMP( DATE_FORMAT(tdr.daka_time,'%Y-%m-01 00:00:00')) statDate,
+			UNIX_TIMESTAMP( DATE_FORMAT( LAST_DAY(tdr.daka_time),'%Y-%m-%d 23:59:59')) endDate
+		from t_daka_record tdr
+		inner join t_company_course tcc on tdr.company_course_id = tcc.id
+		where
+			tdr.isdelete = 0
+			and tcc.company_id = #companyId#
+			GROUP BY monthDate
+			order by monthDate desc
+	) MONTH

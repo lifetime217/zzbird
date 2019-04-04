@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -324,6 +325,28 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		hr.setStatusCode(200);
 		return hr;
 
+	}
+	
+	@RequestMapping("/queryCompanyToClassBill")
+	@ResponseBody()
+	public HttpResult queryCompanyToClassBill(@RequestParam Map<String, Object> params) {
+		UserContextInfo userContextInfo = UserContext.get();
+		if (userContextInfo.getRoleVal() != 10) {
+			return HttpResult.fail("请以企业身份查询");
+		}
+		
+		params.put("companyId", userContextInfo.getCompanyId());
+		PageQuery<TDakaRecord> pageQuery = new PageQuery<TDakaRecord>();
+		pageQuery.setParas(params);
+		pageQuery.setPageSize(5);
+		pageQuery.setPageNumber(Integer.parseInt((String) params.get("page")));
+		PageQuery<TDakaRecord> groupByMonth = dakaRecordService.getCompanyDakaGourpByMonth(pageQuery);
+		List<TDakaRecord> list = groupByMonth.getList();
+		for (TDakaRecord tDakaRecord : list) {
+			System.out.println(tDakaRecord.values());
+		}
+		
+		return HttpResult.success();
 	}
 
 }

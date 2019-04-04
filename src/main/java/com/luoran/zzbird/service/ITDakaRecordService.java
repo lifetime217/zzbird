@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.beetl.sql.core.engine.PageQuery;
+
 import com.luoran.zzbird.core.ext.IBaseService;
 import com.luoran.zzbird.entity.biz.TDakaRecord;
 
@@ -117,4 +119,11 @@ public interface ITDakaRecordService extends IBaseService<TDakaRecord> {
 	 * @param id 打卡记录ID
 	 */
 	void quXiaoDakaMessage(Map<String, Object> params);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询总打卡数按月分组
+	 * @param companyId 公司id
+	 */
+	PageQuery<TDakaRecord> getCompanyDakaGourpByMonth(PageQuery<TDakaRecord> pageQuery);
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -166,5 +167,11 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 		String format = sdf.format(dakaTime);
 		
 		Integer quXiaoDakaMessage = messageDao.quXiaoDakaMessage(studentId, format);
+	}
+
+	@Override
+	public PageQuery<TDakaRecord> getCompanyDakaGourpByMonth(PageQuery<TDakaRecord> pageQuery) {
+		dakaRecordDao.queryCompanyDakaGourpByMonth(pageQuery);
+		return pageQuery;
 	}
 }
