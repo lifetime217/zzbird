@@ -126,4 +126,32 @@ public interface ITDakaRecordService extends IBaseService<TDakaRecord> {
 	 * @param companyId 公司id
 	 */
 	PageQuery<TDakaRecord> getCompanyDakaGourpByMonth(PageQuery<TDakaRecord> pageQuery);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询每月下的打卡老师
+	 * @param companyId 公司id
+	 * @param statdate 月的开始时间
+	 * @param enddate 月的结束时间
+	 */
+	List<TDakaRecord> getDakaTeaByMonths(Map<String, Object> params);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:* 查询月份下打卡老师所打卡的课程
+	 * @param teacherId 老师角色id
+	 * @param statdate 月的开始时间
+	 * @param enddate 月的结束时间
+	 */
+	List<TDakaRecord> getDakaCourseByTeaAndMonth(Map<String, Object> params);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:* 查询月份下打卡天数按老师和课程
+	 * @param teacherId 老师角色id
+	 * @param courseId 课程id
+	 * @param statdate 月的开始时间
+	 * @param enddate 月的结束时间
+	 */
+	 Integer getDakaDaysByTeaAndCourse(Map<String, Object> params);
 }

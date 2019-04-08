@@ -259,3 +259,58 @@ FROM
 			GROUP BY monthDate
 			order by monthDate desc
 	) MONTH
+
+queryDakaTeaByMonths
+===
+* 查询月份下的打卡老师
+
+	SELECT
+		txur.role_name tea_name,
+		txur.id tea_id
+	FROM
+	t_daka_record AS tdr
+	INNER JOIN t_company_course AS tcc ON tdr.company_course_id = tcc.id
+	INNER JOIN t_xcx_user_role AS txur ON tdr.teacher_id = txur.id
+	WHERE
+	tdr.isdelete = 0 
+	AND tcc.company_id = #companyId#
+	AND tdr.daka_time > (select from_unixtime(#statdate#))
+	AND tdr.daka_time < (select from_unixtime(#enddate#))
+	GROUP BY txur.id
+	
+queryDakaCourseByTeaAndMonth
+===
+* 查询月份下打卡老师所打卡的课程
+	SELECT
+		tcc.id course_id,
+		tcc.course_name
+	FROM
+		t_daka_record AS tdr
+		INNER JOIN t_company_course AS tcc ON tdr.company_course_id = tcc.id
+		INNER JOIN t_xcx_user_role AS txur ON tdr.teacher_id = txur.id
+	WHERE
+		tdr.isdelete = 0 
+		AND txur.id = #teacherId# 
+		AND tdr.daka_time > ( SELECT from_unixtime( #statdate# ) ) 
+		AND tdr.daka_time < ( SELECT from_unixtime( #enddate# ) )
+		GROUP BY tcc.id
+		
+queryDakaDaysByTeaAndCourse
+===
+* 查询月份下打卡天数按老师和课程
+SELECT
+	count(timess.tiems) days
+FROM
+	(
+		SELECT
+			DATE_FORMAT(tdr.daka_time, '%Y-%m-%d') tiems
+		FROM
+			t_daka_record tdr
+		WHERE
+			tdr.isdelete = 0
+		AND tdr.teacher_id = #teacherId# 
+		AND tdr.company_course_id = #courseId#
+		AND tdr.daka_time > ( SELECT from_unixtime( #statdate# ) ) 
+		AND tdr.daka_time < ( SELECT from_unixtime( #enddate# ) )
+		GROUP BY tiems
+	) timess

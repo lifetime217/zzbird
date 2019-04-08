@@ -109,5 +109,32 @@ public interface ITDakaRecordDao extends BaseDao<TDakaRecord> {
 	 * @param companyId 公司id
 	 */
 	public void queryCompanyDakaGourpByMonth(PageQuery<TDakaRecord> pageQuery);
-	
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:查询每月下的打卡老师
+	 * @param companyId 公司id
+	 * @param statDate 月的开始时间
+	 * @param endDate 月的结束时间
+	 */
+	public List<TDakaRecord> queryDakaTeaByMonths(Map<String, Object> params);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:* 查询月份下打卡老师所打卡的课程
+	 * @param teacherId 老师角色id
+	 * @param statdate 月的开始时间
+	 * @param enddate 月的结束时间
+	 */
+	public List<TDakaRecord> queryDakaCourseByTeaAndMonth(Map<String, Object> params);
+	/**
+	 * 
+	 * @Author tzx
+	 * @Description:* 查询月份下打卡天数按老师和课程
+	 * @param teacherId 老师角色id
+	 * @param courseId 课程id
+	 * @param statdate 月的开始时间
+	 * @param enddate 月的结束时间
+	 */
+	public Integer queryDakaDaysByTeaAndCourse(Map<String, Object> params);
 }

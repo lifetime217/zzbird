@@ -46,6 +46,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 	private ITMessageService messageService;
 	@Autowired
 	ITWechatUserService wechatUserService;
+
 	@RequestMapping
 	public String index() {
 		return "tdakarecord";
@@ -281,8 +282,8 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 			hr.setStatusCode(500);
 			return hr;
 		}
-		messageService.sendDakaMessage(userContextInfo,params,studentList,date);
-		wechatUserService.sendGZHMessage(userContextInfo,params,studentList);
+		messageService.sendDakaMessage(userContextInfo, params, studentList, date);
+		wechatUserService.sendGZHMessage(userContextInfo, params, studentList);
 		try {
 			System.out.println();
 		} catch (Exception e) {
@@ -306,7 +307,7 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		try {
 			// 设置行数据isdelete字段为1
 			boolean success = dakaRecordService.quXiaoDaka(params);
-			//取消打卡发送的消息
+			// 取消打卡发送的消息
 			dakaRecordService.quXiaoDakaMessage(params);
 			// 未成功返回信息
 			if (!success) {
@@ -326,27 +327,63 @@ public class TDakaRecordAction implements BaseAction<TDakaRecord> {
 		return hr;
 
 	}
-	
+
 	@RequestMapping("/queryCompanyToClassBill")
 	@ResponseBody()
 	public HttpResult queryCompanyToClassBill(@RequestParam Map<String, Object> params) {
 		UserContextInfo userContextInfo = UserContext.get();
+		JSONArray data = new JSONArray();
 		if (userContextInfo.getRoleVal() != 10) {
 			return HttpResult.fail("请以企业身份查询");
 		}
-		
 		params.put("companyId", userContextInfo.getCompanyId());
+		// 分页初始化
 		PageQuery<TDakaRecord> pageQuery = new PageQuery<TDakaRecord>();
 		pageQuery.setParas(params);
 		pageQuery.setPageSize(5);
 		pageQuery.setPageNumber(Integer.parseInt((String) params.get("page")));
-		PageQuery<TDakaRecord> groupByMonth = dakaRecordService.getCompanyDakaGourpByMonth(pageQuery);
-		List<TDakaRecord> list = groupByMonth.getList();
-		for (TDakaRecord tDakaRecord : list) {
-			System.out.println(tDakaRecord.values());
+		PageQuery<TDakaRecord> groupByMonth = null;
+		try {
+			// 查询打卡有多少个月排序分组分页
+			groupByMonth = dakaRecordService.getCompanyDakaGourpByMonth(pageQuery);
+			List<TDakaRecord> monthList = groupByMonth.getList();
+			for (TDakaRecord tDakaRecord : monthList) {
+				JSONObject monthsObj = new JSONObject();
+				monthsObj.put("months", tDakaRecord.get("monthdate"));
+				params.put("statdate", tDakaRecord.get("statdate"));
+				params.put("enddate", tDakaRecord.get("enddate"));
+				// 查询月份下的老师list
+				List<TDakaRecord> teacherList = dakaRecordService.getDakaTeaByMonths(params);
+				JSONArray teaJsArr = new JSONArray();
+				for (TDakaRecord teacher : teacherList) {
+					JSONObject teaObj = new JSONObject();
+					teaObj.put("teaName", teacher.get("teaName"));
+					params.put("teacherId", teacher.get("teaId"));
+					JSONArray coursejsArr = new JSONArray();
+					// 查询月份下老师的课程list
+					List<TDakaRecord> courseList = dakaRecordService.getDakaCourseByTeaAndMonth(params);
+					for (TDakaRecord course : courseList) {
+						JSONObject courseObj = new JSONObject();
+						courseObj.putAll(course.values());
+						params.put("courseId", course.get("courseId"));
+						// 查询老师课程打卡跨度的天数
+						Integer dayCount = dakaRecordService.getDakaDaysByTeaAndCourse(params);
+						courseObj.put("dayCount", dayCount);
+						coursejsArr.add(courseObj);
+					}
+					teaObj.put("courseList", coursejsArr);
+					teaJsArr.add(teaObj);
+				}
+				monthsObj.put("teacherList", teaJsArr);
+				data.add(monthsObj);
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getCause());
+			HttpResult.fail("后台查询错误");
 		}
-		
-		return HttpResult.success();
+
+		return HttpResult.success("查询成功", data,  groupByMonth.getPageNumber(),groupByMonth.getPageSize(),
+				groupByMonth.getTotalRow(), groupByMonth.getTotalPage());
 	}
 
 }

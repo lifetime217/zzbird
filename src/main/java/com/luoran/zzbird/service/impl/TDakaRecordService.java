@@ -174,4 +174,22 @@ public class TDakaRecordService extends AbstractBaseService<TDakaRecord> impleme
 		dakaRecordDao.queryCompanyDakaGourpByMonth(pageQuery);
 		return pageQuery;
 	}
+
+	@Override
+	public List<TDakaRecord> getDakaTeaByMonths(Map<String, Object> params) {
+		List<TDakaRecord> teacher = dakaRecordDao.queryDakaTeaByMonths(params);
+		return teacher;
+	}
+
+	@Override
+	public List<TDakaRecord> getDakaCourseByTeaAndMonth(Map<String, Object> params) {
+		List<TDakaRecord> courseList = dakaRecordDao.queryDakaCourseByTeaAndMonth(params);
+		return courseList;
+	}
+
+	@Override
+	public Integer getDakaDaysByTeaAndCourse(Map<String, Object> params) {
+		Integer dayCount = dakaRecordDao.queryDakaDaysByTeaAndCourse(params);
+		return dayCount;
+	}
 }
