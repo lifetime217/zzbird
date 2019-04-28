@@ -233,7 +233,7 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 					res.put("userName", userContextInfo.getRoleName());
 				}
 			}
-			//判断此用户是否可以编辑是否可以编辑课程详情
+			// 判断此用户是否可以编辑是否可以编辑课程详情
 			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 10
 					&& userContextInfo.getCompanyId() != null
 					&& userContextInfo.getCompanyId().equals(course.getCompanyId())) {
@@ -241,18 +241,19 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			} else {
 				res.put("isEdit", false);
 			}
-			//判断用户是否要引导关注公众号
-			if (userContextInfo.getRoleVal() == 30) {
-				String wxgzhopid = xcxUserService.getWechatUserIdByRoleId(userContextInfo.getXcxUserRoleId().toString());
+			// 判断用户是否要引导关注公众号
+			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 30) {
+				String wxgzhopid = xcxUserService
+						.getWechatUserIdByRoleId(userContextInfo.getXcxUserRoleId().toString());
 				if (StringUtils.isEmpty(wxgzhopid)) {
 					res.put("isFollow", false);
-				}else {
+				} else {
 					res.put("isFollow", true);
 				}
-			}else {
+			} else {
 				res.put("isFollow", false);
 			}
-			
+
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
