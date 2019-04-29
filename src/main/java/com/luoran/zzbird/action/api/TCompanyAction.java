@@ -104,6 +104,7 @@ public class TCompanyAction implements BaseAction<TCompany> {
 			} else {
 				queryParams.put("showV1", "0");
 			}
+			//经纬度定位查询
 			if (latitude != 0.0d && longitude != 0.0d) {
 				List<String> geohashList = GeohashUtil.encodes(latitude, longitude, 5);
 				for (int i = 0; i < geohashList.size(); i++) {
