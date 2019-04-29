@@ -213,27 +213,16 @@ queryClassHourthIsMonth
 queryStuStudyWeek
 ===
 * 查询学生单个课程学习的周数
-select
-	CASE p.studyWeek 
-	WHEN p.studyDay % 7 = 0
-	THEN p.studyWeek
-	else p.studyWeek + 1 
-	end  studyWeek
-from  (
 		select 
-		TIMESTAMPDIFF(DAY,r.daka_time,NOW()) studyDay,
-		TIMESTAMPDIFF(WEEK,r.daka_time,NOW()) studyWeek
+			WEEKOFYEAR(MAX(r.daka_time)) - WEEKOFYEAR(MIN(r.daka_time)) + 1
 		FROM
-		t_daka_record AS r ,
-		t_company_course AS c
+			t_daka_record AS r ,
+			t_company_course AS c
 		WHERE
-		r.isdelete = 0 
+			r.isdelete = 0 
 		AND r.company_course_id = c.id
 		and r.student_id = #stuRoleId#
 		and r.company_course_id = #courseId#
-		ORDER BY r.daka_time
-		LIMIT 1
-) p
 
 
 queryCompanyDakaGourpByMonth

@@ -216,7 +216,8 @@ public class TCompanyCourseAction implements BaseAction<TCompanyCourse> {
 			if (userContextInfo.getRoleVal() != null && userContextInfo.getRoleVal() == 30 && !"inviteStu".equals(type)
 					&& !"inviteTea".equals(type)) {
 				res.put("classHour", dakaRecordService.queryStuClassHourByCourseId(courseId));
-				res.put("studyWeek", dakaRecordService.queryStuStudyWeek(courseId));
+				Integer queryStuStudyWeek = dakaRecordService.queryStuStudyWeek(courseId);
+				res.put("studyWeek", queryStuStudyWeek==null?0:queryStuStudyWeek);
 				// 默认为第一张海报
 				TPoster tPoster = posterService.get("t1");
 				if (tPoster != null) {
