@@ -81,6 +81,7 @@ queryCourseByUserList
 	u.id = ur.xcx_user_id AND
 	ur.role_val = #roleVal# AND
 	c.company_id = c1.id
+	ORDER BY  cu.add_time DESC
 
 queryUserCourseCount
 ===

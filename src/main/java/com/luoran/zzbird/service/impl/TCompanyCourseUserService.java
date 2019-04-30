@@ -117,7 +117,6 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		} else {
 			xcxUserId = xcxUser.getId();
 		}
-		
 
 		Integer roleVal;// 邀请人的角色
 		String content;// 邀请人和被邀请人的接受消息内容
@@ -133,12 +132,12 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 			companyService.updateCompanyPersonNumber(inviteVo.getCompanyId(), 1);
 			companyCourseService.updatePerson(inviteVo.getCourseId());
 		}
+		// 查询公司用户表
 		TXcxUserRole xcxUserRole = xcxUserRoleService.queryUserRoleExist(xcxUserId, roleVal, inviteVo.getCompanyId());
+		// 修改公司用户关系表正在使用的为0
+		xcxUserRoleService.updateCurrentActiveByZero(zzbird_XcxSessionKey);
 		Integer xcxUserRoleId;
-		// 公司用户表判断
 		if (xcxUserRole == null) {
-			// 修改正在使用为0
-			xcxUserRoleService.updateCurrentActiveByZero(zzbird_XcxSessionKey);
 			// 添加公司用户表
 			TXcxUserRole tXcxUserRole = new TXcxUserRole();
 			tXcxUserRole.setCompanyId(inviteVo.getCompanyId());
@@ -151,6 +150,7 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 			tXcxUserRole.setSign(ShortUuid.generateShortUuid());
 			xcxUserRoleId = xcxUserRoleService.insert(tXcxUserRole);
 		} else {
+			xcxUserRoleService.updateActive(xcxUserRole.getId());
 			xcxUserRoleId = xcxUserRole.getId();
 		}
 
