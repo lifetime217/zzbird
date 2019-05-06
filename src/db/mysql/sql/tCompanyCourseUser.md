@@ -80,7 +80,8 @@ queryCourseByUserList
 	u.open_id = #openId# AND
 	u.id = ur.xcx_user_id AND
 	ur.role_val = #roleVal# AND
-	c.company_id = c1.id
+	c.company_id = c1.id AND
+	c.isdelete = 0
 	ORDER BY  cu.add_time DESC
 
 queryUserCourseCount
@@ -153,3 +154,29 @@ queryTeaCourseStu
 					txurStu.id
 				@} 
 			) stu
+			
+			
+queryCourseStuOrTea
+===
+*查询课程下是否有老师或者学生
+
+	SELECT
+	COUNT(1)
+	FROM
+	t_company_course AS c ,
+	t_company_course_user AS u ,
+	t_xcx_user_role AS r
+	WHERE
+	c.id = u.company_course_id AND
+	u.xcx_user_role_id = r.id AND
+	u.company_course_id = #courseId# AND
+	r.role_val IN (20, 30)
+			
+deleteCourse
+===
+* 删除课程
+	update t_company_course set isdelete =1 where id =#courseId#
+	
+	
+	
+		

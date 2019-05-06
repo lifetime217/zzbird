@@ -76,5 +76,11 @@ public interface ITCompanyCourseUserService extends IBaseService<TCompanyCourseU
 	 */
 	void addCourseUser(InviteVo inviteVo,String zzbird_XcxSessionKey);
 
-
+	/**
+	 * 
+	 * @Author wsl  
+	 * @Description:  删除课程  true代表删除成功     false代表 课程下有学生或者老师 不能删除
+	 */
+	boolean deleteCourse(String courseId);
+	
 }

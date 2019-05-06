@@ -31,6 +31,7 @@ import com.luoran.zzbird.service.ITMessageService;
 import com.luoran.zzbird.service.ITXcxUserService;
 import com.luoran.zzbird.utils.Convert;
 import com.luoran.zzbird.utils.Validate;
+
 /**
  * @author tzx
  *
@@ -42,13 +43,13 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 
 	@Autowired
 	private ITCompanyCourseUserService companyCourseUserService;
-	
+
 	@Autowired
 	ITXcxUserService xcxUserService;
 
 	@Autowired
 	private ITDakaRecordService dakaRecordService;
-	
+
 	@Autowired
 	private ITMessageService messageService;
 
@@ -268,7 +269,8 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 		// 初始化jarr
 		JSONArray data = new JSONArray();
 		// 放入查询的page页
-		PageQuery<TCompanyCourseUser> pageQuery = new PageQuery<TCompanyCourseUser>(Integer.parseInt(params.get("page")),10,params);
+		PageQuery<TCompanyCourseUser> pageQuery = new PageQuery<TCompanyCourseUser>(
+				Integer.parseInt(params.get("page")), 10, params);
 		// 查询出来的Page页
 		PageQuery<TCompanyCourseUser> userQueryPage = null;
 		try {
@@ -294,9 +296,9 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("查询失败");
 		}
-		return HttpResult.success("查询成功", data, userQueryPage.getPageNumber(), userQueryPage.getPageSize(), userQueryPage.getTotalRow(),userQueryPage.getTotalPage());
+		return HttpResult.success("查询成功", data, userQueryPage.getPageNumber(), userQueryPage.getPageSize(),
+				userQueryPage.getTotalRow(), userQueryPage.getTotalPage());
 	}
-
 
 	/**
 	 * 
@@ -311,13 +313,43 @@ public class TCompanyCourseUserAction implements BaseAction<TCompanyCourseUser> 
 			return invite;
 		}
 		try {
-			companyCourseUserService.addCourseUser(inviteVo,zzbird_XcxSessionKey);
+			companyCourseUserService.addCourseUser(inviteVo, zzbird_XcxSessionKey);
 			xcxUserService.reloadSession(zzbird_XcxSessionKey);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e.getCause());
 			return HttpResult.fail("接受失败!");
 		}
 		return HttpResult.success("接受成功");
+	}
+
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description:删除课程 (无老师或者学生)
+	 */
+	@RequestMapping("delCourse")
+	@ResponseBody()
+	public HttpResult delCourse(@RequestParam(value = "courseId") String courseId) {
+		String msg = null;
+		JSONObject res = new JSONObject();
+		UserContextInfo userContextInfo = UserContext.get();
+		try {
+			if (userContextInfo.getRoleVal() != 10) {
+				msg = "不是公司创建者！！";
+			}
+			boolean flag = companyCourseUserService.deleteCourse(courseId);
+			if (flag) {
+				msg = "删除成功！！";
+				res.put("successStatus", "success");
+			} else {
+				msg = "该课程下还存在老师或者学生！！";
+				res.put("successStatus", "fail");
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e.getCause());
+			return HttpResult.fail("请求失败!！");
+		}
+		return HttpResult.success(msg, res);
 	}
 
 }

@@ -216,4 +216,13 @@ public class TCompanyCourseUserService extends AbstractBaseService<TCompanyCours
 		return pageQuery;
 	}
 
+	@Override
+	public boolean deleteCourse(String courseId) {
+		if (companyCourseUserDao.queryCourseStuOrTea(courseId) == 0) {
+			companyCourseUserDao.deleteCourse(courseId);
+			return true;
+		}
+		return false;
+	}
+
 }

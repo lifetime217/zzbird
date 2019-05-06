@@ -71,4 +71,17 @@ public interface ITCompanyCourseUserDao extends BaseDao<TCompanyCourseUser> {
 	 */
 	public void queryTeaCourseStu(PageQuery<TCompanyCourseUser> pageQuery);
 
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description:查询课程下是否有老师或者学生
+	 */
+	public Integer queryCourseStuOrTea(@Param("courseId") String courseId);
+
+	/**
+	 * 
+	 * @Author wsl
+	 * @Description: 删除课程
+	 */
+	public Integer deleteCourse(@Param("courseId") String courseId);
 }

@@ -130,5 +130,16 @@ public class TCompanyCourse extends BaseInfo implements Serializable {
 	public void setCourseImg(String courseImg) {
 		set("courseImg", courseImg);
 	}
+	
+	/**
+	 * 是否删除标记（0：未删除，1：已删除）
+	 */
+	public Integer getIsdelete() {
+		return getInteger("isdelete");
+	}
+
+	public void setIsdelete(Integer isdelete) {
+		set("isdelete", isdelete);
+	}
 
 }

@@ -54,6 +54,7 @@ public class TCompanyCourseService extends AbstractBaseService<TCompanyCourse> i
 		UserContextInfo user = UserContext.get();
 		course.setCompanyId(user.getCompanyId());
 		course.setPersonNumber(0);
+		course.setIsdelete(0);
 		String courseId = add(course);
 
 		TCompanyCourseUser tCompanyCourseUser = new TCompanyCourseUser();
